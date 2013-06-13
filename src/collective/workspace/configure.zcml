@@ -11,7 +11,6 @@
 
   <include package="plone.app.dexterity" />
   <include package="plone.formwidget.autocomplete" />
-  <include package="plone.principalsource" />
 
   <permission
       id="collective.workspace.ManageRoster"

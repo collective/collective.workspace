@@ -1,3 +1,4 @@
+from collective.workspace.vocabs import UsersSource
 from plone.autoform import directives as form
 from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
@@ -11,7 +12,7 @@ class ITeamMembership(model.Schema):
     form.widget(user=AutocompleteFieldWidget)
     user = schema.Choice(
         title=u'User',
-        vocabulary='plone.principalsource.Users',
+        source=UsersSource,
     )
 
     position = schema.TextLine(

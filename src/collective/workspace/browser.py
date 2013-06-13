@@ -11,7 +11,6 @@ from z3c.form import field
 from z3c.form import form
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope.cachedescriptors.property import Lazy as lazy_property
-from zope.interface import Interface
 
 
 class TeamRosterEditSubForm(crud.EditSubForm):
@@ -62,19 +61,13 @@ class TeamRosterForm(AutoExtensibleForm, crud.CrudForm):
     @lazy_property
     def membership_schema(self):
         return self.workspace.membership_schema
+    schema = membership_schema
 
     ignoreContext = True
 
     @lazy_property
     def can_edit_roster(self):
         return getSecurityManager().checkPermission('collective.workspace: Manage roster', self.context)
-
-    @lazy_property
-    def schema(self):
-        if self.can_edit_roster:
-            return self.membership_schema
-        else:
-            return Interface
 
     def update(self):
         AutoExtensibleForm.update(self)
