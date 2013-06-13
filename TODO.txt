@@ -1,7 +1,7 @@
+[ ] Enable PAS plugins
 [X] After created, put creator in admins group
 [X] Members can view roster but not edit
 [ ] Fix user vocabulary/source
-[ ] Roster can be printed
 [X] Index memberships
 [ ] Documentation
   [ ] How to set up for a content type
@@ -12,6 +12,8 @@
   [ ] How to override stuff
 [ ] Tests
 
+[ ] Roster can be printed
+
 Maybe later:
 [ ] Placeful workflow
 [ ] Settings for access policy:
@@ -19,3 +21,5 @@ Maybe later:
   [ ] what content types can be added
 [ ] Configure options for position, group -> role mapping
    [ ] Per content type?
+[ ] Invitations / requests for membership?
+[ ] Email the roster
