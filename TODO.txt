@@ -1,0 +1,21 @@
+[X] After created, put creator in admins group
+[X] Members can view roster but not edit
+[ ] Fix user vocabulary/source
+[ ] Roster can be printed
+[X] Index memberships
+[ ] Documentation
+  [ ] How to set up for a content type
+  [ ] Why this approach
+  [ ] How to query info
+    [ ] Users for a workspace
+    [ ] Team memberships for a user
+  [ ] How to override stuff
+[ ] Tests
+
+Maybe later:
+[ ] Placeful workflow
+[ ] Settings for access policy:
+  [ ] free-for-all vs. reviewed submissions
+  [ ] what content types can be added
+[ ] Configure options for position, group -> role mapping
+   [ ] Per content type?

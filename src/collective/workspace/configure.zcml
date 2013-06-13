@@ -1,0 +1,74 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="collective.workspace">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <include package="plone.app.dexterity" />
+  <include package="plone.formwidget.autocomplete" />
+  <include package="plone.principalsource" />
+
+  <permission
+      id="collective.workspace.ManageRoster"
+      title="collective.workspace: Manage roster">
+    <role name="TeamManager" />
+    <role name="Site Administrator" />
+    <role name="Manager" />
+    <role name="Owner" />
+  </permission>
+
+  <genericsetup:registerProfile
+      name="default"
+      title="collective.workspace"
+      directory="profiles/default"
+      description="Installs the collective.workspace package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+  <!-- -*- extra stuff goes here -*- -->
+
+  <plone:behavior
+      title="Team workspace"
+      description="This item is a team workspace."
+      provides=".interfaces.IWorkspace"
+      factory=".workspace.Workspace"
+      marker=".interfaces.IHasWorkspace"
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      />
+
+  <browser:page
+      for=".interfaces.IHasWorkspace"
+      name="team-roster"
+      class=".browser.TeamRosterPage"
+      permission="zope2.View"
+      />
+
+  <utility
+      component=".vocabs.TeamGroupsVocabulary"
+      name="collective.workspace.groups" />
+
+  <adapter
+      factory=".pas.WorkspaceRoles"
+      for=".interfaces.IHasWorkspace"
+      name="collective.workspace"
+      />
+
+  <utility
+      factory=".pas.TeamManagerRoleDelegation"
+      provides="plone.app.workflow.interfaces.ISharingPageRole"
+      name="TeamManager"
+      />
+
+  <subscriber
+      handler=".workspace.handle_creation"
+      for=".interfaces.IHasWorkspace zope.lifecycleevent.interfaces.IObjectCreatedEvent"
+      />
+
+  <adapter factory=".catalog.workspace_members" name="workspace_members" />
+  <adapter factory=".catalog.null_indexer" name="workspace_members" />
+
+</configure>

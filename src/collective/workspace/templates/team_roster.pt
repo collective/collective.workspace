@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone.z3cform"
+      tal:omit-tag="">
+
+  <div class="portalMessage"
+       tal:condition="view/status" tal:content="view/status">
+  </div>
+
+  <p class="crud-description"
+       tal:condition="view/description"
+       tal:content="view/description">
+  </p>
+
+  <div
+      tal:define="table python:view.subforms[0]"
+      tal:content="structure table/render" />
+
+  <fieldset tal:condition="view/can_edit_roster">
+    <legend>Add a team member</legend>
+    <tal:block metal:use-macro="context/@@ploneform-macros/titlelessform" />
+  </fieldset>
+
+</html>
