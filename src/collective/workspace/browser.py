@@ -11,6 +11,7 @@ from z3c.form import field
 from z3c.form import form
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope.cachedescriptors.property import Lazy as lazy_property
+import copy
 
 
 class TeamRosterEditSubForm(crud.EditSubForm):
@@ -43,6 +44,7 @@ class TeamRosterEditForm(crud.EditForm):
     # Make sure we mutate our own copies of the buttons
     form.extends(crud.EditForm)
 
+    buttons = copy.deepcopy(crud.EditForm.buttons)
     buttons['edit'].condition = lambda form: form.context.can_edit_roster
     buttons['delete'].condition = lambda form: form.context.can_edit_roster
 
