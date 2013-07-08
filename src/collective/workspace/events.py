@@ -10,8 +10,8 @@ class TeamMemberEvent(ObjectEvent):
     just a dictionary in this case).
     """
 
-    def __init__(self, workspace, memberdata):
-        self.workspace = workspace
+    def __init__(self, object, memberdata):
+        self.object = object
         self.memberdata = memberdata
 
 

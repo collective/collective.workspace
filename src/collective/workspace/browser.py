@@ -37,10 +37,10 @@ class TeamRosterEditSubForm(crud.EditSubForm):
         return fields
 
     def applyChanges(self, data):
-        changes = super(TeamRosterEditSubForm, self).applyChanges()
+        changes = super(TeamRosterEditSubForm, self).applyChanges(data)
         if changes:
             workspace_context = self.context.context.context
-            notify(TeamMemberModifiedEvent(workspace_context, data))
+            notify(TeamMemberModifiedEvent(workspace_context, self.getContent()))
 
 
 class TeamRosterEditForm(crud.EditForm):
