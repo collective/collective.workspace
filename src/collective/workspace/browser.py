@@ -1,6 +1,9 @@
 from AccessControl import getSecurityManager
 from Acquisition import ImplicitAcquisitionWrapper
 from collective.workspace.interfaces import IWorkspace
+from collective.workspace.events import TeamMemberAddedEvent
+from collective.workspace.events import TeamMemberModifiedEvent
+from collective.workspace.events import TeamMemberRemovedEvent
 from plone.app.uuid.utils import uuidToURL
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform.crud import crud
@@ -11,6 +14,7 @@ from z3c.form import field
 from z3c.form import form
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope.cachedescriptors.property import Lazy as lazy_property
+from zope.event import notify
 import copy
 
 
@@ -31,6 +35,12 @@ class TeamRosterEditSubForm(crud.EditSubForm):
                 f.mode = 'display'
 
         return fields
+
+    def applyChanges(self, data):
+        changes = super(TeamRosterEditSubForm, self).applyChanges()
+        if changes:
+            workspace_context = self.context.context.context
+            notify(TeamMemberModifiedEvent(workspace_context, data))
 
 
 class TeamRosterEditForm(crud.EditForm):
@@ -102,12 +112,12 @@ class TeamRosterForm(AutoExtensibleForm, crud.CrudForm):
 
         user_id = str(data['user'])
         self.workspace.members[user_id] = data
-
+        notify(TeamMemberAddedEvent(self.context, data))
         self.context.reindexObject(idxs=['workspace_members'])
 
     def remove(self, (id, item)):
         del self.workspace.members[id]
-
+        notify(TeamMemberRemovedEvent(self.context, item))
         self.context.reindexObject(idxs=['workspace_members'])
 
     def link(self, item, fname):
