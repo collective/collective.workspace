@@ -1,4 +1,4 @@
-from zope.interface.interfaces import ObjectEvent
+from zope.component.interfaces import ObjectEvent
 
 
 class TeamMemberEvent(ObjectEvent):
