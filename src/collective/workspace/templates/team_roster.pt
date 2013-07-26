@@ -5,6 +5,9 @@
       i18n:domain="plone.z3cform"
       tal:omit-tag="">
 
+  <h1 tal:condition="view/label | nothing"
+      tal:content="view/label">Form title</h1>
+
   <div class="portalMessage"
        tal:condition="view/status" tal:content="view/status">
   </div>

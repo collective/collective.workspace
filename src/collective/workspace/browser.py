@@ -44,12 +44,9 @@ class TeamRosterEditSubForm(crud.EditSubForm):
 
 
 class TeamRosterEditForm(crud.EditForm):
+    label = None
     template = ViewPageTemplateFile('templates/team_roster_table.pt')
     editsubform_factory = TeamRosterEditSubForm
-
-    @property
-    def label(self):
-        return 'Roster: ' + self.context.context.Title()
 
     # Make sure we mutate our own copies of the buttons
     form.extends(crud.EditForm)
@@ -65,6 +62,10 @@ class TeamRosterForm(AutoExtensibleForm, crud.CrudForm):
     addform_factory = crud.NullForm
 
     template = ViewPageTemplateFile('templates/team_roster.pt')
+
+    @property
+    def label(self):
+        return 'Roster: ' + self.context.Title()
 
     @lazy_property
     def workspace(self):
@@ -114,6 +115,9 @@ class TeamRosterForm(AutoExtensibleForm, crud.CrudForm):
         self.workspace.members[user_id] = data
         notify(TeamMemberAddedEvent(self.context, data))
         self.context.reindexObject(idxs=['workspace_members'])
+
+        # make sure entered values don't show up anymore
+        self.ignoreRequest = True
 
     def remove(self, (id, item)):
         del self.workspace.members[id]
