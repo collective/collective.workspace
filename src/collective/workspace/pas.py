@@ -13,6 +13,7 @@ from Products.PluggableAuthService.interfaces.plugins \
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import IWorkspace
+from zope.annotation.interfaces import IAnnotations
 from zope.interface import implements
 
 
@@ -56,11 +57,18 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         self.title = title
 
     def _iterWorkspaces(self):
-        catalog = getToolByName(self, 'portal_catalog')
-        for brain in catalog.unrestrictedSearchResults(
-                object_provides=WORKSPACE_INTERFACE):
-            obj = brain._unrestrictedGetObject()
-            yield IWorkspace(obj)
+        workspaces = IAnnotations(self.REQUEST).get('workspaces')
+        if workspaces is None:
+            catalog = getToolByName(self, 'portal_catalog')
+            workspaces = [
+                IWorkspace(b._unrestrictedGetObject())
+                for b in catalog.unrestrictedSearchResults(
+                    object_provides=WORKSPACE_INTERFACE
+                    )
+                ]
+            IAnnotations(self.REQUEST)['workspaces'] = workspaces
+
+        return iter(workspaces)
 
     def _getWorkspace(self, uid):
         catalog = getToolByName(self, 'portal_catalog')
