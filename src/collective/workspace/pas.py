@@ -162,6 +162,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
     #
 
     def getGroupById(self, group_id, default=None):
+        if ':' not in group_id:
+            return default
         pas = self._getPAS()
         plugins = pas._getOb('plugins')
         groups_plugin = pas.source_groups
