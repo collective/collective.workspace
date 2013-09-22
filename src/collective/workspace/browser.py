@@ -1,131 +1,135 @@
 from AccessControl import getSecurityManager
-from Acquisition import ImplicitAcquisitionWrapper
+from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace.events import TeamMemberAddedEvent
-from collective.workspace.events import TeamMemberModifiedEvent
-from collective.workspace.events import TeamMemberRemovedEvent
-from plone.app.uuid.utils import uuidToURL
+from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
-from plone.z3cform.crud import crud
-from plone.z3cform.layout import wrap_form
+from plone.z3cform import z2
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
-from z3c.form import field
-from z3c.form import form
-from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.form import DisplayForm
+from z3c.form.form import EditForm
 from zope.cachedescriptors.property import Lazy as lazy_property
-from zope.event import notify
-import copy
+from zope.interface import implementer
+from zope.publisher.interfaces.browser import IPublishTraverse
 
 
-class TeamRosterEditSubForm(crud.EditSubForm):
-    template = ViewPageTemplateFile('templates/team_roster_row.pt')
+@implementer(IRosterView)
+class TeamRosterView(AutoFields, DisplayForm):
+    """Display the roster as a table."""
 
-    @property
-    def fields(self):
-        crud_form = self.context.context
-        if crud_form.can_edit_roster:
-            fields = field.Fields(self._select_field())
-            fields += field.Fields(crud_form.membership_schema)
-            fields['user'].mode = 'display'
-            fields['groups'].widgetFactory = CheckBoxFieldWidget
-        else:
-            fields = field.Fields(crud_form.membership_schema)
-            for f in fields.values():
-                f.mode = 'display'
+    row_template = ViewPageTemplateFile('templates/team_roster_row.pt')
 
-        return fields
-
-    def applyChanges(self, data):
-        changes = super(TeamRosterEditSubForm, self).applyChanges(data)
-        if changes:
-            workspace_context = self.context.context.context
-            notify(TeamMemberModifiedEvent(workspace_context, self.getContent()))
-
-
-class TeamRosterEditForm(crud.EditForm):
-    label = None
-    template = ViewPageTemplateFile('templates/team_roster_table.pt')
-    editsubform_factory = TeamRosterEditSubForm
-
-    # Make sure we mutate our own copies of the buttons
-    form.extends(crud.EditForm)
-
-    buttons = copy.deepcopy(crud.EditForm.buttons)
-    buttons['edit'].condition = lambda form: form.context.can_edit_roster
-    buttons['delete'].condition = lambda form: form.context.can_edit_roster
-
-
-class TeamRosterForm(AutoExtensibleForm, crud.CrudForm):
-    """Form for managing the team roster."""
-    editform_factory = TeamRosterEditForm
-    addform_factory = crud.NullForm
-
-    template = ViewPageTemplateFile('templates/team_roster.pt')
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.workspace = IWorkspace(self.context)
 
     @property
     def label(self):
         return 'Roster: ' + self.context.Title()
 
     @lazy_property
-    def workspace(self):
-        return IWorkspace(self.context)
-
-    @lazy_property
-    def membership_schema(self):
+    def schema(self):
         return self.workspace.membership_schema
-    schema = membership_schema
 
     ignoreContext = True
 
+    def getContent(self):
+        return self.context
+
+    def row_views(self):
+        for memberdata in self.workspace.members.itervalues():
+            context = self.workspace.membership_factory(self.workspace, memberdata)
+            for widget in self.widgets.values():
+                widget.ignoreContext = False
+                widget.context = context
+                widget.update()
+            yield self.row_template(membership=context)
+
     @lazy_property
     def can_edit_roster(self):
-        return getSecurityManager().checkPermission('collective.workspace: Manage roster', self.context)
+        return getSecurityManager().checkPermission(
+            'collective.workspace.ManageRoster', self.context)
 
     def update(self):
-        AutoExtensibleForm.update(self)
-        crud.CrudForm.update(self)
+        z2.switch_on(self)
+        self.updateFieldsFromSchemata()
+        self.updateWidgets()
+
+    def render(self):
+        return self.index()
+
+    def __call__(self):
+        self.update()
+        return self.render()
+
+
+@implementer(IPublishTraverse)
+class TeamMemberEditForm(AutoExtensibleForm, EditForm):
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.workspace = IWorkspace(self.context)
+
+    user_id = None
+
+    def publishTraverse(self, request, name):
+        self.user_id = name
+        return self
 
     @lazy_property
-    def update_schema(self):
-        fields = field.Fields(self.membership_schema)
-        if self.can_edit_roster:
-            fields = fields.omit('user')
-        return fields
+    def schema(self):
+        return self.workspace.membership_schema
+
+    def updateFields(self):
+        super(TeamMemberEditForm, self).updateFields()
+        # don't show the user field if we are editing
+        if self.user_id:
+            del self.fields['user']
 
     @lazy_property
-    def view_schema(self):
-        fields = field.Fields(self.membership_schema)
-        if self.can_edit_roster:
-            fields = fields.select('user')
-        return fields
+    def ignoreContext(self):
+        return not bool(self.user_id)
 
-    def get_items(self):
-        return [(user_id, ImplicitAcquisitionWrapper(membership, self.context))
-                for user_id, membership
-                in self.workspace.members.items()]
+    @lazy_property
+    def label(self):
+        if self.user_id:
+            mtool = getToolByName(self.context, 'portal_membership')
+            member = mtool.getMemberById(self.user_id)
+            if member is not None:
+                return member.getProperty('fullname') or self.user_id
+            else:
+                return self.user_id
+        else:
+            return u'Add Person to Roster'
 
-    @button.buttonAndHandler(u'Add team member')
-    def handleAdd(self, action):
+    @lazy_property
+    def _content(self):
+        if not self.user_id:
+            return self.context
+        workspace = self.workspace
+        memberdata = workspace.members[self.user_id]
+        return workspace.membership_factory(workspace, memberdata)
+
+    def getContent(self):
+        return self._content
+
+    @button.buttonAndHandler(u'Save')
+    def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
             return
 
-        user_id = str(data['user'])
-        self.workspace.members[user_id] = data
-        notify(TeamMemberAddedEvent(self.context, data))
-        self.context.reindexObject(idxs=['workspace_members'])
+        if self.user_id:
+            membership = self.getContent()
+            membership.update(data)
+        else:
+            # Add new roster member
+            self.workspace.add_to_team(**data)
 
-        # make sure entered values don't show up anymore
-        self.ignoreRequest = True
-
-    def remove(self, (id, item)):
-        del self.workspace.members[id]
-        notify(TeamMemberRemovedEvent(self.context, item))
-        self.context.reindexObject(idxs=['workspace_members'])
-
-    def link(self, item, fname):
-        if fname == 'user':
-            return uuidToURL(item['user'])
-
-TeamRosterPage = wrap_form(TeamRosterForm)
+    @button.buttonAndHandler(u'Remove', condition=lambda self: self.user_id)
+    def handleRemove(self, action):
+        membership = self.getContent()
+        membership.remove_from_team()

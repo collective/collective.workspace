@@ -1,19 +1,7 @@
-<tal:block repeat="widget view/widgets/values">
-
-  <td tal:define="error python:widget.error"
-      tal:attributes="class python:'field' + (error and ' error' or '')">
-
-    <a href=""
-       tal:define="link python:view.context.context.link(view.getContent(), widget.field.__name__)"
-       tal:omit-tag="python:widget.mode == 'input' or link is None"
-       tal:attributes="href link">
-
-      <span class="error" tal:omit-tag="not:error">
-        <div tal:condition="error" tal:replace="structure error/render" />
-        <input type="text" tal:replace="structure widget/render" />
-      </span>
-
-    </a>
-
-  </td>
-</tal:block>
+<td tal:repeat="widget view/widgets/values">
+    <div tal:replace="structure widget/render" />
+</td>
+<td tal:condition="view/can_edit_roster">
+  <a class="pat-modal"
+     tal:attributes="href string:${context/absolute_url}/edit-roster/${options/membership/user}">Edit</a>
+</td>

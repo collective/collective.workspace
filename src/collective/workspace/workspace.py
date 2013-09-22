@@ -1,7 +1,8 @@
 from BTrees.OOBTree import OOBTree
-from .events import TeamMemberModifiedEvent
+from .events import TeamMemberAddedEvent
 from .interfaces import IWorkspace
 from .membership import ITeamMembership
+from .membership import TeamMembership
 from zope.event import notify
 
 
@@ -24,40 +25,39 @@ class Workspace(object):
         """
         return ITeamMembership
 
-    @property
-    def available_groups(self):
-        """Lists groups to which team members can be assigned.
+    membership_factory = TeamMembership
 
-        Returns a mapping of group name -> roles
-        """
-        return {
-            u'Members': ('Contributor', 'Reader'),
-            u'Admins': ('Contributor', 'Editor', 'Reviewer',
-                        'Reader', 'TeamManager',),
-        }
+    # A list of groups to which team members can be assigned.
+    # Maps group name -> roles
+    available_groups = {
+        u'Members': ('Contributor', 'Reader', 'TeamMember'),
+        u'Admins': ('Contributor', 'Editor', 'Reviewer',
+                    'Reader', 'TeamManager',),
+    }
 
     @property
     def members(self):
         """Access the raw team member data."""
         return self.context._team
 
-    def add_to_team(self, user_id, default_position=None, **kw):
+    def add_to_team(self, **kw):
         """Makes sure a user is in this workspace's team.
 
-        If the user was not in the team before, the position will
-        be set to default_position.
-
-        Extra keyword arguments will be set on the team member.
+        Pass user and any other attributes that should be set on the team member.
         """
+        data = kw.copy()
+        user = data['user']
         members = self.members
-        if user_id not in members:
-            members[user_id] = {
-                'user': user_id,
-                'position': None,
-                'groups': set(),
-            }
-        members[user_id].update(kw)
-        notify(TeamMemberModifiedEvent(self.context, members[user_id]))
+        if user not in self.members:
+            if 'groups' not in data:
+                data['groups'] = set()
+            members[user] = data
+            membership = self.membership_factory(self, data)
+            membership.handle_added()
+            notify(TeamMemberAddedEvent(self.context, membership))
+        else:
+            membership = self.membership_factory(self, self.members[user])
+            membership.update(data)
 
 
 def handle_creation(object, event):
@@ -66,4 +66,4 @@ def handle_creation(object, event):
     workspace = IWorkspace(object)
     user_id = object.Creator()
     if user_id not in workspace.members:
-        workspace.members[user_id] = {'user': user_id, 'groups': set([u'Admins'])}
+        workspace.add_to_team(user=user_id, groups=set([u'Admins']))

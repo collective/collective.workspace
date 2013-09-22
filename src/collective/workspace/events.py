@@ -10,9 +10,9 @@ class TeamMemberEvent(ObjectEvent):
     just a dictionary in this case).
     """
 
-    def __init__(self, object, memberdata):
+    def __init__(self, object, membership):
         self.object = object
-        self.memberdata = memberdata
+        self.membership = membership
 
 
 class TeamMemberAddedEvent(TeamMemberEvent):

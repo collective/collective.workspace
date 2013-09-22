@@ -13,6 +13,16 @@
   <include package="plone.formwidget.autocomplete" />
 
   <permission
+      id="collective.workspace.ViewRoster"
+      title="collective.workspace: View roster">
+    <role name="TeamMember" />
+    <role name="TeamManager" />
+    <role name="Site Administrator" />
+    <role name="Manager" />
+    <role name="Owner" />
+  </permission>
+
+  <permission
       id="collective.workspace.ManageRoster"
       title="collective.workspace: Manage roster">
     <role name="TeamManager" />
@@ -42,8 +52,16 @@
   <browser:page
       for=".interfaces.IHasWorkspace"
       name="team-roster"
-      class=".browser.TeamRosterPage"
-      permission="zope2.View"
+      class=".browser.TeamRosterView"
+      template="templates/team_roster.pt"
+      permission="collective.workspace.ViewRoster"
+      />
+
+  <browser:page
+      for=".interfaces.IHasWorkspace"
+      name="edit-roster"
+      class=".browser.TeamMemberEditForm"
+      permission="collective.workspace.ManageRoster"
       />
 
   <utility

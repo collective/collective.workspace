@@ -7,3 +7,7 @@ class IHasWorkspace(Interface):
 
 class IWorkspace(Interface):
     """Interface for interacting with an item's workspace features."""
+
+
+class IRosterView(Interface):
+    """Marker for display view of a roster."""

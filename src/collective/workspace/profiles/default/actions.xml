@@ -10,7 +10,7 @@
    <property name="icon_expr"></property>
    <property name="available_expr">nocall:context/@@team-roster|nothing</property>
    <property name="permissions">
-    <element value="View"/>
+    <element value="collective.workspace: View roster"/>
    </property>
    <property name="visible">True</property>
   </object>

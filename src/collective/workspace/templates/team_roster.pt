@@ -3,27 +3,40 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="plone.z3cform"
-      tal:omit-tag="">
+      metal:use-macro="context/main_template/macros/master">
+
+<metal:block fill-slot="main">
+
+<div data-pat-modal='{"actionOptions": {"displayInModal": false}}'>
 
   <h1 tal:condition="view/label | nothing"
       tal:content="view/label">Form title</h1>
 
-  <div class="portalMessage"
-       tal:condition="view/status" tal:content="view/status">
-  </div>
+  <a class="pat-modal"
+     tal:condition="view/can_edit_roster"
+     tal:attributes="href string:${context/absolute_url}/edit-roster">
+    &#43; Add person to roster
+  </a>
 
-  <p class="crud-description"
-       tal:condition="view/description"
-       tal:content="view/description">
-  </p>
+  <table class="listing"
+         tal:condition="view/workspace/members">
+      <thead>
+        <tr>
+          <th tal:repeat="widget view/widgets/values"
+              tal:content="widget/field/title"
+              tal:attributes="title widget/field/description" />
+          <th tal:condition="view/can_edit_roster" />
+        </tr>
+      </thead>
+      <tbody>
+        <tal:block repeat="row_view view/row_views">
+          <tr tal:content="structure row_view" />
+        </tal:block>
+      </tbody>
+  </table>
 
-  <div
-      tal:define="table python:view.subforms[0]"
-      tal:content="structure table/render" />
+</div>
 
-  <fieldset tal:condition="view/can_edit_roster">
-    <legend>Add a team member</legend>
-    <tal:block metal:use-macro="context/@@ploneform-macros/titlelessform" />
-  </fieldset>
+</metal:block>
 
 </html>
