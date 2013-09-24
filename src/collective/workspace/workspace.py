@@ -58,6 +58,7 @@ class Workspace(object):
         else:
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
+        return membership
 
 
 def handle_creation(object, event):
