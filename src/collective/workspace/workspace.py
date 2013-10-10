@@ -40,6 +40,20 @@ class Workspace(object):
         """Access the raw team member data."""
         return self.context._team
 
+    def __getitem__(self, name):
+        memberdata = self.context._team[name]
+        return self.membership_factory(self, memberdata)
+
+    def get(self, name, default=None):
+        try:
+            return self[name]
+        except KeyError:
+            return default
+
+    def __iter__(self):
+        for userid in self.context._team.iterkeys():
+            yield self[userid]
+
     def add_to_team(self, **kw):
         """Makes sure a user is in this workspace's team.
 

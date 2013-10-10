@@ -57,6 +57,9 @@ class TeamMembership(object):
 
     def update(self, data):
         self.__dict__.update(data)
+        # make sure change is persisted
+        # XXX really we should use PersistentDicts
+        self.workspace.context._team[self.user] = self.__dict__
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
 
     def handle_added(self):

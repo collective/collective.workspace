@@ -50,7 +50,7 @@ class TeamRosterView(AutoFields, DisplayForm):
     @lazy_property
     def can_edit_roster(self):
         return getSecurityManager().checkPermission(
-            'collective.workspace.ManageRoster', self.context)
+            'collective.workspace: Manage roster', self.context)
 
     def update(self):
         z2.switch_on(self)
