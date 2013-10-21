@@ -47,13 +47,12 @@ class TeamRosterView(AutoFields, DisplayForm):
         return self.context
 
     def row_views(self):
-        for memberdata in self.workspace.members.itervalues():
-            context = self.workspace.membership_factory(self.workspace, memberdata)
+        for membership in self.workspace:
             for widget in self.widgets.values():
                 widget.ignoreContext = False
-                widget.context = context
+                widget.context = membership
                 widget.update()
-            yield self.row_template(membership=context)
+            yield self.row_template(membership=membership)
 
     @lazy_property
     def can_edit_roster(self):

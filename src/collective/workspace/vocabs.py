@@ -15,7 +15,7 @@ from zope.schema.vocabulary import SimpleVocabulary
 def find_workspace(context):
     while hasattr(context, 'context'):
         context = context.context
-    for context in reversed(context.aq_chain):
+    for context in context.aq_chain:
         workspace = IWorkspace(context, None)
         if workspace is not None:
             return workspace
