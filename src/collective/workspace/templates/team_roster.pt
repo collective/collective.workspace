@@ -25,7 +25,7 @@
           <th tal:repeat="widget view/widgets/values"
               tal:content="widget/field/title"
               tal:attributes="title widget/field/description" />
-          <th tal:condition="view/can_edit_roster" />
+          <th />
         </tr>
       </thead>
       <tbody>

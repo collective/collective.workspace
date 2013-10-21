@@ -1,6 +1,7 @@
 from AccessControl import getSecurityManager
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
+from collections import namedtuple
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform import z2
@@ -14,11 +15,18 @@ from zope.interface import implementer
 from zope.publisher.interfaces.browser import IPublishTraverse
 
 
+Action = namedtuple('Action', "label view_name permission")
+
+
 @implementer(IRosterView)
 class TeamRosterView(AutoFields, DisplayForm):
     """Display the roster as a table."""
 
     row_template = ViewPageTemplateFile('templates/team_roster_row.pt')
+
+    actions = (
+        Action('Edit', 'edit-roster', 'collective.workspace: Manage roster'),
+    )
 
     def __init__(self, context, request):
         self.context = context
