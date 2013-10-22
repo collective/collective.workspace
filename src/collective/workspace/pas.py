@@ -57,7 +57,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         self.title = title
 
     def _iterWorkspaces(self, userid=None):
-        workspaces = IAnnotations(self.REQUEST).get('workspaces')
+        workspaces = IAnnotations(self.REQUEST).get(('workspaces', userid))
         if workspaces is None:
             catalog = getToolByName(self, 'portal_catalog')
             query = {'object_provides': WORKSPACE_INTERFACE}
@@ -67,7 +67,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                 IWorkspace(b._unrestrictedGetObject())
                 for b in catalog.unrestrictedSearchResults(query)
                 ]
-            IAnnotations(self.REQUEST)['workspaces'] = workspaces
+            IAnnotations(self.REQUEST)[('workspaces', userid)] = workspaces
 
         return iter(workspaces)
 
