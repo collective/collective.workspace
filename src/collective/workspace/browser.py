@@ -24,9 +24,11 @@ class TeamRosterView(AutoFields, DisplayForm):
 
     row_template = ViewPageTemplateFile('templates/team_roster_row.pt')
 
-    actions = (
+    row_actions = (
         Action('Edit', 'edit-roster', 'collective.workspace: Manage roster'),
     )
+
+    table_actions = ()
 
     def __init__(self, context, request):
         self.context = context

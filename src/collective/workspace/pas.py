@@ -56,15 +56,16 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         self._id = self.id = id
         self.title = title
 
-    def _iterWorkspaces(self):
+    def _iterWorkspaces(self, userid=None):
         workspaces = IAnnotations(self.REQUEST).get('workspaces')
         if workspaces is None:
             catalog = getToolByName(self, 'portal_catalog')
+            query = {'object_provides': WORKSPACE_INTERFACE}
+            if userid:
+                query['workspace_members'] = userid
             workspaces = [
                 IWorkspace(b._unrestrictedGetObject())
-                for b in catalog.unrestrictedSearchResults(
-                    object_provides=WORKSPACE_INTERFACE
-                    )
+                for b in catalog.unrestrictedSearchResults(query)
                 ]
             IAnnotations(self.REQUEST)['workspaces'] = workspaces
 
@@ -89,7 +90,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         #   If workspace has this user:
         #      Return that user's workspace groups
         groups = []
-        for workspace in self._iterWorkspaces():
+        for workspace in self._iterWorkspaces(principal.getId()):
             member_data = workspace.members.get(principal.getId())
             if member_data is not None:
                 # Membership in the Members group is implied

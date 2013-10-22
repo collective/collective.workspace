@@ -1,9 +1,13 @@
+<td tal:condition="view/table_actions">
+  <input type="checkbox" name="ids:list"
+         tal:attributes="value options/membership/user" />
+</td>
 <td tal:repeat="widget view/widgets/values">
     <div tal:replace="structure widget/render" />
 </td>
 <td>
   <tal:block tal:define="mtool nocall:context/portal_membership"
-  	         tal:repeat="action view/actions">
+  	         tal:repeat="action view/row_actions">
   	 <a tal:condition="python:mtool.checkPermission(action.permission, context)"
   	    tal:attributes="href string:${context/absolute_url}/${action/view_name}/${options/membership/user}"
   	    tal:content="action/label"

@@ -18,24 +18,58 @@
     &#43; Add person to roster
   </a>
 
-  <table class="listing"
-         tal:condition="view/workspace/members">
-      <thead>
-        <tr>
-          <th tal:repeat="widget view/widgets/values"
-              tal:content="widget/field/title"
-              tal:attributes="title widget/field/description" />
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        <tal:block repeat="row_view view/row_views">
-          <tr tal:content="structure row_view" />
-        </tal:block>
-      </tbody>
-  </table>
+  <form method="GET" tal:attributes="action context/absolute_url">
+    <table class="listing"
+           tal:condition="view/workspace/members">
+        <thead>
+          <tr>
+            <th tal:condition="view/table_actions">
+              <input class="select-toggle" type="checkbox" />
+            </th>
+            <th tal:repeat="widget view/widgets/values"
+                tal:content="widget/field/title"
+                tal:attributes="title widget/field/description" />
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          <tal:block repeat="row_view view/row_views">
+            <tr tal:content="structure row_view" />
+          </tal:block>
+        </tbody>
+    </table>
+
+    <div class="roster-actions" tal:condition="view/table_actions">
+      Selected people: <span class="select-count">0</span>
+      <tal:block tal:define="mtool nocall:context/portal_membership"
+                 tal:repeat="action view/table_actions">
+        <input class="roster-action" type="submit"
+               tal:condition="python:mtool.checkPermission(action.permission, context)"
+               tal:attributes="name string:${action/view_name}:method;
+                               value action/label" />
+      </tal:block>
+    </div>
+  </form>
 
 </div>
+
+<script type="text/javascript">
+jQuery(function($) {
+  var update_actions = function() {
+    var count = $('input[name="ids:list"]:checked').length;
+    $('.select-count').html(count);
+    $('.roster-action').prop('disabled', !count);
+  }
+
+  $('input[name="ids:list"]').click(function() {
+    update_actions();
+  });
+  $('.select-toggle').click(function() {
+    $('input[name="ids:list"]').prop('checked', $(this).prop('checked'));
+    update_actions();
+  });
+});
+</script>
 
 </metal:block>
 
