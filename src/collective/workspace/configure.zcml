@@ -80,11 +80,6 @@
       name="TeamManager"
       />
 
-  <subscriber
-      handler=".workspace.handle_creation"
-      for=".interfaces.IHasWorkspace zope.lifecycleevent.interfaces.IObjectCreatedEvent"
-      />
-
   <adapter factory=".catalog.workspace_members" name="workspace_members" />
   <adapter factory=".catalog.null_indexer" name="workspace_members" />
 

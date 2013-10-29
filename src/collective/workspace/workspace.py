@@ -1,6 +1,5 @@
 from BTrees.OOBTree import OOBTree
 from .events import TeamMemberAddedEvent
-from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
 from zope.event import notify
@@ -73,12 +72,3 @@ class Workspace(object):
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
         return membership
-
-
-def handle_creation(object, event):
-    """Make sure a workspace's creator is in its Admins team.
-    """
-    workspace = IWorkspace(object)
-    user_id = object.Creator()
-    if user_id not in workspace.members:
-        workspace.add_to_team(user=user_id, groups=set([u'Admins']))
