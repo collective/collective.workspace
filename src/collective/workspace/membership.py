@@ -76,3 +76,4 @@ class TeamMembership(object):
         del self.workspace.members[self.user]
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
+        self.workspace.context.reindexObject(idxs=['workspace_members'])
