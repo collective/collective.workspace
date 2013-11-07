@@ -142,3 +142,11 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
+        self._finishedRemove = True
+
+    _finishedRemove = False
+
+    def render(self):
+        if self._finishedRemove:
+            return ''
+        return super(TeamMemberEditForm, self).render()

@@ -56,17 +56,18 @@ class TeamMembership(object):
         return deepcopy(field.default)
 
     def update(self, data):
+        old = self.__dict__.copy()
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
         self.workspace.context._team[self.user] = self.__dict__
-        self.handle_modified()
+        self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
 
     def handle_added(self):
         pass
 
-    def handle_modified(self):
+    def handle_modified(self, old):
         pass
 
     def handle_removed(self):
