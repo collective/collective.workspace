@@ -38,7 +38,12 @@
       description="Installs the collective.workspace package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
-  <!-- -*- extra stuff goes here -*- -->
+
+  <genericsetup:importStep
+      name="collective.workspace_various"
+      title="collective.workspace various"
+      description=""
+      handler=".setuphandlers.setup_pas" />
 
   <plone:behavior
       title="Team workspace"
