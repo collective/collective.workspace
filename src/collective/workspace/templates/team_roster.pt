@@ -28,7 +28,8 @@
             </th>
             <th tal:repeat="widget view/widgets/values"
                 tal:content="widget/field/title"
-                tal:attributes="title widget/field/description" />
+                tal:attributes="title widget/field/description;
+                                id string:column-${widget/field/__name__}" />
             <th />
           </tr>
         </thead>
@@ -76,6 +77,9 @@ jQuery(function($) {
       formselector: '#form',
       noform: 'reload'
   });
+
+  // sort
+  $('#column-user').click();
 });
 </script>
 
