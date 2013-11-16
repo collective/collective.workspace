@@ -138,15 +138,17 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             # Add new roster member
             self.workspace.add_to_team(**data)
 
+        self._finished = True
+
     @button.buttonAndHandler(u'Remove', condition=lambda self: self.user_id)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
-        self._finishedRemove = True
+        self._finished = True
 
-    _finishedRemove = False
+    _finished = False
 
     def render(self):
-        if self._finishedRemove:
+        if self._finished:
             return ''
         return super(TeamMemberEditForm, self).render()

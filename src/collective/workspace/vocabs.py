@@ -1,3 +1,4 @@
+from Acquisition import aq_chain
 from collective.workspace.interfaces import IWorkspace
 from Products.CMFCore.utils import getToolByName
 from z3c.formwidget.query.interfaces import IQuerySource
@@ -5,7 +6,6 @@ from zope.component.hooks import getSite
 from zope.interface import classProvides
 from zope.interface import directlyProvides
 from zope.interface import implements
-from zope.globalrequest import getRequest
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
@@ -15,14 +15,14 @@ from zope.schema.vocabulary import SimpleVocabulary
 def find_workspace(context):
     while hasattr(context, 'context'):
         context = context.context
-    for context in context.aq_chain:
+    for context in aq_chain(context):
         workspace = IWorkspace(context, None)
         if workspace is not None:
             return workspace
 
 
 def TeamGroupsVocabulary(context):
-    workspace = find_workspace(getRequest()['PUBLISHED'])
+    workspace = find_workspace(context)
     # Membership in the Members group is implied by
     # inclusion in the roster, so we don't need to show
     # it as an explicit option.

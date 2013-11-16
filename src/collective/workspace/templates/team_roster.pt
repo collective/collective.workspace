@@ -55,18 +55,26 @@
 
 <script type="text/javascript">
 jQuery(function($) {
+  // select checkboxes
   var update_actions = function() {
     var count = $('input[name="ids:list"]:checked').length;
     $('.select-count').html(count);
     $('.roster-action').prop('disabled', !count);
   }
-
   $('input[name="ids:list"]').click(function() {
     update_actions();
   });
   $('.select-toggle').click(function() {
     $('input[name="ids:list"]').prop('checked', $(this).prop('checked'));
     update_actions();
+  });
+
+  // overlays
+  $('.pat-modal').prepOverlay({
+      subtype: 'ajax',
+      filter: common_content_filter,
+      formselector: '#form',
+      noform: 'reload'
   });
 });
 </script>

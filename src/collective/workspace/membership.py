@@ -1,5 +1,6 @@
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
+from collective.workspace.interfaces import IWorkspace
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from plone.autoform import directives as form
@@ -8,6 +9,7 @@ from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
+from zope.component import adapter
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implementer
@@ -78,3 +80,9 @@ class TeamMembership(object):
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])
+
+
+@adapter(ITeamMembership)
+@implementer(IWorkspace)
+def workspace_from_membership(membership):
+    return membership.workspace

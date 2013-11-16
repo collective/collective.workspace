@@ -74,6 +74,10 @@
       name="collective.workspace"
       />
 
+  <adapter
+      factory=".membership.workspace_from_membership"
+      />
+
   <utility
       factory=".pas.TeamManagerRoleDelegation"
       provides="plone.app.workflow.interfaces.ISharingPageRole"

@@ -1,3 +1,4 @@
+[ ] Alphabetize roster
 [ ] Enable PAS plugins
 [X] After created, put creator in admins group
 [X] Members can view roster but not edit
