@@ -13,6 +13,7 @@
       tal:content="view/label">Form title</h1>
 
   <a class="pat-modal"
+     id="workspace-add-user"
      tal:condition="view/can_edit_roster"
      tal:attributes="href string:${context/absolute_url}/edit-roster">
     &#43; Add person to roster

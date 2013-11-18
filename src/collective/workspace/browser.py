@@ -150,5 +150,5 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
 
     def render(self):
         if self._finished:
-            return ''
+            return ' '
         return super(TeamMemberEditForm, self).render()

@@ -51,7 +51,7 @@
       provides=".interfaces.IWorkspace"
       factory=".workspace.Workspace"
       marker=".interfaces.IHasWorkspace"
-      for="plone.dexterity.interfaces.IDexterityContainer"
+      for="plone.dexterity.interfaces.IDexterityContent"
       />
 
   <browser:page

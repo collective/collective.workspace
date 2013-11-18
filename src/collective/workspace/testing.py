@@ -31,6 +31,17 @@ class CollectiveWorkspaceLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.workspace:default')
 
+        # Create a content type with the behavior enabled
+        from plone.dexterity.fti import DexterityFTI
+        fti = DexterityFTI('Workspace')
+        fti.behaviors = (
+            'plone.app.content.interfaces.INameFromTitle',
+            'plone.app.dexterity.behaviors.metadata.IBasic',
+            'collective.workspace.interfaces.IWorkspace',
+            )
+        portal.portal_types._setObject('Workspace', fti)
+
+
 COLLECTIVE_WORKSPACE_FIXTURE = CollectiveWorkspaceLayer()
 COLLECTIVE_WORKSPACE_INTEGRATION_TESTING = IntegrationTesting(
     bases=(COLLECTIVE_WORKSPACE_FIXTURE,),

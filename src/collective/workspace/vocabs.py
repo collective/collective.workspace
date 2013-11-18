@@ -48,8 +48,13 @@ class UsersSource(object):
         return self._users.getUserById(value, None) and True or False
 
     def search(self, query):
+        users = set()
+        for u in self._users.searchUsers(id=query):
+            users.add(u['userid'])
         for u in self._users.searchUsers(fullname=query):
-            yield self.getTerm(u['userid'])
+            users.add(u['userid'])
+        for u in users:
+            yield self.getTerm(u)
 
     def getTerm(self, userid):
         fullname = userid
