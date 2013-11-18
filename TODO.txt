@@ -1,7 +1,33 @@
-[ ] Write test stubs
+[ ] Write tests
+  [ ] Unit test coverage for
+    [ ] workspace.py
+    [ ] membership.py
+    [ ] PAS plugin
+  [ ] UI
+    [ ] Local roles for the workspace's groups show up on the Sharing tab
+  [ ] Permissions
+    [ ] Roster members get these roles: Contributor, Reader, TeamMember
+    [ ] Roster members can view the workspace
+    [ ] Roster members can view the roster
+    [ ] Roster admins get these roles: Contributor, Editor, Reviewer, Reader, TeamManager
+    [ ] Roster admins can view and edit the roster
+  [ ] Events
+    [ ] Adding user to roster with add_to_team fires TeamMemberAddedEvent on the workspace context
+    [ ] Modifying a roster membership with .update() fires TeamMemberModifiedEvent on the workspace context
+    [ ] Removing a roster membership with .remove_from_team() fires TeamMemberRemovedEvent on the workspace
+  [ ] Indexing
+    [ ] Adding user to roster adds it to the workspace_members index
+    [ ] Removing user from roster removes it from the workspace_members index
+  [ ] Extensibility
+    [ ] Custom workspace adapter can override the group -> role mapping
+    [ ] Custom workspace adapter can override the membership schema and factory
+    [ ] Custom membership class can implement handle_added, handle_modified, and handle_removed hooks
+    [ ] TeamRosterView subclass can specify additional table and row actions
+
 [ ] Fix membership object
   [ ] __getattr__ defaults
   [ ] PersistentDict
+
 [ ] Documentation
   [ ] How to set up for a content type
   [ ] Why this approach
@@ -9,8 +35,6 @@
     [ ] Users for a workspace
     [ ] Team memberships for a user
   [ ] How to override stuff
-
-[ ] Roster can be printed
 
 Maybe later:
 [ ] Placeful workflow
@@ -21,3 +45,4 @@ Maybe later:
    [ ] Per content type?
 [ ] Invitations / requests for membership?
 [ ] Email the roster
+[ ] Download/print view of roster (datatables.org)
