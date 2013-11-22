@@ -125,6 +125,9 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def getContent(self):
         return self._content
 
+    def validateInvariants(self, membership):
+        pass
+
     @button.buttonAndHandler(u'Save')
     def handleSave(self, action):
         data, errors = self.extractData()
@@ -136,8 +139,9 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             membership.update(data)
         else:
             # Add new roster member
-            self.workspace.add_to_team(**data)
+            membership = self.workspace.add_to_team(**data)
 
+        self.validateInvariants(membership)
         self._finished = True
 
     @button.buttonAndHandler(u'Remove', condition=lambda self: self.user_id)
