@@ -144,7 +144,11 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         self.validateInvariants(membership)
         self._finished = True
 
-    @button.buttonAndHandler(u'Remove', condition=lambda self: self.user_id)
+    @property
+    def can_remove(self):
+        return self.user_id
+
+    @button.buttonAndHandler(u'Remove', condition=lambda self: self.can_remove)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
