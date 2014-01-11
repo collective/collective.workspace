@@ -163,6 +163,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
     #
 
     def getGroupById(self, group_id, default=None):
+        if not group_id:
+            return default
         if ':' not in group_id:
             return default
         pas = self._getPAS()
