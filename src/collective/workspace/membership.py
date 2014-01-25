@@ -62,7 +62,21 @@ class TeamMembership(object):
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
-        self.workspace.context._team[self.user] = self.__dict__
+        workspace = self.workspace
+        workspace.context._team[self.user] = self.__dict__
+
+        # update counters
+        for name, func in workspace.counters:
+            # The following is based on Python's ability to treat booleans
+            # as integers (1 or 0)...
+            # 0 = no change
+            # 1 = matches now but didn't before
+            # -1 = matched before but doesn't now
+            # Then we use that difference to update the count of how many roster members match.
+            diff = func(data) - func(old)
+            if diff:
+                workspace.context._counters[name].change(diff)
+
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
 

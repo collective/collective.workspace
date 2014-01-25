@@ -1,3 +1,4 @@
+from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from .events import TeamMemberAddedEvent
 from .membership import ITeamMembership
@@ -18,6 +19,19 @@ class Workspace(object):
         if not hasattr(self.context, '_team'):
             self.context._team = OOBTree()
 
+        if not hasattr(self.context, '_counters'):
+            self._recount()
+
+    def _recount(self):
+        counters = {}
+        for name, func in self.counters:
+            counters[name] = Length()
+        for m in self.context._team.itervalues():
+            for name, func in self.counters:
+                if func(m):
+                    counters[name].change(1)
+        self.context._counters = counters
+
     @property
     def membership_schema(self):
         """Returns the schema to be used for editing team memberships.
@@ -33,6 +47,10 @@ class Workspace(object):
         u'Admins': ('Contributor', 'Editor', 'Reviewer',
                     'Reader', 'TeamManager',),
     }
+
+    counters = (
+        ('members', lambda x: True),
+    )
 
     @property
     def members(self):
@@ -65,6 +83,9 @@ class Workspace(object):
             if 'groups' not in data:
                 data['groups'] = set()
             members[user] = data
+            for name, func in self.counters:
+                if func(data):
+                    self.context._counters[name].change(1)
             membership = self.membership_factory(self, data)
             membership.handle_added()
             notify(TeamMemberAddedEvent(self.context, membership))
