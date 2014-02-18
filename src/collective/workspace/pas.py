@@ -141,6 +141,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             obj = brain._unrestrictedGetObject()
             workspace = IWorkspace(obj)
             for group_name in workspace.available_groups:
+                group_name = group_name.encode('utf8')
                 i += 1
                 if max_results is not None and i >= max_results:
                     break
@@ -181,7 +182,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         groups = []
         for workspace in self._iterWorkspaces():
             for group_name in workspace.available_groups:
-                group_id = group_name + ':' + workspace.context.UID()
+                group_id = group_name.encode('utf8') + ':' + workspace.context.UID()
                 groups.append(groups_plugin._findGroup(plugins, group_id))
         return groups
     security.declarePrivate('getGroups')
@@ -191,7 +192,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         for workspace in self._iterWorkspaces():
             for group_name in workspace.available_groups:
                 group_ids.append('%s:%s' %
-                    (group_name, workspace.context.UID()))
+                    (group_name.encode('utf8, workspace.context.UID()))
         return group_ids
     security.declarePrivate('getGroupIds')
 
@@ -200,6 +201,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             return ()
 
         group_name, workspace_uid = group_id.split(':')
+        if isinstance(group_name, str):
+            group_name = group_name.decode('utf8')
         workspace = self._getWorkspace(workspace_uid)
         if workspace is not None:
             return tuple(
