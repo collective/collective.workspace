@@ -147,14 +147,17 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             workspace = IWorkspace(obj)
             for group_name in workspace.available_groups:
                 group_name = group_name.encode('utf8')
-                i += 1
-                if max_results is not None and i >= max_results:
-                    break
 
                 if id and group_name not in target_group_names:
                     continue
-                if title and not any(t == brain.Title for t in title):
+                if title and exact_match and not any(t == brain.Title for t in title):
                     continue
+                if title and not exact_match and not any(t in brain.Title for t in title):
+                    continue
+
+                i += 1
+                if max_results is not None and i >= max_results:
+                    break
 
                 workspace_url = obj.absolute_url() + '/team-roster'
                 info = {
