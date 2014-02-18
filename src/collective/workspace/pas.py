@@ -192,7 +192,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         for workspace in self._iterWorkspaces():
             for group_name in workspace.available_groups:
                 group_ids.append('%s:%s' %
-                    (group_name.encode('utf8, workspace.context.UID()))
+                    (group_name.encode('utf8'), workspace.context.UID()))
         return group_ids
     security.declarePrivate('getGroupIds')
 
