@@ -128,9 +128,14 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             'sort_on': 'sortable_title',
         }
 
-        if id and ':' in id:
-            target_group_name, workspace_uid = id.split(':')
-            query['UID'] = workspace_uid
+        if id:
+            target_group_names = set()
+            uid_query = list()
+            for one_id in id:
+                target_group_name, workspace_uid = one_id.split(':')
+                target_group_names.add(target_group_name)
+                uid_query.append(workspace_uid)
+            query['UID'] = uid_query
 
         elif title:
             query['Title'] = exact_match and title or \
@@ -146,16 +151,20 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                 if max_results is not None and i >= max_results:
                     break
 
-                if id is None or group_name == target_group_name:
-                    workspace_url = obj.absolute_url() + '/team-roster'
-                    info = {
-                        'id': group_name + ':' + brain.UID,
-                        'title': group_name + ': ' + brain.Title,
-                        'pluginid': plugin_id,
-                        'properties_url': workspace_url,
-                        'members_url': workspace_url,
-                    }
-                    group_info.append(info)
+                if id and group_name not in target_group_names:
+                    continue
+                if title and not any(t == brain.Title for t in title):
+                    continue
+
+                workspace_url = obj.absolute_url() + '/team-roster'
+                info = {
+                    'id': group_name + ':' + brain.UID,
+                    'title': group_name + ': ' + brain.Title,
+                    'pluginid': plugin_id,
+                    'properties_url': workspace_url,
+                    'members_url': workspace_url,
+                }
+                group_info.append(info)
         return tuple(group_info)
     security.declarePrivate('enumerateGroups')
 
