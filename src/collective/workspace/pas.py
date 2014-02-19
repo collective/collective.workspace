@@ -152,7 +152,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                     continue
                 if title and exact_match and not any(t == brain.Title for t in title):
                     continue
-                if title and not exact_match and not any(t in brain.Title for t in title):
+                if title and not exact_match and not any(t.lower() in brain.Title.lower() for t in title):
                     continue
 
                 i += 1
