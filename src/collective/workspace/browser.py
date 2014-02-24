@@ -10,9 +10,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
 from z3c.form.form import DisplayForm
 from z3c.form.form import EditForm
+from z3c.form.interfaces import ActionExecutionError
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IPublishTraverse
+import transaction
 
 
 Action = namedtuple('Action', "label view_name permission")
@@ -141,7 +143,13 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             # Add new roster member
             membership = self.workspace.add_to_team(**data)
 
-        self.validateInvariants(membership)
+        try:
+            self.validateInvariants(membership)
+        except ActionExecutionError:
+            # make sure above changes won't be persisted
+            transaction.abort()
+            raise
+
         self._finished = True
 
     @property
