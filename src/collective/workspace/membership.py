@@ -73,7 +73,7 @@ class TeamMembership(object):
             # 1 = matches now but didn't before
             # -1 = matched before but doesn't now
             # Then we use that difference to update the count of how many roster members match.
-            diff = func(data) - func(old)
+            diff = func(self.__dict__) - func(old)
             if diff:
                 workspace.context._counters[name].change(diff)
 
@@ -90,6 +90,10 @@ class TeamMembership(object):
         pass
 
     def remove_from_team(self):
+        workspace = self.workspace
+        for name, func in workspace.counters:
+            if func(self.__dict__):
+                workspace.context._counters[name].change(-1)
         del self.workspace.members[self.user]
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
