@@ -89,7 +89,7 @@ class Workspace(object):
             membership = self.membership_factory(self, data)
             membership.handle_added()
             notify(TeamMemberAddedEvent(self.context, membership))
-            self.context.reindexObject(idxs=['workspace_members'])
+            self.context.reindexObject(idxs=['workspace_members', 'workspace_leaders'])
         else:
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
