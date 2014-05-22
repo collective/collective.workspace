@@ -94,3 +94,15 @@ class Workspace(object):
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
         return membership
+
+    def remove_from_team(self, user):
+        """
+        remove a user from the workspace
+        """
+        members = self.members
+        if user not in members:
+            return
+
+        membership = self.membership_factory(self, members[user])
+        membership.remove_from_team()
+        return membership
