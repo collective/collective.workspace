@@ -18,8 +18,10 @@ from zope.interface import implements
 
 
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
-    'templates/WorkspaceGroupManagerForm', globals(),
-    __name__='manage_addWorkspaceGroupManagerForm')
+    'templates/WorkspaceGroupManagerForm',
+    globals(),
+    __name__='manage_addWorkspaceGroupManagerForm'
+)
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
@@ -32,7 +34,8 @@ def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
         REQUEST['RESPONSE'].redirect(
             '%s/manage_workspace?manage_tabs_message='
             'WorkspaceGroupManager+added.'
-            % dispatcher.absolute_url())
+            % dispatcher.absolute_url()
+        )
 
 
 WORKSPACE_INTERFACE = 'collective.workspace.interfaces.IHasWorkspace'
