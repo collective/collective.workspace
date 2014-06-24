@@ -107,11 +107,14 @@ class Workspace(object):
             membership.update(data)
         return membership
 
-    def remove_from_team(self, user):
+    def remove_from_team(self, userid):
         """
-        remove a user from the workspace
+        Remove a user from the workspace
+
+        :param userid: The id of the user to remove from this workspace
+        :type userid: str
         """
-        membership = self.get(user)
+        membership = self.get(userid)
         if membership is not None:
             membership.remove_from_team()
         return membership
