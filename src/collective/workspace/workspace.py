@@ -71,12 +71,12 @@ class Workspace(object):
         for userid in self.context._team.iterkeys():
             yield self[userid]
 
-    def add_to_team(self, user, groups=None, **kw):
+    def add_to_team(self, userid, groups=None, **kw):
         """
         Makes sure a user is in this workspace's team.
 
-        :param user: The id of the user to add to this workspace
-        :type user: str
+        :param userid: The id of the user to add to this workspace
+        :type userid: str
         :param groups: The set of workspace groups to add this user to
         :type groups: set
         :param kw: Pass user and any other attributes that should be set on the
@@ -87,12 +87,12 @@ class Workspace(object):
             groups = set()
         data = kw.copy()
         data.update({
-            'user': user,
+            'user': userid,
             'groups': groups
         })
         members = self.members
-        if user not in self.members:
-            members[user] = data
+        if userid not in self.members:
+            members[userid] = data
             for name, func in self.counters:
                 if func(data):
                     self.context._counters[name].change(1)
@@ -103,7 +103,7 @@ class Workspace(object):
                 idxs=['workspace_members', 'workspace_leaders']
             )
         else:
-            membership = self.membership_factory(self, self.members[user])
+            membership = self.membership_factory(self, self.members[userid])
             membership.update(data)
         return membership
 
