@@ -71,17 +71,27 @@ class Workspace(object):
         for userid in self.context._team.iterkeys():
             yield self[userid]
 
-    def add_to_team(self, **kw):
-        """Makes sure a user is in this workspace's team.
-
-        Pass user and any other attributes that should be set on the team member.
+    def add_to_team(self, user, groups=None, **kw):
         """
+        Makes sure a user is in this workspace's team.
+
+        :param user: The id of the user to add to this workspace
+        :type user: str
+        :param groups: The set of workspace groups to add this user to
+        :type groups: set
+        :param kw: Pass user and any other attributes that should be set on the
+                   team member.
+        :type kw: dict
+        """
+        if groups is None:
+            groups = set()
         data = kw.copy()
-        user = data['user']
+        data.update({
+            'user': user,
+            'groups': groups
+        })
         members = self.members
         if user not in self.members:
-            if 'groups' not in data:
-                data['groups'] = set()
             members[user] = data
             for name, func in self.counters:
                 if func(data):
@@ -89,7 +99,9 @@ class Workspace(object):
             membership = self.membership_factory(self, data)
             membership.handle_added()
             notify(TeamMemberAddedEvent(self.context, membership))
-            self.context.reindexObject(idxs=['workspace_members', 'workspace_leaders'])
+            self.context.reindexObject(
+                idxs=['workspace_members', 'workspace_leaders']
+            )
         else:
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
