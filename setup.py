@@ -47,6 +47,7 @@ setup(name='collective.workspace',
           'test': [
               'plone.app.robotframework',
               'plone.app.testing',
+              'plone.api',
           ]
       },
       entry_points="""
