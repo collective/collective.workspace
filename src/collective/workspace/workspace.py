@@ -99,10 +99,7 @@ class Workspace(object):
         """
         remove a user from the workspace
         """
-        members = self.members
-        if user not in members:
-            return
-
-        membership = self.membership_factory(self, members[user])
-        membership.remove_from_team()
+        membership = self.get(user)
+        if membership is not None:
+            membership.remove_from_team()
         return membership
