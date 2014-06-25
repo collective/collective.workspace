@@ -71,28 +71,30 @@ class Workspace(object):
         for userid in self.context._team.iterkeys():
             yield self[userid]
 
-    def add_to_team(self, userid, groups=None, **kw):
+    def add_to_team(self, user, groups=None, **kw):
         """
         Makes sure a user is in this workspace's team.
 
-        :param userid: The id of the user to add to this workspace
-        :type userid: str
+        :param user: The id of the user to add to this workspace
+        :type user: str
         :param groups: The set of workspace groups to add this user to
         :type groups: set
         :param kw: Pass user and any other attributes that should be set on the
                    team member.
         :type kw: dict
         """
+        # TODO: user argument should be renamed to userid for clarity
+        #       however doing so now would break backwards compatibility
         if groups is None:
             groups = set()
         data = kw.copy()
         data.update({
-            'user': userid,
+            'user': user,
             'groups': groups
         })
         members = self.members
-        if userid not in self.members:
-            members[userid] = data
+        if user not in self.members:
+            members[user] = data
             for name, func in self.counters:
                 if func(data):
                     self.context._counters[name].change(1)
@@ -103,18 +105,20 @@ class Workspace(object):
                 idxs=['workspace_members', 'workspace_leaders']
             )
         else:
-            membership = self.membership_factory(self, self.members[userid])
+            membership = self.membership_factory(self, self.members[user])
             membership.update(data)
         return membership
 
-    def remove_from_team(self, userid):
+    def remove_from_team(self, user):
         """
         Remove a user from the workspace
 
-        :param userid: The id of the user to remove from this workspace
-        :type userid: str
+        :param user: The id of the user to remove from this workspace
+        :type user: str
         """
-        membership = self.get(userid)
+        # TODO: user argument should be renamed to userid for clarity
+        #       however doing so now would break backwards compatibility
+        membership = self.get(user)
         if membership is not None:
             membership.remove_from_team()
         return membership
