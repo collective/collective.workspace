@@ -32,15 +32,15 @@ class TestWorkspace(unittest.TestCase):
 
     def test_add_to_team(self):
         self.ws.add_to_team(
-            userid=self.user1.getId()
+            user=self.user1.getId()
         )
         self.assertIn(self.user1.getId(), list(self.ws.members))
 
     def test_remove_from_team(self):
         self.ws.add_to_team(
-            userid=self.user1.getId()
+            user=self.user1.getId()
         )
         self.ws.remove_from_team(
-            userid=self.user1.getId()
+            user=self.user1.getId()
         )
         self.assertNotIn(self.user1.getId(), list(self.ws.members))
