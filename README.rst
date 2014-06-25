@@ -7,7 +7,7 @@ collective.workspace
 Introduction
 ------------
 
-collective.workspace is a Plone package to support 'membership' in specific areas of a Plone Site. 
+collective.workspace package for providing 'membership' in specific areas of a Plone Site. 
 
 It allows you to grant people access to areas of content using a membership group rather than local roles for each user, and to delegate control over that group to people who don't have access to the site-wide user/group control panel.
 
