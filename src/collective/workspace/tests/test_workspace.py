@@ -17,24 +17,30 @@ class TestWorkspace(unittest.TestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
         self.request = self.layer['request']
-        behaviors = ('collective.workspace.interfaces.IWorkspace', )
-        self.portal.portal_types.Folder.behaviors = behaviors
-        transaction.commit()
-
-    def test_add_to_team(self):
         z2.login(self.app['acl_users'], SITE_OWNER_NAME)
-        user1 = api.user.create(
+        self.user1 = api.user.create(
             email='user1@example.com',
             username='user1',
             password='123'
         )
-        workspace = api.content.create(
+        self.workspace = api.content.create(
             container=self.portal,
             type='Workspace',
             id='a-workspace'
         )
-        ws = IWorkspace(workspace)
-        ws.add_to_team(
-            user=user1.getId()
+        self.ws = IWorkspace(self.workspace)
+
+    def test_add_to_team(self):
+        self.ws.add_to_team(
+            userid=self.user1.getId()
         )
-        self.assertIn(user1.getId(), list(ws.members))
+        self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_remove_from_team(self):
+        self.ws.add_to_team(
+            userid=self.user1.getId()
+        )
+        self.ws.remove_from_team(
+            userid=self.user1.getId()
+        )
+        self.assertNotIn(self.user1.getId(), list(self.ws.members))
