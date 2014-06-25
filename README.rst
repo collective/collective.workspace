@@ -29,5 +29,5 @@ Basic Installation
 ------------------
 
  * Add collective.workspace to your buildout eggs.
- * Install collective.workspace in the 'Add-ons' section of Plone's Site Setup
- * Enable the behaviour on your dexterity content type (Either using GenericSetup or Site Setup -> Dexterity Content Types)
+ * Install collective.workspace in the 'Add-ons' section of Plone's Site Setup.
+ * Enable the behaviour on your dexterity content type (Either using GenericSetup or Site Setup -> Dexterity Content Types).
