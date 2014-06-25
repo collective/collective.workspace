@@ -1,4 +1,5 @@
-.. contents::
+.. image:: https://travis-ci.org/collective/collective.workspace.svg?branch=master
+    :target: https://travis-ci.org/collective/collective.workspace
 
 collective.workspace
 ====================
