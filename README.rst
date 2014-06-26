@@ -37,7 +37,8 @@ Custom Workspace Groups
 
 The default groups available on a workspace are 'Members' and 'Admins'. You can customise the groups that are available and the default permissions they are given by adding a custom IWorkspace adapter:
 
-```configure.zcml```
+``configure.zcml``
+
 .. code:: xml
 
   <adapter
@@ -46,7 +47,8 @@ The default groups available on a workspace are 'Members' and 'Admins'. You can 
      factory=".adapters.MyWorkspace"
      />
 
-```adapters.py```
+``adapters.py``
+
 .. code:: python
 
   from collective.workspace.workspace import Workspace
