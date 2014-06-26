@@ -85,15 +85,14 @@ class Workspace(object):
         """
         # TODO: user argument should be renamed to userid for clarity
         #       however doing so now would break backwards compatibility
-        if groups is None:
-            groups = set()
         data = kw.copy()
-        data.update({
-            'user': user,
-            'groups': groups
-        })
+        data['user'] = user
+        if groups is not None:
+            data['groups'] = groups
         members = self.members
         if user not in self.members:
+            if groups is None:
+                data['groups'] = set()
             members[user] = data
             for name, func in self.counters:
                 if func(data):
