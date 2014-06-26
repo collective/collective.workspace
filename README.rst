@@ -32,3 +32,33 @@ Basic Installation
  * Install collective.workspace in the 'Add-ons' section of Plone's Site Setup.
  * Enable the behaviour on your dexterity content type (Either using GenericSetup or Site Setup -> Dexterity Content Types).
 
+Custom Workspace Groups
+-----------------------
+
+The default groups available on a workspace are 'Members' and 'Admins'. You can customise the groups that are available and the default permissions they are given by adding a custom IWorkspace adapter:
+
+.. code:: xml
+
+  <adapter
+     for="mypackage.MyContentType"
+     provides="collective.workspace.interfaces.IWorkspace"
+     factory=".adapters.MyWorkspace"
+     />
+
+.. code:: python
+
+  from collective.workspace.workspace import Workspace
+
+  class MyWorkspace(Workspace):
+      """
+      A custom workspace behaviour, based on collective.workspace
+      """
+      # A list of groups to which team members can be assigned.
+      # Maps group name -> roles
+      available_groups = {
+          u'Supervillians': ('Reader', ),
+          u'Superheroes': ('Reader', 'Contributor', 'Reviewer', 'Editor',),
+      }
+
+
+
