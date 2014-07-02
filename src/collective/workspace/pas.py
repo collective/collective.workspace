@@ -18,8 +18,10 @@ from zope.interface import implements
 
 
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
-    'templates/WorkspaceGroupManagerForm', globals(),
-    __name__='manage_addWorkspaceGroupManagerForm')
+    'templates/WorkspaceGroupManagerForm',
+    globals(),
+    __name__='manage_addWorkspaceGroupManagerForm'
+)
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
@@ -32,7 +34,8 @@ def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
         REQUEST['RESPONSE'].redirect(
             '%s/manage_workspace?manage_tabs_message='
             'WorkspaceGroupManager+added.'
-            % dispatcher.absolute_url())
+            % dispatcher.absolute_url()
+        )
 
 
 WORKSPACE_INTERFACE = 'collective.workspace.interfaces.IHasWorkspace'
@@ -50,7 +53,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         IGroupEnumerationPlugin,
         IGroupIntrospection,
         IPropertiesPlugin,
-        )
+    )
 
     def __init__(self, id, title=None):
         self._id = self.id = id
@@ -66,7 +69,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             workspaces = [
                 IWorkspace(b._unrestrictedGetObject())
                 for b in catalog.unrestrictedSearchResults(query)
-                ]
+            ]
             IAnnotations(self.REQUEST)[('workspaces', userid)] = workspaces
 
         return iter(workspaces)
@@ -76,7 +79,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         res = catalog.unrestrictedSearchResults(
             object_provides=WORKSPACE_INTERFACE,
             UID=uid
-            )
+        )
         if not res:
             return
 
@@ -98,7 +101,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                 groups.extend([
                     '%s:%s' % (group_name, workspace.context.UID())
                     for group_name in member_groups
-                    ])
+                ])
         return tuple(groups)
     security.declarePrivate('getGroupsForPrincipal')
 
@@ -222,7 +225,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                 if group_name in data['groups']
                 # Membership in the Members group is implied
                 or group_name == u'Members'
-                )
+            )
         return ()
     security.declarePrivate('getGroupMembers')
 
