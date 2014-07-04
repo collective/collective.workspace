@@ -49,7 +49,10 @@ setup(name='collective.workspace',
               'plone.app.robotframework',
               'plone.app.testing',
               'plone.api',
-          ]
+          ],
+          'develop': [
+              'zest.releaser',
+          ],
       },
       entry_points="""
       # -*- Entry points: -*-
