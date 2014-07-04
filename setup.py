@@ -15,7 +15,7 @@ long_description = (
 
 setup(name='collective.workspace',
       version=version,
-      description="",
+      description="Provide 'membership' in specific areas of a Plone Site",
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
