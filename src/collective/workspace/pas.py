@@ -89,6 +89,11 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
     #   IGroupsPlugin implementation
     #
     def getGroupsForPrincipal(self, principal, request=None):
+        # Skip principals that look like workspace groups,
+        # because we're not going to find them as workspace members
+        if ':' in principal.getId():
+            return ()
+
         # For each workspace:
         #   If workspace has this user:
         #      Return that user's workspace groups
