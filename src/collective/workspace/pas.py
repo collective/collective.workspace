@@ -260,10 +260,11 @@ class WorkspaceRoles(object):
 
     def __init__(self, context):
         self.workspace = IWorkspace(context)
+        self.uid = context.UID()
 
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
-            group_id = group_name.encode('utf8') + ':' + self.workspace.context.UID()
+            group_id = group_name.encode('utf8') + ':' + self.uid
             yield group_id, roles
 
     def getRoles(self, user_id):
