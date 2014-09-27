@@ -91,15 +91,20 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
     def getGroupsForPrincipal(self, principal, request=None):
         # Skip principals that look like workspace groups,
         # because we're not going to find them as workspace members
-        if ':' in principal.getId():
+        user_id = principal.getId()
+        if ':' in user_id:
             return ()
+
+        groups = IAnnotations(self.REQUEST).get(('workspace_groups', user_id))
+        if groups is not None:
+            return groups
 
         # For each workspace:
         #   If workspace has this user:
         #      Return that user's workspace groups
         groups = []
-        for workspace in self._iterWorkspaces(principal.getId()):
-            member_data = workspace.members.get(principal.getId())
+        for workspace in self._iterWorkspaces(user_id):
+            member_data = workspace.members.get(user_id)
             if member_data is not None:
                 # Membership in the Members group is implied
                 member_groups = set(member_data['groups']) | set([u'Members'])
@@ -107,7 +112,9 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                     '%s:%s' % (group_name, workspace.context.UID())
                     for group_name in member_groups
                 ])
-        return tuple(groups)
+        res = tuple(groups)
+        IAnnotations(self.REQUEST)[('workspace_groups', user_id)] = res
+        return res
     security.declarePrivate('getGroupsForPrincipal')
 
     #
