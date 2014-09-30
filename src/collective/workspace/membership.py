@@ -58,12 +58,12 @@ class TeamMembership(object):
             raise AttributeError(name)
         return deepcopy(field.default)
 
-    def _update_groups(self, old_groups, new_groups, removing=False):
+    def _update_groups(self, old_groups, new_groups, add_members=True):
         workspace = self.workspace
         context = workspace.context
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
-        if not removing and u'Members' in workspace.available_groups:
+        if add_members and u'Members' in workspace.available_groups:
             new_groups |= set([u'Members'])
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
@@ -112,7 +112,7 @@ class TeamMembership(object):
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
         del self.workspace.members[self.user]
-        self._update_groups(self.groups, set(), removing=True)
+        self._update_groups(self.groups, set(), add_members=False)
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])
