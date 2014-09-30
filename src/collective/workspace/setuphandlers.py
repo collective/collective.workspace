@@ -18,12 +18,12 @@ def migrate_groups(context):
             object_provides=IHasWorkspace.__identifier__):
         print b.getPath()
         workspace = IWorkspace(b._unrestrictedGetObject())
-        for group_name in (set(workspace.available_groups) | set([u'Members'])):
+        for group_name in set(workspace.available_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), b.UID)
             gtool.addGroup(
                 id=group_id,
                 title='{}: {}'.format(group_name.encode('utf8'), b.Title),
                 )
         for m in workspace:
-            new_groups = m.groups & set(workspace.available_groups)
-            m._update_groups(set(), new_groups)
+            new_groups = (m.groups | set([u'Members'])) & set(workspace.available_groups)
+            m._update_groups(set(), new_groups, add_members=False)
