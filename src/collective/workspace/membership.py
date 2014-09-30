@@ -8,6 +8,7 @@ from plone.autoform import directives as form
 from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
+from Products.CMFCore.utils import getToolByName
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
 from zope.component import adapter
@@ -58,6 +59,18 @@ class TeamMembership(object):
             raise AttributeError(name)
         return deepcopy(field.default)
 
+    def _update_groups(self, old_groups, new_groups):
+        workspace = self.workspace
+        context = workspace.context
+        uid = context.UID()
+        gtool = getToolByName(context, 'portal_groups')
+        for group_name in (new_groups - old_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            gtool.addPrincipalToGroup(self.user, group_id)
+        for group_name in (old_groups - new_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            gtool.removePrincipalFromGroup(self.user, group_id)
+
     def update(self, data):
         old = self.__dict__.copy()
         self.__dict__.update(data)
@@ -79,6 +92,8 @@ class TeamMembership(object):
             if diff:
                 workspace.context._counters[name].change(diff)
 
+        self._update_groups(old['groups'], data['groups'])
+
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
 
@@ -97,6 +112,7 @@ class TeamMembership(object):
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
         del self.workspace.members[self.user]
+        self._update_groups(self.groups, set())
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])
