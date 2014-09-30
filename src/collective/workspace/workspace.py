@@ -1,8 +1,15 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
+from Products.CMFCore.utils import getToolByName
 from .events import TeamMemberAddedEvent
+from .interfaces import IHasWorkspace
+from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
+from zope.component import adapter
+from zope.container.interfaces import IObjectAddedEvent
+from zope.container.interfaces import IObjectRemovedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.event import notify
 
 
@@ -88,11 +95,11 @@ class Workspace(object):
         data = kw.copy()
         data['user'] = user
         if groups is not None:
-            data['groups'] = groups
+            data['groups'] = groups = set(groups)
         members = self.members
         if user not in self.members:
             if groups is None:
-                data['groups'] = set()
+                data['groups'] = groups = set()
             members[user] = data
             for name, func in self.counters:
                 if func(data):
@@ -122,3 +129,35 @@ class Workspace(object):
         if membership is not None:
             membership.remove_from_team()
         return membership
+
+
+@adapter(IHasWorkspace, IObjectAddedEvent)
+def handle_workspace_added(context, event):
+    workspace = IWorkspace(context)
+    gtool = getToolByName(context, 'portal_groups')
+    for group_name in workspace.available_groups:
+        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
+        gtool.addGroup(
+            id=group_id,
+            title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
+            )
+
+
+@adapter(IHasWorkspace, IObjectModifiedEvent)
+def handle_workspace_modified(context, event):
+    workspace = IWorkspace(context)
+    gtool = getToolByName(context, 'portal_groups')
+    for group_name in workspace.available_groups:
+        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
+        group_title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
+        group = gtool.getGroupById(group_id)
+        group.setProperties(title=group_title)
+
+
+@adapter(IHasWorkspace, IObjectRemovedEvent)
+def handle_workspace_removed(context, event):
+    workspace = IWorkspace(context)
+    gtool = getToolByName(context, 'portal_groups')
+    for group_name in workspace.available_groups:
+        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
+        gtool.removeGroup(group_id)

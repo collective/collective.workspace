@@ -3,7 +3,6 @@ import unittest
 from plone import api
 from plone.testing import z2
 from plone.app.testing import SITE_OWNER_NAME
-import transaction
 
 from collective.workspace.testing import \
     COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
@@ -30,11 +29,43 @@ class TestWorkspace(unittest.TestCase):
         )
         self.ws = IWorkspace(self.workspace)
 
+    def test_adding_workspace_creates_groups(self):
+        group = self.portal.portal_groups.getGroupById('Admins:' + self.workspace.UID())
+        self.assertIsNotNone(group)
+
+    def test_renaming_workspace_updates_group_titles(self):
+        self.workspace.setTitle('new title')
+        from zope.lifecycleevent import modified
+        modified(self.workspace)
+        group = self.portal.portal_groups.getGroupById('Admins:' + self.workspace.UID())
+        self.assertEqual(group.getProperty('title'), 'Admins: new title')
+
+    def test_removing_workspace_removes_groups(self):
+        self.portal.manage_delObjects(['a-workspace'])
+        group = self.portal.portal_groups.getGroupById('Admins:' + self.workspace.UID())
+        self.assertIsNone(group)
+
     def test_add_to_team(self):
         self.ws.add_to_team(
             user=self.user1.getId()
         )
         self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_adding_team_member_updates_groups(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(),
+            groups=(u'Admins',),
+            )
+        self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
+        self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
+
+    def test_updating_team_member_updates_groups(self):
+        self.ws.add_to_team(
+            user=self.user1.getId()
+        )
+        self.ws[self.user1.getId()].update({'groups': set([u'Admins'])})
+        self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
+        self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
 
     def test_remove_from_team(self):
         self.ws.add_to_team(
@@ -44,3 +75,14 @@ class TestWorkspace(unittest.TestCase):
             user=self.user1.getId()
         )
         self.assertNotIn(self.user1.getId(), list(self.ws.members))
+
+    def test_removing_team_member_updates_groups(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(),
+            groups=(u'Admins',),
+        )
+        self.ws.remove_from_team(
+            user=self.user1.getId()
+        )
+        self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
+        self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
