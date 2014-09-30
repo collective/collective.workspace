@@ -41,12 +41,6 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-  <genericsetup:importStep
-      name="collective.workspace_various"
-      title="collective.workspace various"
-      description=""
-      handler=".setuphandlers.setup_pas" />
-
   <genericsetup:upgradeStep
     source="0001"
     destination="0002"
@@ -103,10 +97,8 @@
   <adapter factory=".catalog.workspace_members" name="workspace_members" />
   <adapter factory=".catalog.null_indexer" name="workspace_members" />
 
-  <subscriber
-      for=".interfaces.IHasWorkspace
-           *"
-      handler=".events.on_generic_workspace_event"
-      />
+  <subscriber handler=".workspace.handle_workspace_added" />
+  <subscriber handler=".workspace.handle_workspace_modified" />
+  <subscriber handler=".workspace.handle_workspace_removed" />
 
 </configure>

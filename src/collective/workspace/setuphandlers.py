@@ -1,39 +1,17 @@
 from Products.CMFCore.utils import getToolByName
-from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
-from Products.PluggableAuthService.interfaces.plugins import IPropertiesPlugin
 from zope.component.hooks import getSite
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 
 
-def setup_pas(context):
-    if context.readDataFile('collective.workspace.txt') is None:
-        return
-
-    site = getSite()
-    if 'workspace_groups' not in site.acl_users:
-        site.acl_users.manage_addProduct[
-            'collective.workspace'].addWorkspaceGroupManager(
-            'workspace_groups', 'collective.workspace Groups',
-            )
-        activatePluginInterfaces(site, 'workspace_groups')
-
-        # make sure our properties plugin is above mutable_properties
-        plugins = list(site.acl_users.plugins._getPlugins(IPropertiesPlugin))
-        try:
-            target_index = plugins.index('mutable_properties')
-        except ValueError:
-            target_index = 0
-        plugins.remove('workspace_groups')
-        plugins.insert(target_index, 'workspace_groups')
-        site.acl_users.plugins._plugins[IPropertiesPlugin] = tuple(plugins)
-
-
 def migrate_groups(context):
+    site = getSite()
+
     # Remove workspace_groups plugin
+    site.acl_users.workspace_groups.manage_activateInterfaces(())
+    site.acl_users.manage_delObjects(ids=['workspace_groups'])
 
     # Store group membership in the normal group tool
-    site = getSite()
     catalog = getToolByName(site, 'portal_catalog')
     gtool = getToolByName(site, 'portal_groups')
     for b in catalog.unrestrictedSearchResults(
