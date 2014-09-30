@@ -18,7 +18,7 @@ def migrate_groups(context):
             object_provides=IHasWorkspace.__identifier__):
         print b.getPath()
         workspace = IWorkspace(b._unrestrictedGetObject())
-        for group_name in workspace.available_groups:
+        for group_name in (set(workspace.available_groups) | set([u'Members'])):
             group_id = '{}:{}'.format(group_name.encode('utf8'), b.UID)
             gtool.addGroup(
                 id=group_id,

@@ -63,7 +63,7 @@ class TeamMembership(object):
         context = workspace.context
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
-        if not removing:
+        if not removing and u'Members' in workspace.available_groups:
             new_groups |= set([u'Members'])
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
