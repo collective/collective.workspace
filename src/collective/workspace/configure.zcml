@@ -45,6 +45,15 @@
       description=""
       handler=".setuphandlers.setup_pas" />
 
+  <genericsetup:upgradeStep
+    source="0001"
+    destination="0002"
+    title="Transfer group memberships to portal_groups"
+    description="This allows for an optimization of looking up group memberships."
+    profile="collective.workspace:default"
+    handler=".setuphandlers.migrate_groups"
+    />
+
   <plone:behavior
       title="Team workspace"
       description="This item is a team workspace."

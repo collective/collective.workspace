@@ -99,6 +99,7 @@ class Workspace(object):
                     self.context._counters[name].change(1)
             membership = self.membership_factory(self, data)
             membership.handle_added()
+            membership._update_groups(set(), groups)
             notify(TeamMemberAddedEvent(self.context, membership))
             self.context.reindexObject(
                 idxs=['workspace_members', 'workspace_leaders']
