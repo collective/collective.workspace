@@ -92,7 +92,8 @@ class TeamMembership(object):
             if diff:
                 workspace.context._counters[name].change(diff)
 
-        self._update_groups(old['groups'], data['groups'])
+        if 'groups' in data:
+            self._update_groups(old['groups'], data['groups'])
 
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
