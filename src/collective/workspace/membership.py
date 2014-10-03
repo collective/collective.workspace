@@ -71,7 +71,10 @@ class TeamMembership(object):
             gtool.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
-            gtool.removePrincipalFromGroup(self.user, group_id)
+            try:
+                gtool.removePrincipalFromGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                pass
 
     def update(self, data):
         old = self.__dict__.copy()
