@@ -67,7 +67,14 @@ class TeamMembership(object):
             new_groups |= set([u'Members'])
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
-            gtool.addPrincipalToGroup(self.user, group_id)
+            try:
+                gtool.addPrincipalToGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                gtool.addGroup(
+                    id=group_id,
+                    title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
+                )
+                gtool.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
