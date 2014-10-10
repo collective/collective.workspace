@@ -151,7 +151,8 @@ def handle_workspace_modified(context, event):
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         group_title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
         group = gtool.getGroupById(group_id)
-        group.setProperties(title=group_title)
+        if group is not None:
+            group.setProperties(title=group_title)
 
 
 @adapter(IHasWorkspace, IObjectRemovedEvent)
