@@ -85,10 +85,20 @@ class TeamMembership(object):
 
     def update(self, data):
         old = self.__dict__.copy()
+        user_changed = False
+        if 'user' in data and old['user'] != data['user']:
+            # User is changing, so remove the old user from groups.
+            user_changed = True
+            self._update_groups(old['groups'], set())
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
         workspace = self.workspace
+        if user_changed:
+            # User changed; remove old entry in _team
+            del workspace.context._team[old['user']]
+            # Add new user to groups
+            self._update_groups(set(), self.groups)
         workspace.context._team[self.user] = self.__dict__
 
         # update counters
@@ -109,6 +119,8 @@ class TeamMembership(object):
 
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
+        if user_changed:
+            workspace.context.reindexObject(idxs=['workspace_members'])
 
     def handle_added(self):
         pass
