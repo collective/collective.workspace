@@ -86,3 +86,20 @@ class TestWorkspace(unittest.TestCase):
         )
         self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
         self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
+
+    def test_reparent_team_member(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(),
+            groups=(u'Admins',),
+            )
+        user2 = api.user.create(
+            email='user2@example.com',
+            username='user2',
+            password='123'
+        )
+        self.ws[self.user1.getId()].update({'user': user2.getId()})
+        self.assertNotIn(self.user1.getId(), self.workspace._team)
+        self.assertIn(user2.getId(), self.workspace._team)
+        self.assertEqual(self.ws[user2.getId()].user, user2.getId())
+        self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
+        self.assertIn(user2.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
