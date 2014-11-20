@@ -57,6 +57,7 @@ class TeamMembership(object):
         field = self.__class__._schema.get(name, None)
         if field is None:
             raise AttributeError(name)
+        field = field.bind(self)
         return deepcopy(field.default)
 
     def _update_groups(self, old_groups, new_groups, add_members=True):
