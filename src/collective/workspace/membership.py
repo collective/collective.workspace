@@ -87,7 +87,7 @@ class TeamMembership(object):
     @property
     def groups(self):
         groups = self.__dict__.get('groups', set()).copy()
-        groups -= set(u'Members')
+        groups -= set([u'Members'])
         return groups
 
     def update(self, data):
