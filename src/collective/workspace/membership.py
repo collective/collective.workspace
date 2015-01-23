@@ -65,6 +65,7 @@ class TeamMembership(object):
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
         if add_members and u'Members' in workspace.available_groups:
+            new_groups = new_groups.copy()
             new_groups |= set([u'Members'])
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
@@ -82,6 +83,12 @@ class TeamMembership(object):
                 gtool.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
                 pass
+
+    @property
+    def groups(self):
+        groups = self.__dict__.get('groups', set()).copy()
+        groups -= set(u'Members')
+        return groups
 
     def update(self, data):
         old = self.__dict__.copy()
