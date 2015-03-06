@@ -100,5 +100,6 @@
   <subscriber handler=".workspace.handle_workspace_added" />
   <subscriber handler=".workspace.handle_workspace_modified" />
   <subscriber handler=".workspace.handle_workspace_removed" />
+  <subscriber handler=".workspace.handle_principal_deleted" />
 
 </configure>
