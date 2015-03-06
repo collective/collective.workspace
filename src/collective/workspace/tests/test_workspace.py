@@ -103,3 +103,11 @@ class TestWorkspace(unittest.TestCase):
         self.assertEqual(self.ws[user2.getId()].user, user2.getId())
         self.assertNotIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
         self.assertIn(user2.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
+
+    def test_removing_user_removes_workspace_memberships(self):
+        userid = self.user1.getId()
+        self.ws.add_to_team(user=userid)
+        self.assertIn(userid, self.ws.members)
+        api.user.delete(userid)
+        self.assertNotIn(userid, self.ws.members)
+        self.assertNotIn(userid, self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))

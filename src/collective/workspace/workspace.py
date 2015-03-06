@@ -1,12 +1,14 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from Products.CMFCore.utils import getToolByName
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
 from zope.component import adapter
+from zope.component.hooks import getSite
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
@@ -162,3 +164,13 @@ def handle_workspace_removed(context, event):
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         gtool.removeGroup(group_id)
+
+
+@adapter(IPrincipalDeletedEvent)
+def handle_principal_deleted(event):
+    """When a user is deleted, remove it from all workspaces."""
+    principal = event.principal
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    for b in catalog.unrestrictedSearchResults(workspace_members=principal):
+        workspace = IWorkspace(b._unrestrictedGetObject())
+        workspace[principal].remove_from_team()
