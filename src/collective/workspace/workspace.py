@@ -163,7 +163,10 @@ def handle_workspace_removed(context, event):
     gtool = getToolByName(context, 'portal_groups')
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        gtool.removeGroup(group_id)
+        try:
+            gtool.removeGroup(group_id)
+        except KeyError:  # group already doesn't exist
+            pass
 
 
 @adapter(IPrincipalDeletedEvent)
