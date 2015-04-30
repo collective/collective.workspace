@@ -116,3 +116,12 @@ class TestWorkspace(unittest.TestCase):
         api.user.delete(userid)
         self.assertNotIn(userid, self.ws.members)
         self.assertNotIn(userid, self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
+
+    def test_copying_workspace_clears_roster(self):
+        cookie = self.portal.manage_copyObjects(ids=('a-workspace',))
+        self.portal.manage_pasteObjects(cookie)
+
+        self.assertTrue('copy_of_a-workspace' in self.portal)
+        workspace = self.portal['copy_of_a-workspace']
+        self.assertEqual(len(workspace._team), 0)
+        self.assertEqual(workspace._counters['members'](), 0)
