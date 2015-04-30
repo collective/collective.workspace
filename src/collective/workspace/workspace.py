@@ -12,6 +12,7 @@ from zope.component.hooks import getSite
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.event import notify
 
 
@@ -167,6 +168,14 @@ def handle_workspace_removed(context, event):
             gtool.removeGroup(group_id)
         except KeyError:  # group already doesn't exist
             pass
+
+
+@adapter(IHasWorkspace, IObjectCopiedEvent)
+def handle_workspace_copied(context, event):
+    if hasattr(context, '_team'):
+        del context._team
+    if hasattr(context, '_counters'):
+        del context._counters
 
 
 @adapter(IPrincipalDeletedEvent)
