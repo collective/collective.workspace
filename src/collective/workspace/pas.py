@@ -147,9 +147,10 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             target_group_names = set()
             uid_query = list()
             for one_id in id:
-                target_group_name, workspace_uid = one_id.split(':')
-                target_group_names.add(target_group_name)
-                uid_query.append(workspace_uid)
+                if len(one_id.split(':')) > 1:
+                    target_group_name, workspace_uid = one_id.split(':')
+                    target_group_names.add(target_group_name)
+                    uid_query.append(workspace_uid)
             query['UID'] = uid_query
 
         elif title:
