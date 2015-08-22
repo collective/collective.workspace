@@ -46,7 +46,7 @@ setup(name='collective.workspace',
       ],
       extras_require={
           'test': [
-              'plone.app.robotframework',
+              'plone.app.robotframework[debug]',
               'plone.app.testing',
               'plone.api',
           ],
