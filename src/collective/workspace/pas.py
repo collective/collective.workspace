@@ -250,8 +250,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         workspace = self._getWorkspace(workspace_uid)
         if workspace is not None:
             if group_name in workspace.available_groups:
-                return {'title':
-                    group_name + ': ' + workspace.context.Title()}
+                workspace_title = workspace.context.Title().decode('utf8')
+                return {'title': group_name + ': ' + workspace_title}
 
         return {}
     security.declarePrivate('getPropertiesForUser')
