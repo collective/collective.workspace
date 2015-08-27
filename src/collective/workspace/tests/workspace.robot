@@ -32,6 +32,7 @@ Start browser
 a test workspace
     Log in as site owner
     Go to  ${PLONE_URL}
+    Wait until element is visible  css=dl#plone-contentmenu-factories span 
     Open Add New Menu
     Click link  css=.contenttype-workspace
     Input text  form-widgets-IBasic-title  Test Workspace
