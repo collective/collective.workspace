@@ -32,14 +32,16 @@ Start browser
 a test workspace
     Log in as site owner
     Go to  ${PLONE_URL}
-    Open Add New Menu
+    Wait until element is visible  css=dl#plone-contentmenu-factories span 
+    Click element  css=dl#plone-contentmenu-factories span
     Click link  css=.contenttype-workspace
     Input text  form-widgets-IBasic-title  Test Workspace
     Click button  Save
 
 the test user is added to the roster
 	Click link  Roster
-	Click Overlay Link  workspace-add-user
+	Click Link  workspace-add-user
+        Wait until element is visible  css=#form-widgets-user-widgets-query
 	Input text  form-widgets-user-widgets-query  test
 	Wait until page contains  test_user_1_
 	Click element  jquery=li:contains('test_user_1_')
