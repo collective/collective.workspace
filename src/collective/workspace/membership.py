@@ -7,6 +7,7 @@ from plone.autoform import directives as form
 from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
+from Products.CMFCore.utils import getToolByName
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
 from zope.component import adapter
@@ -55,14 +56,60 @@ class TeamMembership(object):
         field = self.__class__._schema.get(name, None)
         if field is None:
             raise AttributeError(name)
+        field = field.bind(self)
         return deepcopy(field.default)
+
+    def _update_groups(self, old_groups, new_groups, add_members=True):
+        workspace = self.workspace
+        context = workspace.context
+        uid = context.UID()
+        gtool = getToolByName(context, 'portal_groups')
+        if u'Members' in workspace.available_groups:
+            if add_members:
+                new_groups = new_groups.copy()
+                new_groups |= set([u'Members'])
+            else:
+                old_groups = old_groups.copy()
+                old_groups |= set([u'Members'])
+        for group_name in (new_groups - old_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            try:
+                gtool.addPrincipalToGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                gtool.addGroup(
+                    id=group_id,
+                    title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
+                )
+                gtool.addPrincipalToGroup(self.user, group_id)
+        for group_name in (old_groups - new_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            try:
+                gtool.removePrincipalFromGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                pass
+
+    @property
+    def groups(self):
+        groups = self.__dict__.get('groups', set()).copy()
+        groups -= set([u'Members'])
+        return groups
 
     def update(self, data):
         old = self.__dict__.copy()
+        user_changed = False
+        if 'user' in data and old['user'] != data['user']:
+            # User is changing, so remove the old user from groups.
+            user_changed = True
+            self._update_groups(old['groups'], set())
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
         workspace = self.workspace
+        if user_changed:
+            # User changed; remove old entry in _team
+            del workspace.context._team[old['user']]
+            # Add new user to groups
+            self._update_groups(set(), self.groups)
         workspace.context._team[self.user] = self.__dict__
 
         # update counters
@@ -77,8 +124,13 @@ class TeamMembership(object):
             if diff:
                 workspace.context._counters[name].change(diff)
 
+        if 'groups' in data:
+            self._update_groups(old['groups'], data['groups'])
+
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
+        if user_changed:
+            workspace.context.reindexObject(idxs=['workspace_members'])
 
     def handle_added(self):
         pass
@@ -95,6 +147,7 @@ class TeamMembership(object):
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
         del self.workspace.members[self.user]
+        self._update_groups(self.groups, set(), add_members=False)
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])

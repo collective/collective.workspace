@@ -42,7 +42,11 @@ WORKSPACE_INTERFACE = 'collective.workspace.interfaces.IHasWorkspace'
 
 
 class WorkspaceGroupManager(BasePlugin, Cacheable):
-    """PAS plugin to dynamically create groups from the team rosters."""
+    """PAS plugin to dynamically create groups from the team rosters.
+
+    Note: This is now obsolete, but the code is still here to facilitate
+    migration.
+    """
 
     meta_type = 'collective.workspace Group Manager'
 

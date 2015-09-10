@@ -39,11 +39,14 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
-  <genericsetup:importStep
-      name="collective.workspace_various"
-      title="collective.workspace various"
-      description=""
-      handler=".setuphandlers.setup_pas" />
+  <genericsetup:upgradeStep
+    source="0001"
+    destination="0002"
+    title="Transfer group memberships to portal_groups"
+    description="This allows for an optimization of looking up group memberships."
+    profile="collective.workspace:default"
+    handler=".setuphandlers.migrate_groups"
+    />
 
   <plone:behavior
       title="Team workspace"
@@ -91,5 +94,11 @@
 
   <adapter factory=".catalog.workspace_members" name="workspace_members" />
   <adapter factory=".catalog.null_indexer" name="workspace_members" />
+
+  <subscriber handler=".workspace.handle_workspace_added" />
+  <subscriber handler=".workspace.handle_workspace_modified" />
+  <subscriber handler=".workspace.handle_workspace_removed" />
+  <subscriber handler=".workspace.handle_workspace_copied" />
+  <subscriber handler=".workspace.handle_principal_deleted" />
 
 </configure>
