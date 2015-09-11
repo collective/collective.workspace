@@ -5,6 +5,7 @@ cache:
   directories:
     - eggs
 python: "2.7"
+firefox: "latest"
 install:
   - python bootstrap.py
   - bin/buildout -N -t 30
