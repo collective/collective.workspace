@@ -65,6 +65,3 @@ The default groups available on a workspace are 'Members' and 'Admins'. You can 
           u'Supervillians': ('Reader', ),
           u'Superheroes': ('Reader', 'Contributor', 'Reviewer', 'Editor',),
       }
-
-
-
