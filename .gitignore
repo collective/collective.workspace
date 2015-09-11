@@ -5,6 +5,7 @@ develop-eggs
 include
 lib
 parts
+var
 *.egg
 output.xml
 report.html
