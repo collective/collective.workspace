@@ -5,6 +5,7 @@ Changelog
 ----------------
 
 - Added msgids with i18n domain
+- Added German translation
 
 
 1.1 (2014-07-04)
