@@ -1,3 +1,4 @@
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
@@ -20,18 +21,18 @@ class ITeamMembership(model.Schema):
 
     form.widget(user=AutocompleteFieldWidget)
     user = schema.Choice(
-        title=u'User',
+        title=_(u'User'),
         source=UsersSource,
     )
 
     position = schema.TextLine(
-        title=u'Position',
+        title=_(u'Position'),
         required=False,
     )
 
     form.widget(groups=CheckBoxFieldWidget)
     groups = schema.Set(
-        title=u'Groups',
+        title=_(u'Groups'),
         required=False,
         value_type=schema.Choice(
             vocabulary='collective.workspace.groups',

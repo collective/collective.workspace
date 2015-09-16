@@ -4,7 +4,7 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added msgids with i18n domain
 
 
 1.1 (2014-07-04)

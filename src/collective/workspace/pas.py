@@ -12,6 +12,7 @@ from Products.PluggableAuthService.interfaces.plugins \
     import IPropertiesPlugin
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from borg.localrole.interfaces import ILocalRoleProvider
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import implements
@@ -283,5 +284,5 @@ class WorkspaceRoles(object):
 
 # Make the MemberAdmin role show up on the Sharing tab
 class TeamManagerRoleDelegation(object):
-    title = u"Can edit roster"
+    title = _(u"Can edit roster")
     required_permission = "collective.workspace: Manage roster"

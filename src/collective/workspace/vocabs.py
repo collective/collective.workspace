@@ -1,4 +1,5 @@
 from Acquisition import aq_chain
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from Products.CMFCore.utils import getToolByName
 from z3c.formwidget.query.interfaces import IQuerySource
@@ -27,7 +28,11 @@ def TeamGroupsVocabulary(context):
     # inclusion in the roster, so we don't need to show
     # it as an explicit option.
     groups = set(workspace.available_groups.keys()) - set([u'Members'])
-    return SimpleVocabulary.fromValues(sorted(groups))
+    items = []
+    for group in groups:
+        items.append(SimpleTerm(group, group, _(group)))
+    return SimpleVocabulary(items)
+
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
 
 
