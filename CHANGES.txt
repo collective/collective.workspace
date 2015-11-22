@@ -4,7 +4,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- This release switches to using Plone 5-compatible widgets.
+  It is no longer compatible with Plone 4.
+  [davisagli]
 
 
 1.1 (2014-07-04)
