@@ -10,7 +10,6 @@
   <five:registerPackage package="." initialize=".initialize" />
 
   <include package="plone.app.dexterity" />
-  <include package="plone.formwidget.autocomplete" />
 
   <permission
       id="collective.workspace.ViewRoster"
@@ -82,6 +81,7 @@
   <adapter
       factory=".membership.workspace_from_membership"
       />
+  <adapter factory=".membership.ChoiceAjaxSelectWidgetConverter" />
 
   <utility
       factory=".pas.TeamManagerRoleDelegation"

@@ -3,22 +3,25 @@ from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
+from plone.app.z3cform.interfaces import IAjaxSelectWidget
+from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from plone.autoform import directives as form
-from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.converter import BaseDataConverter
 from zope import schema
 from zope.component import adapter
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implementer
+from zope.schema.interfaces import IChoice
 
 
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    form.widget(user=AutocompleteFieldWidget)
+    form.widget('user', AjaxSelectFieldWidget)
     user = schema.Choice(
         title=u'User',
         source=UsersSource,
@@ -37,6 +40,23 @@ class ITeamMembership(model.Schema):
             vocabulary='collective.workspace.groups',
         ),
     )
+
+
+# We need a pass-through widget converter
+# because the default one tries to look up the form value
+# as a vocabulary token without binding the field first.
+@adapter(IChoice, IAjaxSelectWidget)
+class ChoiceAjaxSelectWidgetConverter(BaseDataConverter):
+
+    def toWidgetValue(self, value):
+        if not value:
+            return self.field.missing_value
+        return value
+
+    def toFieldValue(self, value):
+        if not value:
+            return self.field.missing_value
+        return value
 
 
 @implementer(ITeamMembership)

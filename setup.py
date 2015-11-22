@@ -41,7 +41,6 @@ setup(name='collective.workspace',
       install_requires=[
           'setuptools',
           'plone.app.dexterity',
-          'plone.formwidget.autocomplete',
           # -*- Extra requirements: -*-
       ],
       extras_require={
