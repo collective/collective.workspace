@@ -1,3 +1,4 @@
+from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
@@ -122,6 +123,8 @@ class TeamMembership(object):
             # Then we use that difference to update the count of how many roster members match.
             diff = func(self.__dict__) - func(old)
             if diff:
+                if name not in workspace.context._counters:
+                    workspace.context._counters = Length()
                 workspace.context._counters[name].change(diff)
 
         if 'groups' in data:

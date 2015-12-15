@@ -106,6 +106,8 @@ class Workspace(object):
             members[user] = data
             for name, func in self.counters:
                 if func(data):
+                    if name not in self.context._counters:
+                        self.context._counters[name] = Length()
                     self.context._counters[name].change(1)
             membership = self.membership_factory(self, data)
             membership.handle_added()
