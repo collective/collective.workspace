@@ -125,7 +125,7 @@ class TeamMembership(object):
             diff = func(self.__dict__) - func(old)
             if diff:
                 if name not in workspace.context._counters:
-                    workspace.context._counters = Length()
+                    workspace.context._counters[name] = Length()
                 workspace.context._counters[name].change(diff)
 
         if 'groups' in data:
