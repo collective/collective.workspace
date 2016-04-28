@@ -95,6 +95,12 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         if ':' in user_id:
             return ()
 
+        # Temporary workarround, for some reason in Plone 5 there's no
+        # self.REQUEST while creating a dexterity resource and we are in
+        # ++add++something URL
+        if not getattr(self, 'REQUEST', False):
+            return ()
+
         groups = IAnnotations(self.REQUEST).get(('workspace_groups', user_id))
         if groups is not None:
             return groups
