@@ -10,4 +10,5 @@ var
 output.xml
 report.html
 log.html
-
+*.pyc
+*.egg-info
