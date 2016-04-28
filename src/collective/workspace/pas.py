@@ -249,6 +249,12 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
 
     def getPropertiesForUser(self, user, request=None):
         group_id = user.getId()
+
+        # Sometimes we are getting None from user.getId for some reason, just
+        # bypass it if it happens
+        if group_id is None:
+            return {}
+
         if ':' not in group_id:
             return {}
 
