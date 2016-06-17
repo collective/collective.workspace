@@ -16,6 +16,7 @@
       id="collective.workspace.ViewRoster"
       title="collective.workspace: View roster">
     <role name="TeamMember" />
+    <role name="TeamGuest" />
     <role name="TeamManager" />
     <role name="Site Administrator" />
     <role name="Manager" />
