@@ -2,6 +2,7 @@
 <rolemap>
   <roles>
     <role name="TeamManager"/>
+    <role name="TeamGuest"/>
   </roles>
   <permissions>
   </permissions>
