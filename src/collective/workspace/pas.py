@@ -108,7 +108,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             if member_data is not None:
                 member_groups = set(member_data['groups'])
                 # Membership in the Members group is implied, but only for
-                # members who anre not Guests
+                # members who are not Guests
                 if "Guests" not in member_data['groups']:
                     member_groups = member_groups | set([u'Members'])
                 groups.extend([
