@@ -12,4 +12,4 @@ report.html
 log.html
 /src/collective.workspace.egg-info
 *.pyc
-
+/share
