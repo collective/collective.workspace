@@ -106,8 +106,11 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         for workspace in self._iterWorkspaces(user_id):
             member_data = workspace.members.get(user_id)
             if member_data is not None:
-                # Membership in the Members group is implied
-                member_groups = set(member_data['groups']) | set([u'Members'])
+                member_groups = set(member_data['groups'])
+                # Membership in the Members group is implied, but only for
+                # members who are not Guests
+                if "Guests" not in member_data['groups']:
+                    member_groups = member_groups | set([u'Members'])
                 groups.extend([
                     '%s:%s' % (group_name, workspace.context.UID())
                     for group_name in member_groups
