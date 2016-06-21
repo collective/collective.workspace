@@ -93,4 +93,10 @@
   <adapter factory=".catalog.workspace_members" name="workspace_members" />
   <adapter factory=".catalog.null_indexer" name="workspace_members" />
 
+  <subscriber
+      for=".interfaces.IHasWorkspace
+           *"
+      handler=".events.on_generic_workspace_event"
+      />
+
 </configure>

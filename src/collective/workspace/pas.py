@@ -14,6 +14,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation.interfaces import IAnnotations
+from zope.globalrequest import getRequest
 from zope.interface import implements
 
 
@@ -22,6 +23,25 @@ manage_addWorkspaceGroupManagerForm = PageTemplateFile(
     globals(),
     __name__='manage_addWorkspaceGroupManagerForm'
 )
+
+
+def purge_workspace_pas_cache():
+    ''' Completely removes workspace pas plugin cache from the request
+    '''
+    request = getRequest()
+    if not request:
+        return
+
+    annotations = IAnnotations(request)
+    keys_to_remove = [
+        key for key in annotations.keys()
+        if (
+            key and
+            isinstance(key, tuple) and
+            key[0] in ('workspaces', 'workspace_groups')
+        )
+    ]
+    map(annotations.pop, keys_to_remove)
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
