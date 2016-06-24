@@ -7,6 +7,7 @@ Changelog
 - Added msgids with i18n domain
 - Added German translation
 - Show status message after adding, removing or updating a roster entry.
+- Fixed issues with caching
 
 
 1.2 (2016-06-22)
