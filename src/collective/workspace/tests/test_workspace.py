@@ -4,10 +4,12 @@ from plone import api
 from plone.testing import z2
 from plone.app.testing import SITE_OWNER_NAME
 
+from collective.workspace.pas import WorkspaceGroupManager
 from collective.workspace.testing import \
     COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation import IAnnotations
+from zope.annotation.attribute import AttributeAnnotations
 from zope.component.interfaces import ObjectEvent
 from zope.event import notify
 
@@ -88,3 +90,29 @@ class TestWorkspace(unittest.TestCase):
         roles = member.getRolesInContext(self.workspace)
         self.assertIn('TeamGuest', roles)
         self.assertNotIn('TeamMember', roles)
+
+    def test_cache_fallback(self):
+        ''' Check if we can have a cache even if the plugin is not properly
+        initialized
+        '''
+        # Ususally the plugin is working fine
+        workspace_groups = self.portal.acl_users.workspace_groups
+        self.assertIsInstance(
+            IAnnotations(workspace_groups.REQUEST),
+            AttributeAnnotations
+        )
+        self.assertIsInstance(
+            workspace_groups.get_cache(),
+            AttributeAnnotations
+        )
+
+        # but we can have border line cases where it is going to fail
+        wgm = WorkspaceGroupManager('test', title='Test')
+        self.assertEqual(
+            wgm.REQUEST,
+            '<Special Object Used to Force Acquisition>'
+        )
+        self.assertIsInstance(
+            wgm.get_cache(),
+            dict
+        )

@@ -80,8 +80,25 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         self._id = self.id = id
         self.title = title
 
+    def get_cache(self):
+        ''' Get the request cache more reliably
+
+        Infact in the __init__ is not setting properly self.REQUEST.
+        In case this happen fallback to use
+        `zope.globalrequest.getRequest` method.
+
+        If this also fails, just return a dict,
+        which is good enough for our use case.
+        '''
+        try:
+            request = self.REQUEST
+        except AttributeError:
+            request = getRequest()
+        return IAnnotations(request, {})
+
     def _iterWorkspaces(self, userid=None):
-        workspaces = IAnnotations(self.REQUEST).get(('workspaces', userid))
+        cache = self.get_cache()
+        workspaces = cache.get(('workspaces', userid))
         if workspaces is None:
             catalog = getToolByName(self, 'portal_catalog')
             query = {'object_provides': WORKSPACE_INTERFACE}
@@ -91,7 +108,7 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                 IWorkspace(b._unrestrictedGetObject())
                 for b in catalog.unrestrictedSearchResults(query)
             ]
-            IAnnotations(self.REQUEST)[('workspaces', userid)] = workspaces
+            cache[('workspaces', userid)] = workspaces
 
         return iter(workspaces)
 
@@ -116,7 +133,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         if ':' in user_id:
             return ()
 
-        groups = IAnnotations(self.REQUEST).get(('workspace_groups', user_id))
+        cache = self.get_cache()
+        groups = cache.get(('workspace_groups', user_id))
         if groups is not None:
             return groups
 
@@ -137,8 +155,9 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
                     for group_name in member_groups
                 ])
         res = tuple(groups)
-        IAnnotations(self.REQUEST)[('workspace_groups', user_id)] = res
+        cache[('workspace_groups', user_id)] = res
         return res
+
     security.declarePrivate('getGroupsForPrincipal')
 
     #
