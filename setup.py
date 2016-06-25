@@ -8,9 +8,9 @@ long_description = (
     'Contributors\n'
     '============\n'
     + '\n' +
-    open('CONTRIBUTORS.txt').read()
+    open('CONTRIBUTORS.rst').read()
     + '\n' +
-    open('CHANGES.txt').read()
+    open('CHANGES.rst').read()
     + '\n')
 
 setup(name='collective.workspace',

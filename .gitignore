@@ -5,8 +5,12 @@ develop-eggs
 include
 lib
 parts
+var
 *.egg
+*.egg-info
 output.xml
 report.html
 log.html
-
+/src/collective.workspace.egg-info
+*.pyc
+/share

@@ -1,0 +1,9 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+
+#: ./templates/team_roster_row.pt
+msgid "Edit"
+msgstr ""

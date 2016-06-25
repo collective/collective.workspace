@@ -67,6 +67,15 @@ class TestWorkspace(unittest.TestCase):
         self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Members:' + self.workspace.UID()))
         self.assertIn(self.user1.getId(), self.portal.portal_groups.getGroupMembers('Admins:' + self.workspace.UID()))
 
+    def test_local_role_team_member(self):
+        self.ws.add_to_team(
+            user=self.user1.getId()
+        )
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        roles = member.getRolesInContext(self.workspace)
+        self.assertIn('TeamMember', roles)
+
     def test_remove_from_team(self):
         self.ws.add_to_team(
             user=self.user1.getId()
@@ -120,3 +129,19 @@ class TestWorkspace(unittest.TestCase):
         workspace = self.portal['copy_of_a-workspace']
         self.assertEqual(len(workspace._team), 0)
         self.assertEqual(workspace._counters['members'](), 0)
+
+    def test_add_guest_to_team(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_guest_has_no_team_member_role(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        roles = member.getRolesInContext(self.workspace)
+        self.assertIn('TeamGuest', roles)
+        self.assertNotIn('TeamMember', roles)

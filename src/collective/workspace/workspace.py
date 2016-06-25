@@ -54,6 +54,7 @@ class Workspace(object):
     # Maps group name -> roles
     available_groups = {
         u'Members': ('Contributor', 'Reader', 'TeamMember'),
+        u'Guests': ('TeamGuest', ),
         u'Admins': ('Contributor', 'Editor', 'Reviewer',
                     'Reader', 'TeamManager',),
     }

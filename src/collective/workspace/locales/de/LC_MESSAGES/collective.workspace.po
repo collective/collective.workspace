@@ -1,0 +1,68 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2015-09-16 15:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: ./templates/team_roster.pt:15
+msgid "&#43; Add person to roster"
+msgstr "&#43; Person zum Team hinzufügen"
+
+#: ./browser.py:119
+msgid "Add Person to Roster"
+msgstr "Eine Person zum Team hinzufügen"
+
+#: ./pas.py:287
+msgid "Can edit roster"
+msgstr "Kann Team bearbeiten"
+
+#: ./browser.py:156
+msgid "Changes saved"
+msgstr "Änderungen gespeichert"
+
+#: ./templates/team_roster_row.pt
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: ./membership.py:35
+msgid "Groups"
+msgstr "Gruppen"
+
+#: ./membership.py:29
+msgid "Position"
+msgstr "Position"
+
+#: ./browser.py:162
+msgid "Remove"
+msgstr "Entfernen"
+
+#: ./browser.py:44
+msgid "Roster: ${title}"
+msgstr "Teamverwaltung: ${title}"
+
+#: ./browser.py:135
+msgid "Save"
+msgstr "Speichern"
+
+#: ./templates/team_roster.pt:46
+msgid "Selected people:"
+msgstr "Ausgewählte Personen"
+
+#: ./membership.py:24
+msgid "User"
+msgstr "Benutzer"
+
+#: ./browser.py:167
+msgid "User removed"
+msgstr "Benutzer entfernt"
+

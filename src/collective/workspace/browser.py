@@ -1,6 +1,8 @@
 from AccessControl import getSecurityManager
+from Products.statusmessages.interfaces import IStatusMessage
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
+from collective.workspace import workspaceMessageFactory as _
 from collections import namedtuple
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
@@ -39,7 +41,7 @@ class TeamRosterView(AutoFields, DisplayForm):
 
     @property
     def label(self):
-        return 'Roster: ' + self.context.Title()
+        return _(u'Roster: ${title}', mapping={'title': self.context.Title()})
 
     @lazy_property
     def schema(self):
@@ -114,7 +116,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             else:
                 return self.user_id
         else:
-            return u'Add Person to Roster'
+            return _(u'Add Person to Roster')
 
     @lazy_property
     def _content(self):
@@ -130,11 +132,13 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def validateInvariants(self, membership):
         pass
 
-    @button.buttonAndHandler(u'Save')
+    @button.buttonAndHandler(_(u'Save'))
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
             return
+
+        status = _(u'Changes saved')
 
         if self.user_id:
             membership = self.getContent()
@@ -142,6 +146,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         else:
             # Add new roster member
             membership = self.workspace.add_to_team(**data)
+            status = _(u'User added')
 
         try:
             self.validateInvariants(membership)
@@ -151,16 +156,18 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             raise
 
         self._finished = True
+        IStatusMessage(self.request).addStatusMessage(status, 'info')
 
     @property
     def can_remove(self):
         return self.user_id
 
-    @button.buttonAndHandler(u'Remove', condition=lambda self: self.can_remove)
+    @button.buttonAndHandler(_(u'Remove'), condition=lambda self: self.can_remove)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
         self._finished = True
+        IStatusMessage(self.request).addStatusMessage(_(u"User removed"), "info")
 
     _finished = False
 

@@ -8,6 +8,7 @@
     i18n_domain="collective.workspace">
 
   <five:registerPackage package="." initialize=".initialize" />
+  <i18n:registerTranslations directory="locales" />
 
   <include package="plone.app.dexterity" />
   <include package="plone.formwidget.autocomplete" />
@@ -16,6 +17,7 @@
       id="collective.workspace.ViewRoster"
       title="collective.workspace: View roster">
     <role name="TeamMember" />
+    <role name="TeamGuest" />
     <role name="TeamManager" />
     <role name="Site Administrator" />
     <role name="Manager" />

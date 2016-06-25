@@ -12,8 +12,10 @@ from Products.PluggableAuthService.interfaces.plugins \
     import IPropertiesPlugin
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from borg.localrole.interfaces import ILocalRoleProvider
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation.interfaces import IAnnotations
+from zope.globalrequest import getRequest
 from zope.interface import implements
 
 
@@ -110,8 +112,11 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         for workspace in self._iterWorkspaces(user_id):
             member_data = workspace.members.get(user_id)
             if member_data is not None:
-                # Membership in the Members group is implied
-                member_groups = set(member_data['groups']) | set([u'Members'])
+                member_groups = set(member_data['groups'])
+                # Membership in the Members group is implied, but only for
+                # members who are not Guests
+                if "Guests" not in member_data['groups']:
+                    member_groups = member_groups | set([u'Members'])
                 groups.extend([
                     '%s:%s' % (group_name, workspace.context.UID())
                     for group_name in member_groups
@@ -254,8 +259,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         workspace = self._getWorkspace(workspace_uid)
         if workspace is not None:
             if group_name in workspace.available_groups:
-                return {'title':
-                    group_name + ': ' + workspace.context.Title()}
+                workspace_title = workspace.context.Title().decode('utf8')
+                return {'title': group_name + ': ' + workspace_title}
 
         return {}
     security.declarePrivate('getPropertiesForUser')
@@ -287,5 +292,5 @@ class WorkspaceRoles(object):
 
 # Make the MemberAdmin role show up on the Sharing tab
 class TeamManagerRoleDelegation(object):
-    title = u"Can edit roster"
+    title = _(u"Can edit roster")
     required_permission = "collective.workspace: Manage roster"

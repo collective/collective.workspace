@@ -1,4 +1,5 @@
 from BTrees.Length import Length
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
@@ -22,18 +23,18 @@ class ITeamMembership(model.Schema):
 
     form.widget(user=AutocompleteFieldWidget)
     user = schema.Choice(
-        title=u'User',
+        title=_(u'User'),
         source=UsersSource,
     )
 
     position = schema.TextLine(
-        title=u'Position',
+        title=_(u'Position'),
         required=False,
     )
 
     form.widget(groups=CheckBoxFieldWidget)
     groups = schema.Set(
-        title=u'Groups',
+        title=_(u'Groups'),
         required=False,
         value_type=schema.Choice(
             vocabulary='collective.workspace.groups',
@@ -66,7 +67,7 @@ class TeamMembership(object):
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
         if u'Members' in workspace.available_groups:
-            if add_members:
+            if add_members and 'Guests' not in new_groups:
                 new_groups = new_groups.copy()
                 new_groups |= set([u'Members'])
             else:

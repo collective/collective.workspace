@@ -15,7 +15,8 @@
   <a class="pat-modal"
      id="workspace-add-user"
      tal:condition="view/can_edit_roster"
-     tal:attributes="href string:${context/absolute_url}/edit-roster">
+     tal:attributes="href string:${context/absolute_url}/edit-roster"
+     i18n:translate="" i18n:domain="collective.workspace">
     &#43; Add person to roster
   </a>
 
@@ -42,13 +43,14 @@
     </table>
 
     <div class="roster-actions" tal:condition="view/table_actions">
-      Selected people: <span class="select-count">0</span>
+      <span i18n:translate="" i18n:domain="collective.workspace">Selected people:</span> <span class="select-count">0</span>
       <tal:block tal:define="mtool nocall:context/portal_membership"
                  tal:repeat="action view/table_actions">
         <input class="roster-action" type="submit"
                tal:condition="python:mtool.checkPermission(action.permission, context)"
                tal:attributes="name string:${action/view_name}:method;
-                               value action/label" />
+                               value action/label"
+               i18n:attributes="value"/>
       </tal:block>
     </div>
   </form>
