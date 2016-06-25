@@ -3,13 +3,13 @@ from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
+from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from plone.autoform import directives as form
 from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
-from Products.CMFCore.utils import getToolByName
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
 from zope.component import adapter
@@ -65,7 +65,7 @@ class TeamMembership(object):
         workspace = self.workspace
         context = workspace.context
         uid = context.UID()
-        gtool = getToolByName(context, 'portal_groups')
+        workspace_groups = get_workspace_groups_plugin(context)
         if u'Members' in workspace.available_groups:
             if add_members and 'Guests' not in new_groups:
                 new_groups = new_groups.copy()
@@ -76,18 +76,18 @@ class TeamMembership(object):
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
-                gtool.addPrincipalToGroup(self.user, group_id)
+                workspace_groups.addPrincipalToGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
-                gtool.addGroup(
-                    id=group_id,
+                workspace_groups.addGroup(
+                    group_id,
                     title='{}: {}'.format(
                         group_name.encode('utf8'), context.Title()),
                 )
-                gtool.addPrincipalToGroup(self.user, group_id)
+                workspace_groups.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
-                gtool.removePrincipalFromGroup(self.user, group_id)
+                workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
                 pass
 
