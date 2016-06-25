@@ -177,8 +177,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
             query['UID'] = uid_query
 
         elif title:
-            query['Title'] = exact_match and title or \
-                             ['%s*' % t for t in title if t]
+            query['Title'] = exact_match and title or [
+                '%s*' % t for t in title if t]
 
         i = 0
         for brain in catalog.unrestrictedSearchResults(query):
@@ -189,9 +189,11 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
 
                 if id and group_name not in target_group_names:
                     continue
-                if title and exact_match and not any(t == brain.Title for t in title):
+                if (title and exact_match and
+                        not any(t == brain.Title for t in title)):
                     continue
-                if title and not exact_match and not any(t.lower() in brain.Title.lower() for t in title):
+                if (title and not exact_match and not
+                        any(t.lower() in brain.Title.lower() for t in title)):
                     continue
 
                 i += 1
@@ -233,7 +235,8 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         groups = []
         for workspace in self._iterWorkspaces():
             for group_name in workspace.available_groups:
-                group_id = group_name.encode('utf8') + ':' + workspace.context.UID()
+                group_id = (
+                    group_name.encode('utf8') + ':' + workspace.context.UID())
                 groups.append(groups_plugin._findGroup(plugins, group_id))
         return groups
     security.declarePrivate('getGroups')
@@ -242,8 +245,9 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         group_ids = []
         for workspace in self._iterWorkspaces():
             for group_name in workspace.available_groups:
-                group_ids.append('%s:%s' %
-                    (group_name.encode('utf8'), workspace.context.UID()))
+                group_ids.append(
+                    '%s:%s' % (
+                        group_name.encode('utf8'), workspace.context.UID()))
         return group_ids
     security.declarePrivate('getGroupIds')
 

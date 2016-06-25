@@ -48,6 +48,7 @@ COLLECTIVE_WORKSPACE_INTEGRATION_TESTING = IntegrationTesting(
     name="CollectiveWorkspaceLayer:Integration"
 )
 COLLECTIVE_WORKSPACE_ROBOT_TESTING = FunctionalTesting(
-    bases=(COLLECTIVE_WORKSPACE_FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER),
+    bases=(
+        COLLECTIVE_WORKSPACE_FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER),
     name="CollectiveWorkspaceLayer:Robot"
 )
