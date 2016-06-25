@@ -17,6 +17,7 @@
       id="collective.workspace.ViewRoster"
       title="collective.workspace: View roster">
     <role name="TeamMember" />
+    <role name="TeamGuest" />
     <role name="TeamManager" />
     <role name="Site Administrator" />
     <role name="Manager" />
@@ -92,5 +93,11 @@
 
   <adapter factory=".catalog.workspace_members" name="workspace_members" />
   <adapter factory=".catalog.null_indexer" name="workspace_members" />
+
+  <subscriber
+      for=".interfaces.IHasWorkspace
+           *"
+      handler=".events.on_generic_workspace_event"
+      />
 
 </configure>

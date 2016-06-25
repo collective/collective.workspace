@@ -3,11 +3,13 @@ import unittest
 from plone import api
 from plone.testing import z2
 from plone.app.testing import SITE_OWNER_NAME
-import transaction
 
 from collective.workspace.testing import \
     COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from collective.workspace.interfaces import IWorkspace
+from zope.annotation import IAnnotations
+from zope.component.interfaces import ObjectEvent
+from zope.event import notify
 
 
 class TestWorkspace(unittest.TestCase):
@@ -30,11 +32,37 @@ class TestWorkspace(unittest.TestCase):
         )
         self.ws = IWorkspace(self.workspace)
 
+    def test_cache_purging_on_event(self):
+        ''' Test we can purge the cache
+        '''
+        # Reading permissions on a workspace taints the annotations
+        api.user.get_permissions(user=self.user1, obj=self.ws)
+        IAnnotations(self.request)
+        self.assertIn(
+            ('workspaces', 'user1'),
+            IAnnotations(self.request),
+        )
+        # Notifying an event on the workspace cleans up the annotations
+        notify(ObjectEvent(self.workspace))
+        self.assertNotIn(
+            ('workspaces', 'user1'),
+            IAnnotations(self.request),
+        )
+
     def test_add_to_team(self):
         self.ws.add_to_team(
             user=self.user1.getId()
         )
         self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_local_role_team_member(self):
+        self.ws.add_to_team(
+            user=self.user1.getId()
+        )
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        roles = member.getRolesInContext(self.workspace)
+        self.assertIn('TeamMember', roles)
 
     def test_remove_from_team(self):
         self.ws.add_to_team(
@@ -44,3 +72,19 @@ class TestWorkspace(unittest.TestCase):
             user=self.user1.getId()
         )
         self.assertNotIn(self.user1.getId(), list(self.ws.members))
+
+    def test_add_guest_to_team(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_guest_has_no_team_member_role(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        roles = member.getRolesInContext(self.workspace)
+        self.assertIn('TeamGuest', roles)
+        self.assertNotIn('TeamMember', roles)

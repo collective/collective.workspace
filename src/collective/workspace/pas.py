@@ -15,6 +15,7 @@ from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation.interfaces import IAnnotations
+from zope.globalrequest import getRequest
 from zope.interface import implements
 
 
@@ -23,6 +24,25 @@ manage_addWorkspaceGroupManagerForm = PageTemplateFile(
     globals(),
     __name__='manage_addWorkspaceGroupManagerForm'
 )
+
+
+def purge_workspace_pas_cache():
+    ''' Completely removes workspace pas plugin cache from the request
+    '''
+    request = getRequest()
+    if not request:
+        return
+
+    annotations = IAnnotations(request)
+    keys_to_remove = [
+        key for key in annotations.keys()
+        if (
+            key and
+            isinstance(key, tuple) and
+            key[0] in ('workspaces', 'workspace_groups')
+        )
+    ]
+    map(annotations.pop, keys_to_remove)
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
@@ -107,8 +127,11 @@ class WorkspaceGroupManager(BasePlugin, Cacheable):
         for workspace in self._iterWorkspaces(user_id):
             member_data = workspace.members.get(user_id)
             if member_data is not None:
-                # Membership in the Members group is implied
-                member_groups = set(member_data['groups']) | set([u'Members'])
+                member_groups = set(member_data['groups'])
+                # Membership in the Members group is implied, but only for
+                # members who are not Guests
+                if "Guests" not in member_data['groups']:
+                    member_groups = member_groups | set([u'Members'])
                 groups.extend([
                     '%s:%s' % (group_name, workspace.context.UID())
                     for group_name in member_groups
