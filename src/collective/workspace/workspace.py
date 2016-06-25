@@ -7,6 +7,7 @@ from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
+from .pas import get_workspace_groups_plugin
 from zope.component import adapter
 from zope.component.hooks import getSite
 from zope.container.interfaces import IObjectAddedEvent
@@ -140,23 +141,24 @@ class Workspace(object):
 @adapter(IHasWorkspace, IObjectAddedEvent)
 def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
-    gtool = getToolByName(context, 'portal_groups')
+    workspace_groups = get_workspace_groups_plugin(context)
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        gtool.addGroup(
-            id=group_id,
+        workspace_groups.addGroup(
+            group_id,
             title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
-            )
+        )
 
 
 @adapter(IHasWorkspace, IObjectModifiedEvent)
 def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
-    gtool = getToolByName(context, 'portal_groups')
+    workspace_groups = get_workspace_groups_plugin(context)
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        group_title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
-        group = gtool.getGroupById(group_id)
+        group_title = '{}: {}'.format(
+            group_name.encode('utf8'), context.Title())
+        group = workspace_groups.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
 
@@ -164,11 +166,11 @@ def handle_workspace_modified(context, event):
 @adapter(IHasWorkspace, IObjectRemovedEvent)
 def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
-    gtool = getToolByName(context, 'portal_groups')
+    workspace_groups = get_workspace_groups_plugin(context)
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         try:
-            gtool.removeGroup(group_id)
+            workspace_groups.removeGroup(group_id)
         except KeyError:  # group already doesn't exist
             pass
 

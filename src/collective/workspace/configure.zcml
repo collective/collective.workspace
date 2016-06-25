@@ -7,6 +7,7 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="collective.workspace">
 
+  <five:registerPackage package="." initialize=".initialize" />
   <i18n:registerTranslations directory="locales" />
 
   <include package="plone.app.dexterity" />
@@ -40,10 +41,16 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:importStep
+      name="collective.workspace_various"
+      title="collective.workspace various"
+      description=""
+      handler=".setuphandlers.setup_pas" />
+
   <genericsetup:upgradeStep
     source="0001"
     destination="0002"
-    title="Transfer group memberships to portal_groups"
+    title="Store workspace groups in workspace_groups plugin"
     description="This allows for an optimization of looking up group memberships."
     profile="collective.workspace:default"
     handler=".setuphandlers.migrate_groups"

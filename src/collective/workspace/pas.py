@@ -1,7 +1,55 @@
+from AccessControl import ClassSecurityInfo
+from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
+from Products.CMFCore.utils import getToolByName
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implements
+
+
+manage_addWorkspaceGroupManagerForm = PageTemplateFile(
+    'templates/WorkspaceGroupManagerForm',
+    globals(),
+    __name__='manage_addWorkspaceGroupManagerForm'
+)
+
+
+def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
+    """ Add a WorkspaceGroupManager to a Pluggable Auth Service. """
+
+    pmm = WorkspaceGroupManager(id, title)
+    dispatcher._setObject(pmm.getId(), pmm)
+
+    if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect(
+            '%s/manage_workspace?manage_tabs_message='
+            'WorkspaceGroupManager+added.'
+            % dispatcher.absolute_url()
+        )
+
+
+class WorkspaceGroupManager(GroupManager):
+    """PAS plugin to store groups created from the team rosters.
+
+    We use a separate plugin from the standard Plone group plugin
+    so that enumeration can optionally be disabled to prevent
+    workspace groups from showing up in sharing and the groups
+    control panel.
+    """
+
+    meta_type = 'collective.workspace Group Manager'
+
+    security = ClassSecurityInfo()
+
+
+InitializeClass(WorkspaceGroupManager)
+
+
+def get_workspace_groups_plugin(context):
+    acl_users = getToolByName(context, 'acl_users')
+    return acl_users.workspace_groups
 
 
 class WorkspaceRoles(object):
