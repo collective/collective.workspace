@@ -162,12 +162,14 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def can_remove(self):
         return self.user_id
 
-    @button.buttonAndHandler(_(u'Remove'), condition=lambda self: self.can_remove)
+    @button.buttonAndHandler(
+        _(u'Remove'), condition=lambda self: self.can_remove)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
         self._finished = True
-        IStatusMessage(self.request).addStatusMessage(_(u"User removed"), "info")
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"User removed"), "info")
 
     _finished = False
 

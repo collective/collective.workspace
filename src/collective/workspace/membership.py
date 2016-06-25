@@ -80,7 +80,8 @@ class TeamMembership(object):
             except KeyError:  # group doesn't exist
                 gtool.addGroup(
                     id=group_id,
-                    title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
+                    title='{}: {}'.format(
+                        group_name.encode('utf8'), context.Title()),
                 )
                 gtool.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
@@ -121,7 +122,8 @@ class TeamMembership(object):
             # 0 = no change
             # 1 = matches now but didn't before
             # -1 = matched before but doesn't now
-            # Then we use that difference to update the count of how many roster members match.
+            # Then we use that difference to update the count
+            # of how many roster members match.
             diff = func(self.__dict__) - func(old)
             if diff:
                 if name not in workspace.context._counters:

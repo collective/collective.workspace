@@ -1,7 +1,8 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from Products.CMFCore.utils import getToolByName
-from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
+from Products.PluggableAuthService.interfaces.events import \
+    IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
@@ -155,7 +156,8 @@ def handle_workspace_modified(context, event):
     gtool = getToolByName(context, 'portal_groups')
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        group_title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
+        group_title = '{}: {}'.format(
+            group_name.encode('utf8'), context.Title())
         group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
