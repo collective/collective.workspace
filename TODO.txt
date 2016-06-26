@@ -1,3 +1,6 @@
+[ ] Update changelog / release notes / docs
+[ ] plone.app.widgets?
+
 [ ] Write tests
   [ ] Unit test coverage for
     [ ] workspace.py
