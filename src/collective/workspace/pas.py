@@ -43,6 +43,16 @@ class WorkspaceGroupManager(GroupManager):
 
     security = ClassSecurityInfo()
 
+    def addGroup(self, group_id, *args, **kw):
+        # Make sure we save the group title via a properties plugin
+        res = super(WorkspaceGroupManager, self).addGroup(
+            group_id, *args, **kw)
+        if kw:
+            gtool = getToolByName(self, 'portal_groups')
+            group = gtool.getGroupById(group_id)
+            group.setGroupProperties(kw)
+        return res
+
 
 InitializeClass(WorkspaceGroupManager)
 
