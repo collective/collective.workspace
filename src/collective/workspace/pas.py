@@ -9,6 +9,9 @@ from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implements
 
 
+PLUGIN_ID = 'workspace_groups'
+
+
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
     'templates/WorkspaceGroupManagerForm',
     globals(),
@@ -69,7 +72,7 @@ InitializeClass(WorkspaceGroupManager)
 
 def get_workspace_groups_plugin(context):
     acl_users = getToolByName(context, 'acl_users')
-    return acl_users.workspace_groups
+    return getattr(acl_users, PLUGIN_ID)
 
 
 class WorkspaceRoles(object):
