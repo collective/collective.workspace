@@ -53,6 +53,16 @@ class WorkspaceGroupManager(GroupManager):
             group.setGroupProperties(kw)
         return res
 
+    # disable editing workspace groups via control panel
+
+    def allowDeletePrincipal(self, principal_id):
+        return False
+
+    def allowGroupAdd(self, user_id, group_id):
+        return False
+
+    def allowGroupRemove(self, user_id, group_id):
+        return False
 
 InitializeClass(WorkspaceGroupManager)
 
