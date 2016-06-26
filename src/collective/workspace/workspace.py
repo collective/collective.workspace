@@ -154,12 +154,12 @@ def handle_workspace_added(context, event):
 @adapter(IHasWorkspace, IObjectModifiedEvent)
 def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
-    workspace_groups = get_workspace_groups_plugin(context)
+    gtool = getToolByName(context, 'portal_groups')
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         group_title = '{}: {}'.format(
             group_name.encode('utf8'), context.Title())
-        group = workspace_groups.getGroupById(group_id)
+        group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
 
