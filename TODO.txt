@@ -24,10 +24,6 @@
     [ ] Custom membership class can implement handle_added, handle_modified, and handle_removed hooks
     [ ] TeamRosterView subclass can specify additional table and row actions
 
-[ ] Fix membership object
-  [ ] __getattr__ defaults
-  [ ] PersistentDict
-
 [ ] Documentation
   [ ] How to set up for a content type
   [ ] Why this approach
