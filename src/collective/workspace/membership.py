@@ -4,6 +4,7 @@ from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.pas import get_workspace_groups_plugin
+from collective.workspace.pas import add_group
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from plone.autoform import directives as form
@@ -78,11 +79,9 @@ class TeamMembership(object):
             try:
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
-                workspace_groups.addGroup(
-                    group_id,
-                    title='{}: {}'.format(
-                        group_name.encode('utf8'), context.Title()),
-                )
+                title = '{}: {}'.format(
+                    group_name.encode('utf8'), context.Title())
+                add_group(context, group_id, title)
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)

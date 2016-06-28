@@ -4,6 +4,7 @@ from zope.component.hooks import getSite
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .pas import get_workspace_groups_plugin
+from .pas import add_group
 import logging
 
 logger = logging.getLogger('collective.workspace')
@@ -41,10 +42,8 @@ def migrate_groups(context):
         workspace = IWorkspace(b._unrestrictedGetObject())
         for group_name in set(workspace.available_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), b.UID)
-            workspace_groups.addGroup(
-                group_id,
-                title='{}: {}'.format(group_name.encode('utf8'), b.Title),
-            )
+            title = '{}: {}'.format(group_name.encode('utf8'), b.Title)
+            add_group(site, group_id, title)
         for m in workspace:
             groups = m.groups
             new_groups = groups & set(workspace.available_groups)
