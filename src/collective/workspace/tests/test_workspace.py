@@ -125,3 +125,28 @@ class TestWorkspace(unittest.TestCase):
         workspace = self.portal['copy_of_a-workspace']
         self.assertEqual(len(workspace._team), 0)
         self.assertEqual(workspace._counters['members'](), 0)
+
+    def test_add_guest_to_team(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        self.assertIn(self.user1.getId(), list(self.ws.members))
+
+    def test_guest_has_no_team_member_role(self):
+        self.ws.add_to_team(
+            user=self.user1.getId(), groups=['Guests']
+        )
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        roles = member.getRolesInContext(self.workspace)
+        self.assertIn('TeamGuest', roles)
+        self.assertNotIn('TeamMember', roles)
+
+    def test_creating_and_removing_plone_groups_is_possible(self):
+        test_group_id = 'My workspace testers'
+        self.assertIsNone(api.group.get(test_group_id))
+        api.group.create(test_group_id)
+        group = api.group.get(test_group_id)
+        self.assertEquals(group.getId(), test_group_id)
+        api.group.delete(test_group_id)
+        self.assertIsNone(api.group.get(test_group_id))
