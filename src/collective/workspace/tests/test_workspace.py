@@ -184,3 +184,12 @@ class TestWorkspace(unittest.TestCase):
         roles = member.getRolesInContext(self.workspace)
         self.assertIn('TeamGuest', roles)
         self.assertNotIn('TeamMember', roles)
+
+    def test_creating_and_removing_plone_groups_is_possible(self):
+        test_group_id = 'My workspace testers'
+        self.assertIsNone(api.group.get(test_group_id))
+        api.group.create(test_group_id)
+        group = api.group.get(test_group_id)
+        self.assertEquals(group.getId(), test_group_id)
+        api.group.delete(test_group_id)
+        self.assertIsNone(api.group.get(test_group_id))
