@@ -46,16 +46,6 @@ class WorkspaceGroupManager(GroupManager):
 
     security = ClassSecurityInfo()
 
-    def addGroup(self, group_id, *args, **kw):
-        # Make sure we save the group title via a properties plugin
-        res = super(WorkspaceGroupManager, self).addGroup(
-            group_id, *args, **kw)
-        if kw:
-            gtool = getToolByName(self, 'portal_groups')
-            group = gtool.getGroupById(group_id)
-            group.setGroupProperties(kw)
-        return res
-
     # disable editing workspace groups via control panel
 
     def allowDeletePrincipal(self, principal_id):
@@ -73,6 +63,15 @@ InitializeClass(WorkspaceGroupManager)
 def get_workspace_groups_plugin(context):
     acl_users = getToolByName(context, 'acl_users')
     return getattr(acl_users, PLUGIN_ID)
+
+
+def add_group(context, group_id, title):
+    workspace_groups = get_workspace_groups_plugin(context)
+    if group_id not in workspace_groups._groups:
+        workspace_groups.addGroup(group_id)
+    gtool = getToolByName(context, 'portal_groups')
+    group = gtool.getGroupById(group_id)
+    group.setGroupProperties({'title': title})
 
 
 class WorkspaceRoles(object):
