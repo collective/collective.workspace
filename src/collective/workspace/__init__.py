@@ -2,9 +2,9 @@
 from zope.i18nmessageid import MessageFactory
 workspaceMessageFactory = MessageFactory('collective.workspace')
 
-from AccessControl.Permissions import add_user_folders
-from collective.workspace import pas
-from Products.PluggableAuthService import registerMultiPlugin
+from AccessControl.Permissions import add_user_folders  # noqa
+from collective.workspace import pas  # noqa
+from Products.PluggableAuthService import registerMultiPlugin  # noqa
 
 
 registerMultiPlugin(pas.WorkspaceGroupManager.meta_type)
