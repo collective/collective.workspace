@@ -5,3 +5,9 @@ graft src
 recursive-include docs LICENSE.*
 
 global-exclude *.pyc
+
+# added by check_manifest.py
+include *.py
+include .travis.yml
+include buildout.cfg
+include development.cfg
