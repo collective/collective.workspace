@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3 (unreleased)
+1.3 (2016-06-29)
 ----------------
 
 - Added msgids with i18n domain
