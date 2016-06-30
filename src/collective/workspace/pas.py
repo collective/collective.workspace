@@ -46,16 +46,24 @@ class WorkspaceGroupManager(GroupManager):
 
     security = ClassSecurityInfo()
 
-    # disable editing workspace groups via control panel
-
-    def allowDeletePrincipal(self, principal_id):
-        return False
+    def removeGroup(self, group_id):
+        # Don't break when PAS asks to delete a non-workspace group.
+        if self.getGroupInfo(group_id) is None:
+            return
+        return super(WorkspaceGroupManager, self).removeGroup(group_id)
 
     def allowGroupAdd(self, user_id, group_id):
+        # Disable adding to workspace groups in control panel
         return False
 
     def allowGroupRemove(self, user_id, group_id):
+        # Disable removing from workspace groups in control panel.
         return False
+
+    def allowDeletePrincipal(self, principal_id):
+        # Disable deleting workspace groups in control panel.
+        return False
+
 
 InitializeClass(WorkspaceGroupManager)
 
