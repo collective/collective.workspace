@@ -1,10 +1,6 @@
-# This needs to go first because it's used from the `pas` module.
-from zope.i18nmessageid import MessageFactory
-workspaceMessageFactory = MessageFactory('collective.workspace')
-
-from AccessControl.Permissions import add_user_folders  # noqa
-from collective.workspace import pas  # noqa
-from Products.PluggableAuthService import registerMultiPlugin  # noqa
+from AccessControl.Permissions import add_user_folders
+from collective.workspace import pas
+from Products.PluggableAuthService import registerMultiPlugin
 
 
 registerMultiPlugin(pas.WorkspaceGroupManager.meta_type)

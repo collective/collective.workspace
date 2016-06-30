@@ -1,8 +1,8 @@
 from AccessControl import getSecurityManager
 from Products.statusmessages.interfaces import IStatusMessage
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace import workspaceMessageFactory as _
 from collections import namedtuple
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm

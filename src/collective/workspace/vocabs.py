@@ -1,5 +1,5 @@
 from Acquisition import aq_chain
-from collective.workspace import workspaceMessageFactory as _
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from Products.CMFCore.utils import getToolByName
 from z3c.formwidget.query.interfaces import IQuerySource

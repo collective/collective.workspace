@@ -1,6 +1,7 @@
 from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.pas import add_group
