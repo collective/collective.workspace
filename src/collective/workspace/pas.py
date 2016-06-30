@@ -1,7 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
-from collective.workspace import workspaceMessageFactory as _
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
