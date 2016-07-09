@@ -187,5 +187,8 @@ def handle_principal_deleted(event):
     principal = event.principal
     catalog = api.portal.get_tool('portal_catalog')
     for b in catalog.unrestrictedSearchResults(workspace_members=principal):
-        workspace = IWorkspace(b._unrestrictedGetObject())
-        workspace[principal].remove_from_team()
+        workspace = IWorkspace(b._unrestrictedGetObject(), None)
+        if workspace is not None:
+            membership = workspace.get(principal)
+            if membership is not None:
+                membership.remove_from_team()
