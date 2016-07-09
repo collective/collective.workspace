@@ -36,12 +36,19 @@ Cleanup:
 - Removed code related to caching (`purge_workspace_pas_cache`) that is no longer used.
 
 
-1.3 (unreleased)
+1.4 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
+1.3 (2016-06-29)
 ----------------
 
 - Added msgids with i18n domain
 - Added German translation
 - Show status message after adding, removing or updating a roster entry.
+- Fixed issues with caching
 
 
 1.2 (2016-06-22)
