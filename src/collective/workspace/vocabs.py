@@ -1,9 +1,8 @@
 from Acquisition import aq_chain
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from z3c.formwidget.query.interfaces import IQuerySource
-from zope.component.hooks import getSite
 from zope.interface import classProvides
 from zope.interface import directlyProvides
 from zope.interface import implements
@@ -47,7 +46,7 @@ class UsersSource(object):
 
     def __init__(self, context):
         self._context = context
-        self._users = getToolByName(getSite(), "acl_users")
+        self._users = api.portal.get_tool('acl_users')
 
     def __contains__(self, value):
         return self._users.getUserById(value, None) and True or False

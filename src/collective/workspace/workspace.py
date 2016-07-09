@@ -1,7 +1,7 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
-from Products.CMFCore.utils import getToolByName
-from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
+from Products.PluggableAuthService.interfaces.events import \
+    IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
@@ -9,8 +9,8 @@ from .membership import ITeamMembership
 from .membership import TeamMembership
 from .pas import get_workspace_groups_plugin
 from .pas import add_group
+from plone import api
 from zope.component import adapter
-from zope.component.hooks import getSite
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
@@ -145,13 +145,13 @@ def handle_workspace_added(context, event):
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
-        add_group(context, group_id, title)
+        add_group(group_id, title)
 
 
 @adapter(IHasWorkspace, IObjectModifiedEvent)
 def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
-    gtool = getToolByName(context, 'portal_groups')
+    gtool = api.portal.get_tool('portal_groups')
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         group_title = '{}: {}'.format(
@@ -164,7 +164,7 @@ def handle_workspace_modified(context, event):
 @adapter(IHasWorkspace, IObjectRemovedEvent)
 def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
-    workspace_groups = get_workspace_groups_plugin(context)
+    workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
         group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
         try:
@@ -185,7 +185,7 @@ def handle_workspace_copied(context, event):
 def handle_principal_deleted(event):
     """When a user is deleted, remove it from all workspaces."""
     principal = event.principal
-    catalog = getToolByName(getSite(), 'portal_catalog')
+    catalog = api.portal.get_tool('portal_catalog')
     for b in catalog.unrestrictedSearchResults(workspace_members=principal):
         workspace = IWorkspace(b._unrestrictedGetObject())
         workspace[principal].remove_from_team()

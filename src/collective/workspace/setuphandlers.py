@@ -1,4 +1,4 @@
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 from zope.component.hooks import getSite
 from .interfaces import IHasWorkspace
@@ -24,9 +24,7 @@ def setup_pas(context):
 
 
 def migrate_groups(context):
-    site = getSite()
-
-    workspace_groups = get_workspace_groups_plugin(site)
+    workspace_groups = get_workspace_groups_plugin()
     if hasattr(workspace_groups, '_groups'):
         # Already migrated
         return
@@ -35,7 +33,7 @@ def migrate_groups(context):
     workspace_groups.__init__(workspace_groups.id, workspace_groups.title)
 
     # Store existing workspace group membership in workspace_groups
-    catalog = getToolByName(site, 'portal_catalog')
+    catalog = api.portal.get_tool('portal_catalog')
     for b in catalog.unrestrictedSearchResults(
             object_provides=IHasWorkspace.__identifier__):
         logger.info('Migrating workspace groups for {}'.format(b.getPath()))
@@ -43,7 +41,7 @@ def migrate_groups(context):
         for group_name in set(workspace.available_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), b.UID)
             title = '{}: {}'.format(group_name.encode('utf8'), b.Title)
-            add_group(site, group_id, title)
+            add_group(group_id, title)
         for m in workspace:
             groups = m.groups
             new_groups = groups & set(workspace.available_groups)
