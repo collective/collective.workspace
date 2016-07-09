@@ -86,6 +86,21 @@ class TestWorkspace(unittest.TestCase):
                 'Admins:' + self.workspace.UID()),
         )
 
+    def test_direct_set_of_membership_property_is_blocked(self):
+        self.ws.add_to_team(
+            user=self.user1.getId()
+        )
+        try:
+            self.ws[self.user1.getId()].position = u'Tester'
+        except Exception as e:
+            self.assertEqual(
+                str(e),
+                'Setting membership properties directly is not supported. '
+                'Use the `update` method instead.'
+            )
+        else:
+            self.fail('Expected exception')
+
     def test_local_role_team_member(self):
         self.ws.add_to_team(
             user=self.user1.getId()

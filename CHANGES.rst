@@ -15,6 +15,9 @@ Changed functionality:
 - The Members group is no longer displayed as an option in the UI,
   since it is assigned automatically.
 - Copying and pasting a workspace now empties the roster of the copy.
+- Trying to set a membership attribute directly now raises an exception.
+  Membership attributes should be updated using the `update` method
+  to make sure that all changes are properly accounted for.
 
 Bugs fixed:
 
@@ -25,6 +28,8 @@ Bugs fixed:
 - When a user is deleted from the site,
   their memberships in any workspaces are now also deleted.
 - New workspace counters can now be added without breaking existing workspaces.
+- Tools are now looked up using `plone.api.portal.get_tool`,
+  which helps in some cases where objects are not properly acquisition-wrapped.
 
 Cleanup:
 
