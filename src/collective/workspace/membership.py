@@ -62,6 +62,14 @@ class TeamMembership(object):
         field = field.bind(self)
         return deepcopy(field.default)
 
+    def __setattr__(self, name, value):
+        if name not in ('workspace', '__dict__'):
+            raise Exception(
+                'Setting membership properties directly is not supported. '
+                'Use the `update` method instead.'
+            )
+        super(TeamMembership, self).__setattr__(name, value)
+
     def _update_groups(self, old_groups, new_groups, add_members=True):
         workspace = self.workspace
         context = workspace.context
