@@ -66,7 +66,7 @@ class TeamMembership(object):
         workspace = self.workspace
         context = workspace.context
         uid = context.UID()
-        workspace_groups = get_workspace_groups_plugin(context)
+        workspace_groups = get_workspace_groups_plugin()
         if u'Members' in workspace.available_groups:
             if add_members and 'Guests' not in new_groups:
                 new_groups = new_groups.copy()
@@ -81,7 +81,7 @@ class TeamMembership(object):
             except KeyError:  # group doesn't exist
                 title = '{}: {}'.format(
                     group_name.encode('utf8'), context.Title())
-                add_group(context, group_id, title)
+                add_group(group_id, title)
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)

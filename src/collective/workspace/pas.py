@@ -3,7 +3,7 @@ from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implements
@@ -68,16 +68,16 @@ class WorkspaceGroupManager(GroupManager):
 InitializeClass(WorkspaceGroupManager)
 
 
-def get_workspace_groups_plugin(context):
-    acl_users = getToolByName(context, 'acl_users')
+def get_workspace_groups_plugin():
+    acl_users = api.portal.get_tool('acl_users')
     return getattr(acl_users, PLUGIN_ID)
 
 
-def add_group(context, group_id, title):
-    workspace_groups = get_workspace_groups_plugin(context)
+def add_group(group_id, title):
+    workspace_groups = get_workspace_groups_plugin()
     if group_id not in workspace_groups._groups:
         workspace_groups.addGroup(group_id)
-    gtool = getToolByName(context, 'portal_groups')
+    gtool = api.portal.get_tool('portal_groups')
     group = gtool.getGroupById(group_id)
     group.setGroupProperties({'title': title})
 
