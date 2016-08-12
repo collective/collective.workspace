@@ -61,6 +61,11 @@ class Workspace(object):
                     'Reader', 'TeamManager',),
     }
 
+    # Add everyone on the roster to the Members group
+    auto_groups = {
+        u'Members': lambda x: True,
+    }
+
     counters = (
         ('members', lambda x: True),
     )
