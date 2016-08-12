@@ -60,18 +60,22 @@ class TeamMembership(object):
         field = field.bind(self)
         return deepcopy(field.default)
 
-    def _update_groups(self, old_groups, new_groups, add_members=True):
+    def _update_groups(self, old_groups, new_groups, add_auto_groups=True):
         workspace = self.workspace
         context = workspace.context
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
-        if u'Members' in workspace.available_groups:
-            if add_members:
-                new_groups = new_groups.copy()
-                new_groups |= set([u'Members'])
+
+        # Determine automatic groups
+        for name, condition in workspace.auto_groups.items():
+            if name not in workspace.available_groups:
+                raise Exception('Unknown workspace group: {}'.format(name))
+            if add_auto_groups and condition(self):
+                new_groups = new_groups.copy() | set([name])
             else:
-                old_groups = old_groups.copy()
-                old_groups |= set([u'Members'])
+                old_groups = old_groups.copy() | set([name])
+
+        # Add to new groups
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
@@ -82,6 +86,8 @@ class TeamMembership(object):
                     title='{}: {}'.format(group_name.encode('utf8'), context.Title()),
                 )
                 gtool.addPrincipalToGroup(self.user, group_id)
+
+        # Remove from old groups
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
@@ -91,8 +97,9 @@ class TeamMembership(object):
 
     @property
     def groups(self):
+        # Don't include automatic groups
         groups = self.__dict__.get('groups', set()).copy()
-        groups -= set([u'Members'])
+        groups -= set(self.workspace.auto_groups.keys())
         return groups
 
     def update(self, data):
@@ -150,7 +157,7 @@ class TeamMembership(object):
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
         del self.workspace.members[self.user]
-        self._update_groups(self.groups, set(), add_members=False)
+        self._update_groups(self.groups, set(), add_auto_groups=False)
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])
