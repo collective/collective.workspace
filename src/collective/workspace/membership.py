@@ -1,4 +1,5 @@
 from BTrees.Length import Length
+from DateTime import DateTime
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import _
@@ -111,6 +112,7 @@ class TeamMembership(object):
             # User is changing, so remove the old user from groups.
             user_changed = True
             self._update_groups(old['groups'], set())
+        data['_mtime'] = DateTime()
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
