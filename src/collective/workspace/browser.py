@@ -107,12 +107,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     @lazy_property
     def label(self):
         if self.key:
-            mtool = getToolByName(self.context, 'portal_membership')
-            member = mtool.getMemberById(self.key)
-            if member is not None:
-                return member.getProperty('fullname') or self.key
-            else:
-                return self.key
+            return self.getContent()._title
         else:
             return u'Add Person to Roster'
 
@@ -134,6 +129,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
+            self.status = self.formErrorsMessage
             return
 
         if self.key:

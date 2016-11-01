@@ -110,7 +110,7 @@ class Workspace(object):
         members = self.members
         data['UID'] = key = getUtility(IUUIDGenerator)()
         key = user or key
-        if key not in self.members:
+        if key not in members:
             data['_mtime'] = DateTime()
             if groups is None:
                 data['groups'] = groups = set()

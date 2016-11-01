@@ -58,6 +58,15 @@ class TeamMembership(object):
     def _key(self):
         return self.user or self.UID
 
+    @property
+    def _title(self):
+        mtool = getToolByName(self.workspace.context, 'portal_membership')
+        member = mtool.getMemberById(self._key)
+        if member is not None:
+            return member.getProperty('fullname') or self._key
+        else:
+            return self._key
+
     def __getattr__(self, name):
         field = self.__class__._schema.get(name, None)
         if field is None:
