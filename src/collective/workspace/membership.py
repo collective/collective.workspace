@@ -54,6 +54,10 @@ class TeamMembership(object):
             data['UID'] = getUtility(IUUIDGenerator)()
         self.__dict__ = data
 
+    @property
+    def _key(self):
+        return self.user or self.UID
+
     def __getattr__(self, name):
         field = self.__class__._schema.get(name, None)
         if field is None:
@@ -66,6 +70,9 @@ class TeamMembership(object):
         context = workspace.context
         uid = context.UID()
         gtool = getToolByName(context, 'portal_groups')
+
+        if self.user is None:
+            return
 
         # Determine automatic groups
         for name, condition in workspace.auto_groups.items():
@@ -105,6 +112,7 @@ class TeamMembership(object):
 
     def update(self, data):
         old = self.__dict__.copy()
+        old_key = self._key
         user_changed = False
         if 'user' in data and old['user'] != data['user']:
             # User is changing, so remove the old user from groups.
@@ -117,10 +125,10 @@ class TeamMembership(object):
         workspace = self.workspace
         if user_changed:
             # User changed; remove old entry in _team
-            del workspace.context._team[old['user']]
+            del workspace.context._team[old_key]
             # Add new user to groups
             self._update_groups(set(), self.groups)
-        workspace.context._team[self.user] = self.__dict__
+        workspace.context._team[self._key] = self.__dict__
 
         # update counters
         for name, func in workspace.counters:
@@ -158,7 +166,7 @@ class TeamMembership(object):
         for name, func in workspace.counters:
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
-        del self.workspace.members[self.user]
+        del self.workspace.members[self._key]
         self._update_groups(self.groups, set(), add_auto_groups=False)
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))

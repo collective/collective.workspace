@@ -84,10 +84,10 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         self.request = request
         self.workspace = IWorkspace(self.context)
 
-    user_id = None
+    key = None
 
     def publishTraverse(self, request, name):
-        self.user_id = name
+        self.key = name
         return self
 
     @lazy_property
@@ -97,31 +97,31 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def updateFields(self):
         super(TeamMemberEditForm, self).updateFields()
         # don't show the user field if we are editing
-        if self.user_id:
+        if self.key:
             del self.fields['user']
 
     @lazy_property
     def ignoreContext(self):
-        return not bool(self.user_id)
+        return not bool(self.key)
 
     @lazy_property
     def label(self):
-        if self.user_id:
+        if self.key:
             mtool = getToolByName(self.context, 'portal_membership')
-            member = mtool.getMemberById(self.user_id)
+            member = mtool.getMemberById(self.key)
             if member is not None:
-                return member.getProperty('fullname') or self.user_id
+                return member.getProperty('fullname') or self.key
             else:
-                return self.user_id
+                return self.key
         else:
             return u'Add Person to Roster'
 
     @lazy_property
     def _content(self):
-        if not self.user_id:
+        if not self.key:
             return self.context
         workspace = self.workspace
-        memberdata = workspace.members[self.user_id]
+        memberdata = workspace.members[self.key]
         return workspace.membership_factory(workspace, memberdata)
 
     def getContent(self):
@@ -136,7 +136,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         if errors:
             return
 
-        if self.user_id:
+        if self.key:
             membership = self.getContent()
             membership.update(data)
         else:
@@ -154,7 +154,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
 
     @property
     def can_remove(self):
-        return self.user_id
+        return self.key
 
     @button.buttonAndHandler(u'Remove', condition=lambda self: self.can_remove)
     def handleRemove(self, action):

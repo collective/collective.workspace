@@ -1,6 +1,7 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from DateTime import DateTime
+from plone.uuid.interfaces import IUUIDGenerator
 from Products.CMFCore.utils import getToolByName
 from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
@@ -9,6 +10,7 @@ from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
 from zope.component import adapter
+from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
@@ -84,8 +86,8 @@ class Workspace(object):
             return default
 
     def __iter__(self):
-        for userid in self.context._team.iterkeys():
-            yield self[userid]
+        for key in self.context._team.iterkeys():
+            yield self[key]
 
     def add_to_team(self, user, groups=None, **kw):
         """
@@ -106,11 +108,13 @@ class Workspace(object):
         if groups is not None:
             data['groups'] = groups = set(groups)
         members = self.members
-        if user not in self.members:
+        data['UID'] = key = getUtility(IUUIDGenerator)()
+        key = user or key
+        if key not in self.members:
             data['_mtime'] = DateTime()
             if groups is None:
                 data['groups'] = groups = set()
-            members[user] = data
+            members[key] = data
             for name, func in self.counters:
                 if func(data):
                     if name not in self.context._counters:
@@ -124,7 +128,7 @@ class Workspace(object):
                 idxs=['workspace_members', 'workspace_leaders']
             )
         else:
-            membership = self.membership_factory(self, self.members[user])
+            membership = self.membership_factory(self, self.members[key])
             membership.update(data)
         return membership
 
@@ -135,9 +139,10 @@ class Workspace(object):
         :param user: The id of the user to remove from this workspace
         :type user: str
         """
-        # TODO: user argument should be renamed to userid for clarity
+        # TODO: user argument should be renamed to key for clarity
         #       however doing so now would break backwards compatibility
-        membership = self.get(user)
+        key = user
+        membership = self.get(key)
         if membership is not None:
             membership.remove_from_team()
         return membership
