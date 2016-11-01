@@ -1,6 +1,7 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from DateTime import DateTime
+from plone.uuid.interfaces import IUUIDGenerator
 from Products.PluggableAuthService.interfaces.events import \
     IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
@@ -12,6 +13,7 @@ from .pas import get_workspace_groups_plugin
 from .pas import add_group
 from plone import api
 from zope.component import adapter
+from zope.component import getUtility
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
@@ -87,8 +89,8 @@ class Workspace(object):
             return default
 
     def __iter__(self):
-        for userid in self.context._team.iterkeys():
-            yield self[userid]
+        for key in self.context._team.iterkeys():
+            yield self[key]
 
     def add_to_team(self, user, groups=None, **kw):
         """
@@ -109,11 +111,13 @@ class Workspace(object):
         if groups is not None:
             data['groups'] = groups = set(groups)
         members = self.members
-        if user not in self.members:
+        if not user or user not in members:
+            data['UID'] = uid = getUtility(IUUIDGenerator)()
+            key = user or uid
             data['_mtime'] = DateTime()
             if groups is None:
                 data['groups'] = groups = set()
-            members[user] = data
+            members[key] = data
             for name, func in self.counters:
                 if func(data):
                     if name not in self.context._counters:
@@ -138,9 +142,10 @@ class Workspace(object):
         :param user: The id of the user to remove from this workspace
         :type user: str
         """
-        # TODO: user argument should be renamed to userid for clarity
+        # TODO: user argument should be renamed to key for clarity
         #       however doing so now would break backwards compatibility
-        membership = self.get(user)
+        key = user
+        membership = self.get(key)
         if membership is not None:
             membership.remove_from_team()
         return membership
