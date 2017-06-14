@@ -14,3 +14,4 @@ log.html
 /src/collective.workspace.egg-info
 *.pyc
 /share
+*.mo

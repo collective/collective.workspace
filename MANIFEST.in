@@ -4,6 +4,7 @@ include *.txt
 graft src
 recursive-include docs LICENSE.*
 
+exclude i18n.sh
 global-exclude *.pyc
 
 # added by check_manifest.py
