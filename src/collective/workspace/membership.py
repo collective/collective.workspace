@@ -1,10 +1,10 @@
 from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
-from collective.workspace.interfaces import _
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.pas import add_group
+from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from plone.autoform import directives as form
@@ -76,7 +76,7 @@ class TeamMembership(object):
         uid = context.UID()
         workspace_groups = get_workspace_groups_plugin()
         if u'Members' in workspace.available_groups:
-            if add_members:
+            if add_members and 'Guests' not in new_groups:
                 new_groups = new_groups.copy()
                 new_groups |= set([u'Members'])
             else:
