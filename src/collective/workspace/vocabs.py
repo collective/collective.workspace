@@ -45,9 +45,16 @@ class UsersSource(object):
     implements(IQuerySource)
     classProvides(IContextSourceBinder)
 
-    def __init__(self, context):
+    def __init__(self, context=None):
         self._context = context
-        self._users = api.portal.get_tool('acl_users')
+
+    _acl_users = None
+
+    @property
+    def _users(self):
+        if self._acl_users is None:
+            self._acl_users = api.portal.get_tool('acl_users')
+        return self._acl_users
 
     def __contains__(self, value):
         return self._users.getUserById(value, None) and True or False
