@@ -1,12 +1,14 @@
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
-from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from plone import api
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implements
+from zope.i18nmessageid import MessageFactory
+
+_ = MessageFactory('collective.workspace')
 
 
 PLUGIN_ID = 'workspace_groups'

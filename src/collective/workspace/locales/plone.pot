@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-09-16 15:33+0000\n"
+"POT-Creation-Date: 2017-06-14 09:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,47 +17,50 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./browser.py:119
+#: collective/workspace/browser.py:119
 msgid "Add Person to Roster"
 msgstr ""
 
-#: ./pas.py:287
+#: collective/workspace/pas.py:333
 msgid "Can edit roster"
 msgstr ""
 
-#: ./browser.py:156
+#: collective/workspace/browser.py:141
 msgid "Changes saved"
 msgstr ""
 
-#: ./membership.py:35
+#: collective/workspace/membership.py:37
 msgid "Groups"
 msgstr ""
 
-#: ./membership.py:29
+#: collective/workspace/membership.py:31
 msgid "Position"
 msgstr ""
 
-#: ./browser.py:162
+#: collective/workspace/browser.py:166
 msgid "Remove"
 msgstr ""
 
-#: ./profiles/default/actions.xml
+#: collective/workspace/profiles/default/actions.xml
 msgid "Roster"
 msgstr ""
 
-#: ./browser.py:44
+#: collective/workspace/browser.py:44
 msgid "Roster: ${title}"
 msgstr ""
 
-#: ./browser.py:135
+#: collective/workspace/browser.py:135
 msgid "Save"
 msgstr ""
 
-#: ./membership.py:24
+#: collective/workspace/membership.py:26
 msgid "User"
 msgstr ""
 
-#: ./browser.py:167
-msgid "User removed"
+#: collective/workspace/browser.py:149
+msgid "User added"
 msgstr ""
 
+#: collective/workspace/browser.py:172
+msgid "User removed"
+msgstr ""
