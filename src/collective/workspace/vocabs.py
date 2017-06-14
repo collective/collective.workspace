@@ -1,5 +1,5 @@
 from Acquisition import aq_chain
-from collective.workspace.interfaces import _
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from zope.interface import directlyProvides
 from zope.schema.interfaces import IVocabularyFactory
