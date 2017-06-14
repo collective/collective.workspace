@@ -4,6 +4,9 @@ Changelog
 3.0 (unreleased)
 ----------------
 
+- Added the possibility to specify the available groups through
+  the registry record ``collective.workspace.available_groups``
+  [datakurre]
 - Upgrade for Python 3 and Plone 5.2
   [cillianderoiste]
 
