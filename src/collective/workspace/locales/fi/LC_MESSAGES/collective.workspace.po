@@ -16,77 +16,77 @@ msgstr ""
 
 #: collective/workspace/templates/team_roster.pt:15
 msgid "&#43; Add person to roster"
-msgstr "&#43; Person zum Team hinzufügen"
+msgstr "&#43; Lisää käyttäjä työtilaan"
 
 #: collective/workspace/browser.py:119
 msgid "Add Person to Roster"
-msgstr "Eine Person zum Team hinzufügen"
+msgstr "Lisää käyttäjä työtilaan"
 
 msgid "Admins"
-msgstr ""
+msgstr "Ylläpitäjät"
 
 #: collective/workspace/pas.py:333
 msgid "Can edit roster"
-msgstr "Kann Team bearbeiten"
+msgstr "Voi muokata työtilaa"
 
 #: collective/workspace/browser.py:141
 msgid "Changes saved"
-msgstr "Änderungen gespeichert"
+msgstr "Muutokset tallennettu"
 
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr "Muokkaa"
 
 #: collective/workspace/membership.py:37
 msgid "Groups"
-msgstr "Gruppen"
+msgstr "Ryhmät"
 
 msgid "Guests"
-msgstr ""
+msgstr "Vierailijat"
 
 #: collective/workspace/configure.zcml:42
 msgid "Installs the collective.workspace package"
-msgstr ""
+msgstr "Asentaa ryhmätyötilatuen"
 
 #: collective/workspace/membership.py:31
 msgid "Position"
-msgstr "Position"
+msgstr "Tehtävänkuvaus"
 
 #: collective/workspace/browser.py:166
 msgid "Remove"
-msgstr "Entfernen"
+msgstr "Poista"
 
 #: collective/workspace/browser.py:44
 msgid "Roster: ${title}"
-msgstr "Teamverwaltung: ${title}"
+msgstr "Työtila: ${title}"
 
 #: collective/workspace/browser.py:135
 msgid "Save"
-msgstr "Speichern"
+msgstr "Tallenna"
 
 #: collective/workspace/templates/team_roster.pt:46
 msgid "Selected people:"
-msgstr "Ausgewählte Personen"
+msgstr "Valitut käyttäjät:"
 
 #: collective/workspace/configure.zcml:57
 msgid "Team workspace"
-msgstr ""
+msgstr "Ryhmätyötila"
 
 #: collective/workspace/configure.zcml:57
 msgid "This item is a team workspace."
-msgstr ""
+msgstr "Tämä kansio toimii ryhmätyötilana."
 
 #: collective/workspace/membership.py:26
 msgid "User"
-msgstr "Benutzer"
+msgstr "Käyttäjä"
 
 #: collective/workspace/browser.py:149
 msgid "User added"
-msgstr ""
+msgstr "Lisättiin käyttäjä työtilaan"
 
 #: collective/workspace/browser.py:172
 msgid "User removed"
-msgstr "Benutzer entfernt"
+msgstr "Poistettiin käyttäjä työtilasta"
 
 #: collective/workspace/configure.zcml:42
 msgid "collective.workspace"
-msgstr ""
+msgstr "Työtila"

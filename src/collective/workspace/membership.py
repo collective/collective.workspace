@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent

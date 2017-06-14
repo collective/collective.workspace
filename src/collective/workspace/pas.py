@@ -12,11 +12,13 @@ from Products.PluggableAuthService.interfaces.plugins \
     import IPropertiesPlugin
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from borg.localrole.interfaces import ILocalRoleProvider
-from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace
 from zope.annotation.interfaces import IAnnotations
 from zope.globalrequest import getRequest
 from zope.interface import implements
+from zope.i18nmessageid import MessageFactory
+
+_ = MessageFactory('collective.workspace')
 
 
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
