@@ -27,7 +27,7 @@ msgstr "Ylläpitäjät"
 
 #: collective/workspace/pas.py:333
 msgid "Can edit roster"
-msgstr "Voi muokata työtilaa"
+msgstr "Voi hallita työtilaa"
 
 #: collective/workspace/browser.py:141
 msgid "Changes saved"
