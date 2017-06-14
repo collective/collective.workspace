@@ -28,25 +28,35 @@ Scenario: Workspace member gains access to workspace
 
 Start browser
     Open browser  http://localhost:55001/plone/  browser=${BROWSER}
+    Set window size  1200  900
+
+Open Toolbar Menu
+    [Arguments]  ${elementId}
+    Element Should Be Visible  css=#${elementId} a
+    Element Should Not Be Visible  css=#${elementId} ul a
+    Click link  css=#${elementId} a
+    Wait until keyword succeeds  1  5  Element Should Be Visible  css=#${elementId} ul a
 
 a test workspace
     Log in as site owner
     Go to  ${PLONE_URL}
-    Open Add New Menu
+#   Open Add New Menu  # Broken because still no Plone 5 kw in p.a.rf
+    Open Toolbar Menu  plone-contentmenu-factories
     Click link  css=.contenttype-workspace
     Input text  form-widgets-IBasic-title  Test Workspace
-    Click button  Save
+    Click button  id=form-buttons-save
 
 the test user is added to the roster
-	Click link  Roster
+	Click link  css=#contentview-team-roster a
 	Click Overlay Link  workspace-add-user
-	Input text  form-widgets-user-widgets-query  test
+	Input text  css=#formfield-form-widgets-user input  test
 	Wait until page contains  test_user_1_
 	Click element  jquery=li:contains('test_user_1_')
-	Click button  Save
+	Press key  css=#formfield-form-widgets-position input  \\13
+#   Click button  id=form-buttons-save  # Broken on phantomjs because of plone-modal DOM manipulations
 
 the test user appears in the roster
-	Page should contain element  css=a[href$="edit-roster/test_user_1_"]	
+	Wait until page contains element  css=a[href$="edit-roster/test_user_1_"]
 
 the test user can view the workspace
 	Log in as test user
