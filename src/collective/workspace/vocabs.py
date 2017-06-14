@@ -33,6 +33,7 @@ def TeamGroupsVocabulary(context):
         items.append(SimpleTerm(group, group, _(group)))
     return SimpleVocabulary(items)
 
+
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
 
 
@@ -45,9 +46,16 @@ class UsersSource(object):
     implements(IQuerySource)
     classProvides(IContextSourceBinder)
 
-    def __init__(self, context):
+    def __init__(self, context=None):
         self._context = context
-        self._users = getToolByName(getSite(), "acl_users")
+
+    _acl_users = None
+
+    @property
+    def _users(self):
+        if self._acl_users is None:
+            self._acl_users = getToolByName(getSite(), "acl_users")
+        return self._acl_users
 
     def __contains__(self, value):
         return self._users.getUserById(value, None) and True or False
