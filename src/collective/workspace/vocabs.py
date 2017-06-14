@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from Acquisition import aq_chain
+from Products.CMFPlone.utils import safe_unicode
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from plone import api
@@ -72,7 +74,11 @@ class UsersSource(object):
         fullname = userid
         user = self._users.getUserById(userid, None)
         if user:
-            fullname = user.getProperty('fullname', None) or userid
+            fullname = user.getProperty('fullname', None)
+        if fullname:
+            fullname = u'{0:s} ({1:s})'.format(safe_unicode(fullname), userid)
+        else:
+            fullname = userid
         return SimpleTerm(userid, userid, fullname)
     getTermByToken = getTerm
 
