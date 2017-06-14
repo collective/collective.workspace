@@ -1,21 +1,23 @@
+# -*- coding: utf-8 -*-8
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
-from Products.PluggableAuthService.interfaces.events import \
-    IPrincipalDeletedEvent
-from .events import TeamMemberAddedEvent
+from collective.workspace.events import TeamMemberAddedEvent
+from collective.workspace.membership import ITeamMembership
+from collective.workspace.membership import TeamMembership
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
-from .membership import ITeamMembership
-from .membership import TeamMembership
-from .pas import get_workspace_groups_plugin
 from .pas import add_group
+from .pas import get_workspace_groups_plugin
 from plone import api
+from plone.registry.interfaces import IRegistry
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa
 from zope.component import adapter
+from zope.component import getUtility
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.event import notify
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
 class Workspace(object):
@@ -54,12 +56,15 @@ class Workspace(object):
 
     # A list of groups to which team members can be assigned.
     # Maps group name -> roles
-    available_groups = {
-        u'Members': ('Contributor', 'Reader', 'TeamMember'),
-        u'Guests': ('TeamGuest', ),
-        u'Admins': ('Contributor', 'Editor', 'Reviewer',
-                    'Reader', 'TeamManager',),
-    }
+    @property
+    def available_groups(self):
+        registry = getUtility(IRegistry)
+        return registry.get('collective.workspace.available_groups', {
+            u'Members': ('Contributor', 'Reader', 'TeamMember'),
+            u'Guests': ('TeamGuest', ),
+            u'Admins': ('Contributor', 'Editor', 'Reviewer',
+                        'Reader', 'TeamManager',)
+        })
 
     counters = (
         ('members', lambda x: True),
