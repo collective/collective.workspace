@@ -8,16 +8,31 @@ from collective.workspace.pas import add_group
 from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
-from plone.app.z3cform.widget import AjaxSelectFieldWidget
+from plone.app.z3cform.widget import AjaxSelectWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.interfaces import IFieldWidget
+from z3c.form.widget import FieldWidget
 from zope.component import adapter
 from zope.component import getUtility
 from zope.event import notify
 from zope import schema
 from zope.interface import implementer
+
+
+class AjaxUserSelectWidget(AjaxSelectWidget):
+    pattern_options = {
+        'minimumInputLength': 4
+    }
+
+
+@implementer(IFieldWidget)
+def AjaxSelectFieldWidget(field, request, extra=None):
+    if extra is not None:
+        request = extra
+    return FieldWidget(field, AjaxUserSelectWidget(request))
 
 
 class ITeamMembership(model.Schema):
