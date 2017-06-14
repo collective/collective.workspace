@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<registry>
+  <record name="collective.workspace.available_groups">
+    <field type="plone.registry.field.Dict">
+      <title>Available workspace groups</title>
+      <key_type type="plone.registry.field.TextLine" />
+      <value_type type="plone.registry.field.Tuple">
+        <value_type type="plone.registry.field.BytesLine" />
+      </value_type>
+    </field>
+    <value>
+      <element key="Members">
+        <element>Contributor</element>
+        <element>Reader</element>
+        <element>TeamMember</element>
+      </element>
+      <element key="Guests">
+        <element>TeamGuest</element>
+      </element>
+      <element key="Admins">
+        <element>Contributor</element>
+        <element>Editor</element>
+        <element>Reader</element>
+        <element>Reviewer</element>
+        <element>TeamManager</element>
+      </element>
+    </value>
+  </record>
+</registry>
