@@ -175,6 +175,12 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         IStatusMessage(self.request).addStatusMessage(
             _(u"User removed"), "info")
 
+    @button.buttonAndHandler(_(u'Cancel'))
+    def handleCancel(self, action):
+        self._finished = True
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"No changes"), "info")
+
     _finished = False
 
     def render(self):

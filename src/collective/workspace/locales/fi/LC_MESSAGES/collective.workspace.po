@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-06-14 09:07+0000\n"
+"POT-Creation-Date: 2017-06-15 05:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,48 +18,56 @@ msgstr ""
 msgid "&#43; Add person to roster"
 msgstr "&#43; Lisää käyttäjä työtilaan"
 
-#: collective/workspace/browser.py:119
+#: collective/workspace/browser.py:123
 msgid "Add Person to Roster"
 msgstr "Lisää käyttäjä työtilaan"
 
 msgid "Admins"
 msgstr "Ylläpitäjät"
 
-#: collective/workspace/pas.py:333
+#: collective/workspace/pas.py:110
 msgid "Can edit roster"
 msgstr "Voi hallita työtilaa"
 
-#: collective/workspace/browser.py:141
+#: collective/workspace/browser.py:178
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: collective/workspace/browser.py:145
 msgid "Changes saved"
 msgstr "Muutokset tallennettu"
 
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: collective/workspace/membership.py:37
+#: collective/workspace/membership.py:54
 msgid "Groups"
 msgstr "Ryhmät"
 
 msgid "Guests"
 msgstr "Vierailijat"
 
-#: collective/workspace/configure.zcml:42
+#: collective/workspace/configure.zcml:41
 msgid "Installs the collective.workspace package"
 msgstr "Asentaa ryhmätyötilatuen"
 
-#: collective/workspace/membership.py:31
+#: collective/workspace/browser.py:182
+msgid "No changes"
+msgstr "Ei muutoksia"
+
+#: collective/workspace/membership.py:48
 msgid "Position"
 msgstr "Tehtävänkuvaus"
 
-#: collective/workspace/browser.py:166
+#: collective/workspace/browser.py:170
 msgid "Remove"
 msgstr "Poista"
 
-#: collective/workspace/browser.py:44
+#: collective/workspace/browser.py:47
 msgid "Roster: ${title}"
 msgstr "Työtila: ${title}"
 
-#: collective/workspace/browser.py:135
+#: collective/workspace/browser.py:139
 msgid "Save"
 msgstr "Tallenna"
 
@@ -67,26 +75,26 @@ msgstr "Tallenna"
 msgid "Selected people:"
 msgstr "Valitut käyttäjät:"
 
-#: collective/workspace/configure.zcml:57
+#: collective/workspace/configure.zcml:65
 msgid "Team workspace"
 msgstr "Ryhmätyötila"
 
-#: collective/workspace/configure.zcml:57
+#: collective/workspace/configure.zcml:65
 msgid "This item is a team workspace."
 msgstr "Tämä kansio toimii ryhmätyötilana."
 
-#: collective/workspace/membership.py:26
+#: collective/workspace/membership.py:43
 msgid "User"
 msgstr "Käyttäjä"
 
-#: collective/workspace/browser.py:149
+#: collective/workspace/browser.py:153
 msgid "User added"
 msgstr "Lisättiin käyttäjä työtilaan"
 
-#: collective/workspace/browser.py:172
+#: collective/workspace/browser.py:176
 msgid "User removed"
 msgstr "Poistettiin käyttäjä työtilasta"
 
-#: collective/workspace/configure.zcml:42
+#: collective/workspace/configure.zcml:41
 msgid "collective.workspace"
 msgstr "Työtila"

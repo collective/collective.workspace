@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-06-14 09:07+0000\n"
+"POT-Creation-Date: 2017-06-15 05:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,48 +21,56 @@ msgstr ""
 msgid "&#43; Add person to roster"
 msgstr ""
 
-#: collective/workspace/browser.py:119
+#: collective/workspace/browser.py:123
 msgid "Add Person to Roster"
 msgstr ""
 
 msgid "Admins"
 msgstr ""
 
-#: collective/workspace/pas.py:333
+#: collective/workspace/pas.py:110
 msgid "Can edit roster"
 msgstr ""
 
-#: collective/workspace/browser.py:141
+#: collective/workspace/browser.py:178
+msgid "Cancel"
+msgstr ""
+
+#: collective/workspace/browser.py:145
 msgid "Changes saved"
 msgstr ""
 
 msgid "Edit"
 msgstr ""
 
-#: collective/workspace/membership.py:37
+#: collective/workspace/membership.py:54
 msgid "Groups"
 msgstr ""
 
 msgid "Guests"
 msgstr ""
 
-#: collective/workspace/configure.zcml:42
+#: collective/workspace/configure.zcml:41
 msgid "Installs the collective.workspace package"
 msgstr ""
 
-#: collective/workspace/membership.py:31
+#: collective/workspace/browser.py:182
+msgid "No changes"
+msgstr ""
+
+#: collective/workspace/membership.py:48
 msgid "Position"
 msgstr ""
 
-#: collective/workspace/browser.py:166
+#: collective/workspace/browser.py:170
 msgid "Remove"
 msgstr ""
 
-#: collective/workspace/browser.py:44
+#: collective/workspace/browser.py:47
 msgid "Roster: ${title}"
 msgstr ""
 
-#: collective/workspace/browser.py:135
+#: collective/workspace/browser.py:139
 msgid "Save"
 msgstr ""
 
@@ -70,26 +78,26 @@ msgstr ""
 msgid "Selected people:"
 msgstr ""
 
-#: collective/workspace/configure.zcml:57
+#: collective/workspace/configure.zcml:65
 msgid "Team workspace"
 msgstr ""
 
-#: collective/workspace/configure.zcml:57
+#: collective/workspace/configure.zcml:65
 msgid "This item is a team workspace."
 msgstr ""
 
-#: collective/workspace/membership.py:26
+#: collective/workspace/membership.py:43
 msgid "User"
 msgstr ""
 
-#: collective/workspace/browser.py:149
+#: collective/workspace/browser.py:153
 msgid "User added"
 msgstr ""
 
-#: collective/workspace/browser.py:172
+#: collective/workspace/browser.py:176
 msgid "User removed"
 msgstr ""
 
-#: collective/workspace/configure.zcml:42
+#: collective/workspace/configure.zcml:41
 msgid "collective.workspace"
 msgstr ""
