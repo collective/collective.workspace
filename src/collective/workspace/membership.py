@@ -61,7 +61,7 @@ class TeamMembership(object):
     @property
     def _title(self):
         mtool = getToolByName(self.workspace.context, 'portal_membership')
-        member = mtool.getMemberById(self._key)
+        member = mtool.getMemberById(self.user)
         if member is not None:
             return member.getProperty('fullname') or self._key
         else:

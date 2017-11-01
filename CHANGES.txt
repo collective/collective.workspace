@@ -4,7 +4,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Make sure UID doesn't get reset when calling add_to_team
+  with a user who is already in the workspace.
 
 
 1.1 (2014-07-04)

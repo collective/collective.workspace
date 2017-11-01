@@ -108,9 +108,9 @@ class Workspace(object):
         if groups is not None:
             data['groups'] = groups = set(groups)
         members = self.members
-        data['UID'] = key = getUtility(IUUIDGenerator)()
-        key = user or key
-        if key not in members:
+        if not user or user not in members:
+            data['UID'] = uid = getUtility(IUUIDGenerator)()
+            key = user or uid
             data['_mtime'] = DateTime()
             if groups is None:
                 data['groups'] = groups = set()
