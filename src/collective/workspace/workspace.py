@@ -128,7 +128,7 @@ class Workspace(object):
                 idxs=['workspace_members', 'workspace_leaders']
             )
         else:
-            membership = self.membership_factory(self, self.members[key])
+            membership = self.membership_factory(self, self.members[user])
             membership.update(data)
         return membership
 
