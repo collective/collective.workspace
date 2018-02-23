@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.4.dev0'
+version = '2.0.dev0'
 
 long_description = (
     open('README.rst').read()
@@ -40,6 +40,7 @@ setup(name='collective.workspace',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.api',
           'plone.app.dexterity',
           'plone.formwidget.autocomplete',
           # -*- Extra requirements: -*-
@@ -48,7 +49,6 @@ setup(name='collective.workspace',
           'test': [
               'plone.app.robotframework',
               'plone.app.testing',
-              'plone.api',
           ],
           'develop': [
               'zest.releaser',

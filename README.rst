@@ -20,7 +20,7 @@ All the functionality takes place via an IWorkspace adapter, which can be overri
 * Action links for each row in the roster. The default is an "Edit" link which brings up a popup to edit the fields for that person's roster membership.
 * Action buttons at the bottom of the roster which apply to the rows the user selects. An example of this could be a 'Send email' action, so a roster admin can easily email users in the roster.
 
-Unlike similar previous packages (see slc.teamfolder and collective.local.*), collective.workspace supplies its own PAS groups plugin, instead of using standard Plone groups. This means that Workspace-specific groups do not appear in the sitewide group control panel.
+Unlike similar previous packages (see slc.teamfolder and collective.local.*), collective.workspace supplies its own PAS groups plugin, instead of using standard Plone groups. This means that you can prevent Workspace-specific groups from appearing in the sitewide group control panel.
 
 Some other features are:
 
@@ -37,7 +37,7 @@ Basic Installation
 Custom Workspace Groups
 -----------------------
 
-The default groups available on a workspace are 'Members' and 'Admins'. You can customise the groups that are available and the default permissions they are given by adding a custom IWorkspace adapter:
+The default groups available on a workspace are 'Guests', 'Members', and 'Admins'. You can customise the groups that are available and the default permissions they are given by adding a custom IWorkspace adapter:
 
 ``configure.zcml``
 
@@ -62,6 +62,6 @@ The default groups available on a workspace are 'Members' and 'Admins'. You can 
       # A list of groups to which team members can be assigned.
       # Maps group name -> roles
       available_groups = {
-          u'Supervillians': ('Reader', ),
+          u'Supervillains': ('Reader', ),
           u'Superheroes': ('Reader', 'Contributor', 'Reviewer', 'Editor',),
       }

@@ -1,13 +1,13 @@
 from AccessControl import getSecurityManager
 from Products.statusmessages.interfaces import IStatusMessage
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace import workspaceMessageFactory as _
 from collections import namedtuple
+from plone import api
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform import z2
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
 from z3c.form.form import DisplayForm
@@ -109,7 +109,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     @lazy_property
     def label(self):
         if self.user_id:
-            mtool = getToolByName(self.context, 'portal_membership')
+            mtool = api.portal.get_tool('portal_membership')
             member = mtool.getMemberById(self.user_id)
             if member is not None:
                 return member.getProperty('fullname') or self.user_id
