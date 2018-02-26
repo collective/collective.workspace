@@ -1,21 +1,20 @@
-from BTrees.Length import Length
-from BTrees.OOBTree import OOBTree
-from Products.PluggableAuthService.interfaces.events import \
-    IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
-from .pas import get_workspace_groups_plugin
 from .pas import add_group
+from .pas import get_workspace_groups_plugin
+from BTrees.Length import Length
+from BTrees.OOBTree import OOBTree
 from plone import api
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
 from zope.component import adapter
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.event import notify
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
 class Workspace(object):
@@ -84,56 +83,53 @@ class Workspace(object):
         for userid in self.context._team.iterkeys():
             yield self[userid]
 
-    def add_to_team(self, user, groups=None, **kw):
+    def add_to_team(self, userid, groups=None, **kw):
         """
         Makes sure a user is in this workspace's team.
 
-        :param user: The id of the user to add to this workspace
-        :type user: str
+        :param userid: The id of the user to add to this workspace
+        :type userid: str
         :param groups: The set of workspace groups to add this user to
         :type groups: set
         :param kw: Pass user and any other attributes that should be set on the
                    team member.
         :type kw: dict
         """
-        # TODO: user argument should be renamed to userid for clarity
-        #       however doing so now would break backwards compatibility
         data = kw.copy()
-        data['user'] = user
-        if groups is not None:
-            data['groups'] = groups = set(groups)
+        data['userid'] = userid
+        data['groups'] = groups = set(groups or [])
         members = self.members
-        if user not in self.members:
-            if groups is None:
-                data['groups'] = groups = set()
-            members[user] = data
-            for name, func in self.counters:
-                if func(data):
-                    if name not in self.context._counters:
-                        self.context._counters[name] = Length()
-                    self.context._counters[name].change(1)
-            membership = self.membership_factory(self, data)
-            membership.handle_added()
-            membership._update_groups(set(), groups)
-            notify(TeamMemberAddedEvent(self.context, membership))
-            self.context.reindexObject(
-                idxs=['workspace_members', 'workspace_leaders']
-            )
-        else:
-            membership = self.membership_factory(self, self.members[user])
+
+        if userid in members:
+            membership = self.membership_factory(self, members[userid])
             membership.update(data)
+            return membership
+
+        members[userid] = data
+
+        for name, func in self.counters:
+            if func(data):
+                if name not in self.context._counters:
+                    self.context._counters[name] = Length()
+                self.context._counters[name].change(1)
+
+        membership = self.membership_factory(self, data)
+        membership.handle_added()
+        membership._update_groups(set(), groups)
+        notify(TeamMemberAddedEvent(self.context, membership))
+        self.context.reindexObject(
+            idxs=['workspace_members', 'workspace_leaders']
+        )
         return membership
 
-    def remove_from_team(self, user):
+    def remove_from_team(self, userid):
         """
         Remove a user from the workspace
 
-        :param user: The id of the user to remove from this workspace
-        :type user: str
+        :param userid: The id of the user to remove from this workspace
+        :type userid: str
         """
-        # TODO: user argument should be renamed to userid for clarity
-        #       however doing so now would break backwards compatibility
-        membership = self.get(user)
+        membership = self.get(userid)
         if membership is not None:
             membership.remove_from_team()
         return membership

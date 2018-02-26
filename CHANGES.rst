@@ -6,6 +6,9 @@ Changelog
 
 Changed functionality:
 
+- Before version 2.0, in many parts of the code, a variable called user
+  was actually storing the userid string.
+  This is not happening anymore.
 - The `workspace_groups` PAS plugin now stores groups in the same way as normal Plone groups,
   rather than doing catalog queries to find workspaces.
   This performs much better even without enabling caching for the plugin.

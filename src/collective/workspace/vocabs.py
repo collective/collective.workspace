@@ -32,6 +32,7 @@ def TeamGroupsVocabulary(context):
         items.append(SimpleTerm(group, group, _(group)))
     return SimpleVocabulary(items)
 
+
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
 
 

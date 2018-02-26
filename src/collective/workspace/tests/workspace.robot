@@ -40,13 +40,13 @@ a test workspace
 the test user is added to the roster
 	Click link  Roster
 	Click Overlay Link  workspace-add-user
-	Input text  form-widgets-user-widgets-query  test
+	Input text  form-widgets-userid-widgets-query  test
 	Wait until page contains  test_user_1_
 	Click element  jquery=li:contains('test_user_1_')
 	Click button  Save
 
 the test user appears in the roster
-	Page should contain element  css=a[href$="edit-roster/test_user_1_"]	
+	Page should contain element  css=a[href$="edit-roster/test_user_1_"]
 
 the test user can view the workspace
 	Log in as test user

@@ -3,8 +3,8 @@ from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.pas import add_group
+from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from plone.autoform import directives as form
@@ -22,8 +22,8 @@ from zope.interface import implementer
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    form.widget(user=AutocompleteFieldWidget)
-    user = schema.Choice(
+    form.widget(userid=AutocompleteFieldWidget)
+    userid = schema.Choice(
         title=_(u'User'),
         source=UsersSource,
     )
@@ -85,16 +85,19 @@ class TeamMembership(object):
         for group_name in (new_groups - old_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
-                workspace_groups.addPrincipalToGroup(self.user, group_id)
+                workspace_groups.addPrincipalToGroup(self.userid, group_id)
             except KeyError:  # group doesn't exist
                 title = '{}: {}'.format(
                     group_name.encode('utf8'), context.Title())
                 add_group(group_id, title)
-                workspace_groups.addPrincipalToGroup(self.user, group_id)
+                workspace_groups.addPrincipalToGroup(self.userid, group_id)
         for group_name in (old_groups - new_groups):
             group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
             try:
-                workspace_groups.removePrincipalFromGroup(self.user, group_id)
+                workspace_groups.removePrincipalFromGroup(
+                    self.userid,
+                    group_id,
+                )
             except KeyError:  # group doesn't exist
                 pass
 
@@ -107,7 +110,7 @@ class TeamMembership(object):
     def update(self, data):
         old = self.__dict__.copy()
         user_changed = False
-        if 'user' in data and old['user'] != data['user']:
+        if 'userid' in data and old['userid'] != data['userid']:
             # User is changing, so remove the old user from groups.
             user_changed = True
             self._update_groups(old['groups'], set())
@@ -117,10 +120,10 @@ class TeamMembership(object):
         workspace = self.workspace
         if user_changed:
             # User changed; remove old entry in _team
-            del workspace.context._team[old['user']]
+            del workspace.context._team[old['userid']]
             # Add new user to groups
             self._update_groups(set(), self.groups)
-        workspace.context._team[self.user] = self.__dict__
+        workspace.context._team[self.userid] = self.__dict__
 
         # update counters
         for name, func in workspace.counters:
@@ -159,7 +162,7 @@ class TeamMembership(object):
         for name, func in workspace.counters:
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
-        del self.workspace.members[self.user]
+        del self.workspace.members[self.userid]
         self._update_groups(self.groups, set(), add_members=False)
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
