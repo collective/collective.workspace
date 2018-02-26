@@ -1,14 +1,14 @@
 from AccessControl import getSecurityManager
-from Products.statusmessages.interfaces import IStatusMessage
+from collections import namedtuple
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collections import namedtuple
 from plone import api
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform import z2
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import button
 from z3c.form.form import DisplayForm
 from z3c.form.form import EditForm
@@ -16,6 +16,7 @@ from z3c.form.interfaces import ActionExecutionError
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IPublishTraverse
+
 import transaction
 
 
@@ -100,7 +101,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         super(TeamMemberEditForm, self).updateFields()
         # don't show the user field if we are editing
         if self.user_id:
-            del self.fields['user']
+            del self.fields['userid']
 
     @lazy_property
     def ignoreContext(self):
