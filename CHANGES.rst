@@ -13,7 +13,8 @@ Changed functionality:
   (A separate plugin is used so that listing of workspace groups in the Plone control panel
   can easily be disabled.)
 - The Members group is no longer displayed as an option in the UI,
-  since it is assigned automatically.
+  since it is assigned automatically. Other automatic workspace groups can be
+  configured with arbitrary conditions for inclusion in the group.
 - Copying and pasting a workspace now empties the roster of the copy.
 - Trying to set a membership attribute directly now raises an exception.
   Membership attributes should be updated using the `update` method

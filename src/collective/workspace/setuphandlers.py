@@ -43,5 +43,8 @@ def migrate_groups(context):
             title = '{}: {}'.format(group_name.encode('utf8'), b.Title)
             add_group(group_id, title)
         for m in workspace:
-            new_groups = (m.groups | set([u'Members'])) & set(workspace.available_groups)
+            new_groups = (
+                (m.groups | set([u'Members'])) &
+                set(workspace.available_groups)
+            )
             m._update_groups(set(), new_groups, add_auto_groups=False)

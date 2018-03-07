@@ -63,7 +63,7 @@ class Workspace(object):
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u'Members': lambda x: True,
+        u'Members': lambda x: 'Guests' not in x.groups,
     }
 
     counters = (

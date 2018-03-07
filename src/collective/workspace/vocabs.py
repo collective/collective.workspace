@@ -33,6 +33,8 @@ def TeamGroupsVocabulary(context):
     for group in groups:
         items.append(SimpleTerm(group, group, _(group)))
     return SimpleVocabulary(items)
+
+
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
 
 
