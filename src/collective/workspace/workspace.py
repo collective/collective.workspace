@@ -1,5 +1,6 @@
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
+from DateTime import DateTime
 from Products.PluggableAuthService.interfaces.events import \
     IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
@@ -104,6 +105,7 @@ class Workspace(object):
             data['groups'] = groups = set(groups)
         members = self.members
         if user not in self.members:
+            data['_mtime'] = DateTime()
             if groups is None:
                 data['groups'] = groups = set()
             members[user] = data

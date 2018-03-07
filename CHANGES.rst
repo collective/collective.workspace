@@ -18,6 +18,7 @@ Changed functionality:
 - Trying to set a membership attribute directly now raises an exception.
   Membership attributes should be updated using the `update` method
   to make sure that all changes are properly accounted for.
+- A last modified time is now tracked for each roster membership.
 
 Bugs fixed:
 
