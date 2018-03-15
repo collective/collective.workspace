@@ -20,6 +20,8 @@ Changed functionality:
   Membership attributes should be updated using the `update` method
   to make sure that all changes are properly accounted for.
 - A last modified time is now tracked for each roster membership.
+- It's now possible to add a roster entry that isn't associated with a user
+  (for example, to represent a person who doesn't have a Plone account).
 
 Bugs fixed:
 
@@ -32,6 +34,8 @@ Bugs fixed:
 - New workspace counters can now be added without breaking existing workspaces.
 - Tools are now looked up using `plone.api.portal.get_tool`,
   which helps in some cases where objects are not properly acquisition-wrapped.
+- Make sure UID doesn't get reset when calling add_to_team
+  with a user who is already in the workspace.
 
 Cleanup:
 
