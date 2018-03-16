@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.0 (unreleased)
-----------------
+2.0b1 (2018-03-16)
+------------------
 
 Changed functionality:
 
