@@ -1,13 +1,13 @@
 from BTrees.Length import Length
+from DateTime import DateTime
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace.pas import add_group
 from collective.workspace.pas import get_workspace_groups_plugin
+from collective.workspace.pas import add_group
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
-from DateTime import DateTime
 from plone import api
 from plone.autoform import directives as form
 from plone.formwidget.autocomplete import AutocompleteFieldWidget
@@ -125,7 +125,7 @@ class TeamMembership(object):
     @property
     def groups(self):
         # Don't include automatic groups
-        groups = set(self.__dict__.get('groups') or set())
+        groups = self.__dict__.get('groups', set()).copy()
         groups -= set(self.workspace.auto_groups.keys())
         return groups
 

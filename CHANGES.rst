@@ -4,9 +4,7 @@ Changelog
 2.0 (unreleased)
 ----------------
 
-Bugs fixed:
-
-- an edge case where the migration was failing (Fixes #25)
+- Nothing changed yet.
 
 
 2.0b1 (2018-03-16)
