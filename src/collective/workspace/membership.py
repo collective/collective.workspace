@@ -90,18 +90,25 @@ class TeamMembership(object):
         context = workspace.context
         uid = context.UID()
         workspace_groups = get_workspace_groups_plugin()
-
         if self.user is None:
             return
 
         # Determine automatic groups
-        for name, condition in workspace.auto_groups.items():
-            if name not in workspace.available_groups:
-                raise Exception('Unknown workspace group: {}'.format(name))
-            if add_auto_groups and condition(self):
-                new_groups = new_groups.copy() | set([name])
-            else:
-                old_groups = old_groups.copy() | set([name])
+        if add_auto_groups:
+            new_groups = set(new_groups)
+            old_groups = set(old_groups)
+            for name, condition in workspace.auto_groups.items():
+                if name not in workspace.available_groups:
+                    raise Exception('Unknown workspace group: {}'.format(name))
+                if name in new_groups or name in old_groups:
+                    # Respect user input
+                    pass
+                # only add the automatic groups if condition is satisfied,
+                # otherwise remove it
+                if condition(self, new_groups):
+                    new_groups.add(name)
+                else:
+                    old_groups.add(name)
 
         # Add to new groups
         for group_name in (new_groups - old_groups):
@@ -187,7 +194,11 @@ class TeamMembership(object):
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
         del self.workspace.members[self._key]
-        self._update_groups(self.groups, set(), add_auto_groups=False)
+        self._update_groups(
+            self.groups | set(self.workspace.auto_groups),
+            set(),
+            add_auto_groups=False
+        )
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])

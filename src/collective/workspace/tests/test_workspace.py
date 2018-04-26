@@ -1,12 +1,11 @@
-import unittest
-
-from plone import api
-from plone.testing import z2
-from plone.app.testing import SITE_OWNER_NAME
-
-from collective.workspace.testing import \
-    COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
+# coding=utf-8
 from collective.workspace.interfaces import IWorkspace
+from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING  # noqa: E501
+from plone import api
+from plone.app.testing import SITE_OWNER_NAME
+from plone.testing import z2
+
+import unittest
 
 
 class TestWorkspace(unittest.TestCase):
@@ -28,6 +27,11 @@ class TestWorkspace(unittest.TestCase):
             id='a-workspace'
         )
         self.ws = IWorkspace(self.workspace)
+
+    def _check_roles_in_workspace(self):
+        pmt = api.portal.get_tool('portal_membership')
+        member = pmt.getMemberById(self.user1.getId())
+        return member.getRolesInContext(self.workspace)
 
     def test_adding_workspace_creates_groups(self):
         group = self.portal.portal_groups.getGroupById(
@@ -105,10 +109,7 @@ class TestWorkspace(unittest.TestCase):
         self.ws.add_to_team(
             user=self.user1.getId()
         )
-        pmt = api.portal.get_tool('portal_membership')
-        member = pmt.getMemberById(self.user1.getId())
-        roles = member.getRolesInContext(self.workspace)
-        self.assertIn('TeamMember', roles)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
 
     def test_remove_from_team(self):
         self.ws.add_to_team(
@@ -208,3 +209,83 @@ class TestWorkspace(unittest.TestCase):
         self.assertEquals(group.getId(), test_group_id)
         api.group.delete(test_group_id)
         self.assertIsNone(api.group.get(test_group_id))
+
+    def test_update_membership_add_auto_groups_True(self):
+        ''' Test that calling _update_groups with the
+        add_auto_groups parameter set to True (the default) will always add
+        the Members group, unless the user is also in the Guests group
+        '''
+        self.assertNotIn('TeamMember', self._check_roles_in_workspace())
+
+        # Adding the user to the workspace will grant the TeamMember role
+        membership = self.ws.add_to_team(user=self.user1.getId())
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # groups should be untouched
+        old = set()
+        new = set()
+        membership._update_groups(old, new)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # groups should be untouched because user is already a member
+        old = set()
+        new = set(['Members'])
+        membership._update_groups(old, new)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # Removing the automatic group will not actually remove it
+        # because it is an automatic group
+        old = set(['Members'])
+        new = set()
+        membership._update_groups(old, new)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # Removing the automatic group will have no effect
+        old = set(['Members'])
+        new = set()
+        membership._update_groups(old, new)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # Adding the user to the Guests group will remove it from the Members
+        # because the condition will not be satisifed
+        old = set()
+        new = set(['Guests'])
+        membership._update_groups(old, new)
+        self.assertIn('TeamGuest', self._check_roles_in_workspace())
+        self.assertNotIn('TeamMember', self._check_roles_in_workspace())
+
+    def test_update_membership_add_auto_groups_False(self):
+        ''' Test that calling _update_groups with the
+        add_auto_groups parameter set to False, respects the user input
+        '''
+        self.assertNotIn('TeamMember', self._check_roles_in_workspace())
+
+        # Adding the user to the workspace will grant the TeamMember role
+        membership = self.ws.add_to_team(user=self.user1.getId())
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # groups should be untouched
+        old = set()
+        new = set()
+        membership._update_groups(old, new, add_auto_groups=False)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # groups should be untouched because user is already a member
+        old = set()
+        new = set(['Members'])
+        membership._update_groups(old, new, add_auto_groups=False)
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # Adding the user to the Guest group will not remove it from Members
+        # because add_auto_groups is False
+        old = set()
+        new = set(['Guests'])
+        membership._update_groups(old, new, add_auto_groups=False)
+        self.assertIn('TeamGuest', self._check_roles_in_workspace())
+        self.assertIn('TeamMember', self._check_roles_in_workspace())
+
+        # Removing the automatic group will actually remove it
+        old = set(['Members'])
+        new = set()
+        membership._update_groups(old, new, add_auto_groups=False)
+        self.assertNotIn('TeamMember', self._check_roles_in_workspace())

@@ -1,24 +1,23 @@
-from BTrees.Length import Length
-from BTrees.OOBTree import OOBTree
-from DateTime import DateTime
-from plone.uuid.interfaces import IUUIDGenerator
-from Products.PluggableAuthService.interfaces.events import \
-    IPrincipalDeletedEvent
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .membership import ITeamMembership
 from .membership import TeamMembership
-from .pas import get_workspace_groups_plugin
 from .pas import add_group
+from .pas import get_workspace_groups_plugin
+from BTrees.Length import Length
+from BTrees.OOBTree import OOBTree
+from DateTime import DateTime
 from plone import api
+from plone.uuid.interfaces import IUUIDGenerator
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
 from zope.component import adapter
 from zope.component import getUtility
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectRemovedEvent
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.event import notify
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
 class Workspace(object):
@@ -66,7 +65,7 @@ class Workspace(object):
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u'Members': lambda x: 'Guests' not in x.groups,
+        u'Members': lambda x, new_groups=set(): 'Guests' not in set(x.groups) | new_groups,  # noqa: E501
     }
 
     counters = (
