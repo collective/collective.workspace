@@ -100,9 +100,6 @@ class TeamMembership(object):
             for name, condition in workspace.auto_groups.items():
                 if name not in workspace.available_groups:
                     raise Exception('Unknown workspace group: {}'.format(name))
-                if name in new_groups or name in old_groups:
-                    # Respect user input
-                    pass
                 # only add the automatic groups if condition is satisfied,
                 # otherwise remove it
                 if condition(self):
