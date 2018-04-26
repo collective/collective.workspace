@@ -105,7 +105,7 @@ class TeamMembership(object):
                     pass
                 # only add the automatic groups if condition is satisfied,
                 # otherwise remove it
-                if condition(self, new_groups):
+                if condition(self):
                     new_groups.add(name)
                 else:
                     old_groups.add(name)
