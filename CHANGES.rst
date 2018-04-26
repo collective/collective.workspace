@@ -4,7 +4,12 @@ Changelog
 2.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+Bugs fixed:
+
+- fixes the groups authomatic groups calculation in some cases.
+  The bug was preventing the users to be added to the ``Members``
+  in some cases, e.g. during the upgrade step from version 1.x
+  (Fixes #27)
 
 
 2.0b2 (2018-04-10)
