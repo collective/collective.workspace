@@ -65,7 +65,7 @@ class Workspace(object):
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u'Members': lambda x, new_groups=set(): 'Guests' not in set(x.groups) | new_groups,  # noqa: E501
+        u'Members': lambda x: 'Guests' not in set(x.groups),
     }
 
     counters = (

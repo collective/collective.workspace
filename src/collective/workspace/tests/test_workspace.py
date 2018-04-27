@@ -210,9 +210,8 @@ class TestWorkspace(unittest.TestCase):
         api.group.delete(test_group_id)
         self.assertIsNone(api.group.get(test_group_id))
 
-    def test_update_membership_add_auto_groups_True(self):
-        ''' Test that calling _update_groups with the
-        add_auto_groups parameter set to True (the default) will always add
+    def test_update_membership_groups(self):
+        ''' Test that calling _update_groups will always add
         the Members group, unless the user is also in the Guests group
         '''
         self.assertNotIn('TeamMember', self._get_roles_in_workspace())
@@ -252,13 +251,10 @@ class TestWorkspace(unittest.TestCase):
         new = set(['Guests'])
         membership._update_groups(old, new)
         self.assertIn('TeamGuest', self._get_roles_in_workspace())
-        # This actually fails beacuse the condition checks only
-        # the existing groups and not the ones passed in the argument
-        # self.assertNotIn('TeamMember', self._get_roles_in_workspace())
+        self.assertNotIn('TeamMember', self._get_roles_in_workspace())
 
-    def test_update_membership_add_auto_groups_False(self):
-        ''' Test that calling _update_groups with the
-        add_auto_groups parameter set to False, respects the user input
+    def test_membership_remove_all_groups(self):
+        ''' Test that calling _remove_all_groups does so
         '''
         self.assertNotIn('TeamMember', self._get_roles_in_workspace())
 
@@ -266,28 +262,6 @@ class TestWorkspace(unittest.TestCase):
         membership = self.ws.add_to_team(user=self.user1.getId())
         self.assertIn('TeamMember', self._get_roles_in_workspace())
 
-        # groups should be untouched
-        old = set()
-        new = set()
-        membership._update_groups(old, new, add_auto_groups=False)
-        self.assertIn('TeamMember', self._get_roles_in_workspace())
-
-        # groups should be untouched because user is already a member
-        old = set()
-        new = set(['Members'])
-        membership._update_groups(old, new, add_auto_groups=False)
-        self.assertIn('TeamMember', self._get_roles_in_workspace())
-
-        # Adding the user to the Guest group will not remove it from Members
-        # because add_auto_groups is False
-        old = set()
-        new = set(['Guests'])
-        membership._update_groups(old, new, add_auto_groups=False)
-        self.assertIn('TeamGuest', self._get_roles_in_workspace())
-        self.assertIn('TeamMember', self._get_roles_in_workspace())
-
-        # Removing the automatic group will actually remove it
-        old = set(['Members'])
-        new = set()
-        membership._update_groups(old, new, add_auto_groups=False)
+        # groups should be removed
+        membership._remove_all_groups()
         self.assertNotIn('TeamMember', self._get_roles_in_workspace())

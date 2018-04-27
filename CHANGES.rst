@@ -6,9 +6,9 @@ Changelog
 
 Bugs fixed:
 
-- fixes the groups authomatic groups calculation in some cases.
-  The bug was preventing the users to be added to the ``Members``
-  in some cases, e.g. during the upgrade step from version 1.x
+- Fixes the automatic groups calculation in some cases.
+  The bug was preventing the users from being added to the ``Members``
+  group in some cases, e.g. during the upgrade step from version 1.x
   (Fixes #27)
 
 
