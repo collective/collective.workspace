@@ -3,7 +3,7 @@ from collective.workspace.interfaces import IWorkspace
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING  # noqa: E501
 from plone import api
 from plone.app.testing import SITE_OWNER_NAME
-from plone.testing import z2
+from plone.testing import zope
 
 import unittest
 
@@ -15,7 +15,7 @@ class TestWorkspace(unittest.TestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
         self.request = self.layer['request']
-        z2.login(self.app['acl_users'], SITE_OWNER_NAME)
+        zope.login(self.app['acl_users'], SITE_OWNER_NAME)
         self.user1 = api.user.create(
             email='user1@example.com',
             username='user1',
@@ -62,7 +62,7 @@ class TestWorkspace(unittest.TestCase):
         self.ws.add_to_team(
             user=self.user1.getId(),
             groups=(u'Admins',),
-            )
+        )
         self.assertIn(
             self.user1.getId(),
             self.portal.portal_groups.getGroupMembers(

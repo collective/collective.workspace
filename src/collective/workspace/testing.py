@@ -4,7 +4,7 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
-from plone.testing import z2
+from plone.testing import zope
 
 from zope.configuration import xmlconfig
 
@@ -21,12 +21,11 @@ class CollectiveWorkspaceLayer(PloneSandboxLayer):
             collective.workspace,
             context=configurationContext
         )
-
-        z2.installProduct(app, 'collective.workspace')
+        zope.installProduct(app, 'collective.workspace')
 
     def tearDownZope(self, app):
         # Uninstall products installed above
-        z2.uninstallProduct(app, 'collective.workspace')
+        zope.uninstallProduct(app, 'collective.workspace')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.workspace:default')
