@@ -38,7 +38,7 @@ a test workspace
     Click button  Save
 
 the test user is added to the roster
-	Click link  Roster
+	Click link  css=#contentview-team-roster a
 	Click Overlay Link  workspace-add-user
 	Input text  form-widgets-user-widgets-query  test
 	Wait until page contains  test_user_1_
