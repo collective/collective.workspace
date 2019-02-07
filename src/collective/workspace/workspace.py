@@ -18,6 +18,7 @@ from zope.container.interfaces import IObjectRemovedEvent
 from zope.event import notify
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+import six
 
 
 class Workspace(object):
@@ -40,7 +41,7 @@ class Workspace(object):
         counters = {}
         for name, func in self.counters:
             counters[name] = Length()
-        for m in self.context._team.itervalues():
+        for m in six.itervalues(self.context._team):
             for name, func in self.counters:
                 if func(m):
                     counters[name].change(1)
@@ -88,7 +89,7 @@ class Workspace(object):
             return default
 
     def __iter__(self):
-        for key in self.context._team.iterkeys():
+        for key in six.iterkeys(self.context._team):
             yield self[key]
 
     def add_to_team(self, user, groups=None, **kw):
@@ -154,8 +155,10 @@ class Workspace(object):
 def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
-        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        title = '{}: {}'.format(group_name.encode('utf8'), context.Title())
+        if six.PY2:
+            group_name = group_name.encode('utf8')
+        group_id = '{}:{}'.format(group_name, context.UID())
+        title = '{}: {}'.format(group_name, context.Title())
         add_group(group_id, title)
 
 
@@ -164,9 +167,10 @@ def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
     gtool = api.portal.get_tool('portal_groups')
     for group_name in workspace.available_groups:
-        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
-        group_title = '{}: {}'.format(
-            group_name.encode('utf8'), context.Title())
+        if six.PY2:
+            group_name = group_name.encode('utf8')
+        group_id = '{}:{}'.format(group_name, context.UID())
+        group_title = '{}: {}'.format(group_name, context.Title())
         group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
@@ -177,7 +181,9 @@ def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
-        group_id = '{}:{}'.format(group_name.encode('utf8'), context.UID())
+        if six.PY2:
+            group_name = group_name.encode('utf8')
+        group_id = '{}:{}'.format(group_name, context.UID())
         try:
             workspace_groups.removeGroup(group_id)
         except KeyError:  # group already doesn't exist

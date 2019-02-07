@@ -20,6 +20,8 @@ from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implementer
 
+import six
+
 
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
@@ -115,18 +117,22 @@ class TeamMembership(object):
 
         # Add to new groups
         for group_name in (new_groups - old_groups):
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            if six.PY2:
+                group_name = group_name.encode('utf8')
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
                 title = '{}: {}'.format(
-                    group_name.encode('utf8'), context.Title())
+                    group_name, context.Title())
                 add_group(group_id, title)
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
 
         # Remove from old groups
         for group_name in (old_groups - new_groups):
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            if six.PY2:
+                group_name = group_name.encode('utf8')
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
@@ -138,7 +144,9 @@ class TeamMembership(object):
         workspace_groups = get_workspace_groups_plugin()
         groups = set(self.groups) | set(workspace.available_groups)
         for group_name in groups:
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            if six.PY2:
+                group_name = group_name.encode('utf8')
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist

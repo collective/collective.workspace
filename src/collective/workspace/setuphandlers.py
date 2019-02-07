@@ -1,11 +1,13 @@
 from plone import api
-from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
+from Products.PlonePAS.setuphandlers import activatePluginInterfaces
 from zope.component.hooks import getSite
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .pas import get_workspace_groups_plugin
 from .pas import add_group
+
 import logging
+import six
 
 logger = logging.getLogger('collective.workspace')
 
@@ -39,8 +41,10 @@ def migrate_groups(context):
         logger.info('Migrating workspace groups for {}'.format(b.getPath()))
         workspace = IWorkspace(b._unrestrictedGetObject())
         for group_name in set(workspace.available_groups):
-            group_id = '{}:{}'.format(group_name.encode('utf8'), b.UID)
-            title = '{}: {}'.format(group_name.encode('utf8'), b.Title)
+            if six.PY2:
+                group_name = group_name.encode('utf8')
+            group_id = '{}:{}'.format(group_name, b.UID)
+            title = '{}: {}'.format(group_name, b.Title)
             add_group(group_id, title)
         for m in workspace:
             new_groups = m.groups & set(workspace.available_groups)

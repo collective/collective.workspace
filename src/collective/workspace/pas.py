@@ -6,8 +6,9 @@ from collective.workspace.interfaces import IWorkspace
 from plone import api
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
-from zope.interface import implements
+from zope.interface import implementer
 
+import six
 
 PLUGIN_ID = 'workspace_groups'
 
@@ -82,10 +83,10 @@ def add_group(group_id, title):
     group.setGroupProperties({'title': title})
 
 
+@implementer(ILocalRoleProvider)
 class WorkspaceRoles(object):
     """Automatically assign local roles to workspace groups.
     """
-    implements(ILocalRoleProvider)
 
     def __init__(self, context):
         self.workspace = IWorkspace(context)
@@ -93,7 +94,9 @@ class WorkspaceRoles(object):
 
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
-            group_id = group_name.encode('utf8') + ':' + self.uid
+            if six.PY2:
+                group_name = group_name.encode('utf8')
+            group_id = group_name + ':' + self.uid
             yield group_id, roles
 
     def getRoles(self, user_id):

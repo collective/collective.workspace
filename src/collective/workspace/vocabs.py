@@ -3,9 +3,9 @@ from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from plone import api
 from z3c.formwidget.query.interfaces import IQuerySource
-from zope.interface import classProvides
 from zope.interface import directlyProvides
-from zope.interface import implements
+from zope.interface import implementer
+from zope.interface import provider
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
@@ -38,14 +38,14 @@ def TeamGroupsVocabulary(context):
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
 
 
+@provider(IContextSourceBinder)
+@implementer(IQuerySource)
 class UsersSource(object):
     """A source for looking up users.
 
     Unfortunately the one in plone.app.vocabularies is not
     quite workable with z3c.formwidget.query
     """
-    implements(IQuerySource)
-    classProvides(IContextSourceBinder)
 
     def __init__(self, context):
         self._context = context
