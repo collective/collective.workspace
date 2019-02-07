@@ -27,7 +27,7 @@ Scenario: Workspace member gains access to workspace
 *** Keywords ***
 
 Start browser
-    Open browser  http://localhost:55001/plone/  browser=${BROWSER}
+    Open browser  ${START_URL}  browser=${BROWSER}
 
 a test workspace
     Log in as site owner
@@ -50,5 +50,5 @@ the test user appears in the roster
 
 the test user can view the workspace
 	Log in as test user
-	Go to  http://localhost:55001/plone/test-workspace
+	Go to  ${START_URL}/test-workspace
 	Page should contain  Roster
