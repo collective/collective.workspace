@@ -1,13 +1,12 @@
 from AccessControl import getSecurityManager
 from Products.statusmessages.interfaces import IStatusMessage
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace import workspaceMessageFactory as _
 from collections import namedtuple
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform import z2
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
 from z3c.form.form import DisplayForm
@@ -86,10 +85,10 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         self.request = request
         self.workspace = IWorkspace(self.context)
 
-    user_id = None
+    key = None
 
     def publishTraverse(self, request, name):
-        self.user_id = name
+        self.key = name
         return self
 
     @lazy_property
@@ -99,31 +98,26 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def updateFields(self):
         super(TeamMemberEditForm, self).updateFields()
         # don't show the user field if we are editing
-        if self.user_id:
+        if self.key:
             del self.fields['user']
 
     @lazy_property
     def ignoreContext(self):
-        return not bool(self.user_id)
+        return not bool(self.key)
 
     @lazy_property
     def label(self):
-        if self.user_id:
-            mtool = getToolByName(self.context, 'portal_membership')
-            member = mtool.getMemberById(self.user_id)
-            if member is not None:
-                return member.getProperty('fullname') or self.user_id
-            else:
-                return self.user_id
+        if self.key:
+            return self.getContent()._title
         else:
             return _(u'Add Person to Roster')
 
     @lazy_property
     def _content(self):
-        if not self.user_id:
+        if not self.key:
             return self.context
         workspace = self.workspace
-        memberdata = workspace.members[self.user_id]
+        memberdata = workspace.members[self.key]
         return workspace.membership_factory(workspace, memberdata)
 
     def getContent(self):
@@ -136,11 +130,12 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
+            self.status = self.formErrorsMessage
             return
 
         status = _(u'Changes saved')
 
-        if self.user_id:
+        if self.key:
             membership = self.getContent()
             membership.update(data)
         else:
@@ -160,7 +155,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
 
     @property
     def can_remove(self):
-        return self.user_id
+        return self.key
 
     @button.buttonAndHandler(
         _(u'Remove'), condition=lambda self: self.can_remove)

@@ -3,3 +3,6 @@
 - Ben Cole - Documentation/Testing
 - Matthew Sital-Singh - Documentation
 - Paul Grunewald - German translation
+- Cillian De Róiste
+- Wolfgang Thomas
+- Alessandro Pisa

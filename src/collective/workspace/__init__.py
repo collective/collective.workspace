@@ -6,6 +6,7 @@ from zope.i18nmessageid import MessageFactory
 
 workspaceMessageFactory = MessageFactory('collective.workspace')
 
+
 registerMultiPlugin(pas.WorkspaceGroupManager.meta_type)
 
 
@@ -16,5 +17,5 @@ def initialize(context):
         permission=add_user_folders,
         constructors=(pas.manage_addWorkspaceGroupManagerForm,
                       pas.addWorkspaceGroupManager),
-        visibility=None
-        )
+        visibility=None,
+    )

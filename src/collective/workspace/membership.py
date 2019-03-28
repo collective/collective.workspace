@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 from collective.workspace import workspaceMessageFactory as _
+from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
+from collective.workspace.pas import add_group
+from collective.workspace.pas import get_workspace_groups_plugin
 from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
+from DateTime import DateTime
+from plone import api
 from plone.autoform import directives as form
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
@@ -53,19 +59,119 @@ class TeamMembership(object):
             data['UID'] = getUtility(IUUIDGenerator)()
         self.__dict__ = data
 
+    @property
+    def _key(self):
+        return self.user or self.UID
+
+    @property
+    def _title(self):
+        mtool = api.portal.get_tool('portal_membership')
+        member = mtool.getMemberById(self._key)
+        if member is not None:
+            return member.getProperty('fullname') or self._key
+        else:
+            return self._key
+
     def __getattr__(self, name):
         field = self.__class__._schema.get(name, None)
         if field is None:
             raise AttributeError(name)
+        field = field.bind(self)
         return deepcopy(field.default)
+
+    def __setattr__(self, name, value):
+        if name not in ('workspace', '__dict__'):
+            raise Exception(
+                'Setting membership properties directly is not supported. '
+                'Use the `update` method instead.'
+            )
+        super(TeamMembership, self).__setattr__(name, value)
+
+    def _update_groups(self, old_groups, new_groups):
+        workspace = self.workspace
+        context = workspace.context
+        uid = context.UID()
+        workspace_groups = get_workspace_groups_plugin()
+        if self.user is None:
+            return
+
+        for group_name in new_groups:
+            if group_name not in workspace.available_groups:
+                raise ValueError(
+                    'Unknown workspace group: {}'.format(group_name))
+        if self.groups != new_groups:
+            self.__dict__['groups'] = new_groups.copy()
+
+        # Determine automatic groups
+        new_groups = set(new_groups)
+        old_groups = set(old_groups)
+        for name, condition in workspace.auto_groups.items():
+            if name not in workspace.available_groups:
+                raise Exception('Unknown workspace group: {}'.format(name))
+            # only add the automatic groups if condition is satisfied,
+            # otherwise remove it
+            if condition(self):
+                new_groups.add(name)
+            else:
+                old_groups.add(name)
+
+        # Add to new groups
+        for group_name in (new_groups - old_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            try:
+                workspace_groups.addPrincipalToGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                title = '{}: {}'.format(
+                    group_name.encode('utf8'), context.Title())
+                add_group(group_id, title)
+                workspace_groups.addPrincipalToGroup(self.user, group_id)
+
+        # Remove from old groups
+        for group_name in (old_groups - new_groups):
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            try:
+                workspace_groups.removePrincipalFromGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                pass
+
+    def _remove_all_groups(self):
+        workspace = self.workspace
+        uid = workspace.context.UID()
+        workspace_groups = get_workspace_groups_plugin()
+        groups = set(self.groups) | set(workspace.available_groups)
+        for group_name in groups:
+            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            try:
+                workspace_groups.removePrincipalFromGroup(self.user, group_id)
+            except KeyError:  # group doesn't exist
+                pass
+
+    @property
+    def groups(self):
+        # Don't include automatic groups
+        groups = set(self.__dict__.get('groups') or set())
+        groups -= set(self.workspace.auto_groups.keys())
+        return groups
 
     def update(self, data):
         old = self.__dict__.copy()
+        old_key = self._key
+        user_changed = False
+        if 'user' in data and old['user'] != data['user']:
+            # User is changing, so remove the old user from groups.
+            user_changed = True
+            self._remove_all_groups()
+        data['_mtime'] = DateTime()
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
         workspace = self.workspace
-        workspace.context._team[self.user] = self.__dict__
+        if user_changed:
+            # User changed; remove old entry in _team
+            del workspace.context._team[old_key]
+            # Add new user to groups
+            self._update_groups(set(), self.groups)
+        workspace.context._team[self._key] = self.__dict__
 
         # update counters
         for name, func in workspace.counters:
@@ -78,10 +184,17 @@ class TeamMembership(object):
             # of how many roster members match.
             diff = func(self.__dict__) - func(old)
             if diff:
+                if name not in workspace.context._counters:
+                    workspace.context._counters[name] = Length()
                 workspace.context._counters[name].change(diff)
+
+        if 'groups' in data:
+            self._update_groups(old['groups'], data['groups'])
 
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
+        if user_changed:
+            workspace.context.reindexObject(idxs=['workspace_members'])
 
     def handle_added(self):
         pass
@@ -97,7 +210,8 @@ class TeamMembership(object):
         for name, func in workspace.counters:
             if func(self.__dict__):
                 workspace.context._counters[name].change(-1)
-        del self.workspace.members[self.user]
+        del self.workspace.members[self._key]
+        self._remove_all_groups()
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
         self.workspace.context.reindexObject(idxs=['workspace_members'])

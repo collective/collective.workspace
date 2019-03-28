@@ -1,9 +1,8 @@
 from Acquisition import aq_chain
-from collective.workspace import workspaceMessageFactory as _
+from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from Products.CMFCore.utils import getToolByName
+from plone import api
 from z3c.formwidget.query.interfaces import IQuerySource
-from zope.component.hooks import getSite
 from zope.interface import classProvides
 from zope.interface import directlyProvides
 from zope.interface import implements
@@ -24,10 +23,12 @@ def find_workspace(context):
 
 def TeamGroupsVocabulary(context):
     workspace = find_workspace(context)
-    # Membership in the Members group is implied by
-    # inclusion in the roster, so we don't need to show
-    # it as an explicit option.
-    groups = set(workspace.available_groups.keys()) - set([u'Members'])
+    # Membership in the auto_groups is determined automatically,
+    # so we don't need to show them as explicit options.
+    groups = (
+        set(workspace.available_groups.keys()) -
+        set(workspace.auto_groups.keys())
+    )
     items = []
     for group in groups:
         items.append(SimpleTerm(group, group, _(group)))
