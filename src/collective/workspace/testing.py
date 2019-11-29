@@ -1,3 +1,4 @@
+# coding=utf-8
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
@@ -5,7 +6,7 @@ from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 from plone.testing import zope
-
+from plone import api
 from zope.configuration import xmlconfig
 
 
@@ -34,11 +35,12 @@ class CollectiveWorkspaceLayer(PloneSandboxLayer):
         from plone.dexterity.fti import DexterityFTI
         fti = DexterityFTI('Workspace')
         fti.behaviors = (
-            'plone.app.content.interfaces.INameFromTitle',
-            'plone.app.dexterity.behaviors.metadata.IBasic',
-            'collective.workspace.interfaces.IWorkspace',
-            )
+            'plone.namefromtitle',
+            'plone.basic',
+            'collective.workspace.team_workspace',
+        )
         portal.portal_types._setObject('Workspace', fti)
+        api.user.get("test_user_1_").setProperties({"fullname": "Test user"})
 
 
 COLLECTIVE_WORKSPACE_FIXTURE = CollectiveWorkspaceLayer()

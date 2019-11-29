@@ -1,13 +1,16 @@
-from plone import api
-from Products.PlonePAS.setuphandlers import activatePluginInterfaces
-from zope.component.hooks import getSite
+# coding=utf-8
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
-from .pas import get_workspace_groups_plugin
 from .pas import add_group
+from .pas import get_workspace_groups_plugin
+from plone import api
+from plone.dexterity.interfaces import IDexterityFTI
+from Products.PlonePAS.setuphandlers import activatePluginInterfaces
+from zope.component.hooks import getSite
 
 import logging
 import six
+
 
 logger = logging.getLogger('collective.workspace')
 
@@ -49,3 +52,26 @@ def migrate_groups(context):
         for m in workspace:
             new_groups = m.groups & set(workspace.available_groups)
             m._update_groups(set(), new_groups)
+
+
+def move_dotted_to_named_behaviors(context):
+    """ https://github.com/plone/plone.app.upgrade/blob/master/plone/app/upgrade/v52/alphas.py#L58  # noqa: E501
+    """
+    mapping = {
+        IWorkspace.__identifier__: 'collective.workspace.team_workspace'
+    }
+
+    ptt = api.portal.get_tool("portal_types")
+    ftis = (fti for fti in ptt.objectValues() if IDexterityFTI.providedBy(fti))
+    for fti in ftis:
+        behaviors = []
+        change_needed = False
+        for behavior in fti.behaviors:
+            if behavior in mapping:
+                behavior = mapping[behavior]
+                change_needed = True
+            behaviors.append(behavior)
+        if change_needed:
+            fti.behaviors = tuple(behaviors)
+
+    logger.info("Done moving dotted to named behaviors.")

@@ -1,3 +1,4 @@
+# coding=utf-8
 from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
@@ -5,12 +6,11 @@ from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.pas import add_group
 from collective.workspace.pas import get_workspace_groups_plugin
-from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from DateTime import DateTime
 from plone import api
+from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from plone.autoform import directives as form
-from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -26,10 +26,13 @@ import six
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    form.widget(user=AutocompleteFieldWidget)
-    user = schema.Choice(
+    user = schema.TextLine(
         title=_(u'User'),
-        source=UsersSource,
+    )
+    form.widget(
+        "user",
+        AjaxSelectFieldWidget,
+        vocabulary='plone.app.vocabularies.Users',
     )
 
     position = schema.TextLine(

@@ -1,3 +1,4 @@
+# coding=utf-8
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
