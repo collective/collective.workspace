@@ -4,11 +4,11 @@ from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from plone import api
+from Products.CMFPlone.utils import safe_nativestring
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implementer
 
-import six
 
 PLUGIN_ID = 'workspace_groups'
 
@@ -94,8 +94,7 @@ class WorkspaceRoles(object):
 
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
-            if six.PY2:
-                group_name = group_name.encode('utf8')
+            group_name = safe_nativestring(group_name)
             group_id = group_name + ':' + self.uid
             yield group_id, roles
 

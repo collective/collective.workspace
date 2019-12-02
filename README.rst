@@ -7,11 +7,11 @@ collective.workspace
 Introduction
 ------------
 
-collective.workspace package for providing 'membership' in specific areas of a Plone Site. 
+collective.workspace package for providing 'membership' in specific areas of a Plone Site.
 
 It allows you to grant people access to areas of content using a membership group rather than local roles for each user, and to delegate control over that group to people who don't have access to the site-wide user/group control panel.
 
-collective.workspace provides a behavior that can be enabled for any Dexterity content type. When enabled, it adds a "Roster" tab which is where you can manage the team. 
+collective.workspace provides a ``collective.workspace.team_workspace`` behavior that can be enabled for any Dexterity content type. When enabled, it adds a "Roster" tab which is where you can manage the team.
 
 All the functionality takes place via an IWorkspace adapter, which can be overridden to specify:
 

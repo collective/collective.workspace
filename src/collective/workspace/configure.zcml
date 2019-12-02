@@ -11,7 +11,6 @@
   <i18n:registerTranslations directory="locales" />
 
   <include package="plone.app.dexterity" />
-  <include package="plone.formwidget.autocomplete" />
 
   <permission
       id="collective.workspace.ViewRoster"
@@ -56,9 +55,19 @@
     handler=".setuphandlers.migrate_groups"
     />
 
+  <genericsetup:upgradeStep
+    source="0002"
+    destination="0003"
+    title="Store workspace groups in workspace_groups plugin"
+    description="This allows for an optimization of looking up group memberships."
+    profile="collective.workspace:default"
+    handler=".setuphandlers.move_dotted_to_named_behaviors"
+    />
+
   <plone:behavior
       title="Team workspace"
       description="This item is a team workspace."
+      name="collective.workspace.team_workspace"
       provides=".interfaces.IWorkspace"
       factory=".workspace.Workspace"
       marker=".interfaces.IHasWorkspace"
@@ -83,6 +92,8 @@
   <utility
       component=".vocabs.TeamGroupsVocabulary"
       name="collective.workspace.groups" />
+
+  <adapter factory=".adapters.WorkspaceFieldPermissionChecker" />
 
   <adapter
       factory=".pas.WorkspaceRoles"

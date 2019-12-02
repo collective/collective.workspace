@@ -1,3 +1,4 @@
+# coding=utf-8
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
@@ -10,6 +11,7 @@ from BTrees.OOBTree import OOBTree
 from DateTime import DateTime
 from plone import api
 from plone.uuid.interfaces import IUUIDGenerator
+from Products.CMFPlone.utils import safe_nativestring
 from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
 from zope.component import adapter
 from zope.component import getUtility
@@ -18,6 +20,7 @@ from zope.container.interfaces import IObjectRemovedEvent
 from zope.event import notify
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+
 import six
 
 
@@ -155,8 +158,7 @@ class Workspace(object):
 def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
-        if six.PY2:
-            group_name = group_name.encode('utf8')
+        group_name = safe_nativestring(group_name)
         group_id = '{}:{}'.format(group_name, context.UID())
         title = '{}: {}'.format(group_name, context.Title())
         add_group(group_id, title)
@@ -167,8 +169,7 @@ def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
     gtool = api.portal.get_tool('portal_groups')
     for group_name in workspace.available_groups:
-        if six.PY2:
-            group_name = group_name.encode('utf8')
+        group_name = safe_nativestring(group_name)
         group_id = '{}:{}'.format(group_name, context.UID())
         group_title = '{}: {}'.format(group_name, context.Title())
         group = gtool.getGroupById(group_id)
@@ -181,8 +182,7 @@ def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
-        if six.PY2:
-            group_name = group_name.encode('utf8')
+        group_name = safe_nativestring(group_name)
         group_id = '{}:{}'.format(group_name, context.UID())
         try:
             workspace_groups.removeGroup(group_id)

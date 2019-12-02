@@ -1,12 +1,7 @@
 from Acquisition import aq_chain
 from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
-from plone import api
-from z3c.formwidget.query.interfaces import IQuerySource
 from zope.interface import directlyProvides
-from zope.interface import implementer
-from zope.interface import provider
-from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
@@ -36,44 +31,3 @@ def TeamGroupsVocabulary(context):
 
 
 directlyProvides(TeamGroupsVocabulary, IVocabularyFactory)
-
-
-@provider(IContextSourceBinder)
-@implementer(IQuerySource)
-class UsersSource(object):
-    """A source for looking up users.
-
-    Unfortunately the one in plone.app.vocabularies is not
-    quite workable with z3c.formwidget.query
-    """
-
-    def __init__(self, context):
-        self._context = context
-        self._users = api.portal.get_tool('acl_users')
-
-    def __contains__(self, value):
-        return self._users.getUserById(value, None) and True or False
-
-    def search(self, query):
-        users = set()
-        for u in self._users.searchUsers(id=query):
-            users.add(u['userid'])
-        for u in self._users.searchUsers(fullname=query):
-            users.add(u['userid'])
-        for u in users:
-            yield self.getTerm(u)
-
-    def getTerm(self, userid):
-        fullname = userid
-        user = self._users.getUserById(userid, None)
-        if user:
-            fullname = user.getProperty('fullname', None) or userid
-        return SimpleTerm(userid, userid, fullname)
-    getTermByToken = getTerm
-
-    def __iter__(self):
-        for item in self._users.searchUsers():
-            yield self.getTerm(item['userid'])
-
-    def __len__(self):
-        return len(self._users.searchUsers())
