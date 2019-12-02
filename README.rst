@@ -34,6 +34,11 @@ Basic Installation
 * Install collective.workspace in the 'Add-ons' section of Plone's Site Setup.
 * Enable the behaviour on your dexterity content type (Either using GenericSetup or Site Setup -> Dexterity Content Types).
 
+Compatibility
+-------------
+
+For Plone 5.2 use version 3.x. For Plone 4.3, 5.0 and 5.1 you should use version 2.x.
+
 Custom Workspace Groups
 -----------------------
 
