@@ -44,12 +44,11 @@ setup(name='collective.workspace',
           'setuptools',
           'plone.api',
           'plone.app.dexterity',
-          'plone.formwidget.autocomplete',
           # -*- Extra requirements: -*-
       ],
       extras_require={
           'test': [
-              'plone.app.robotframework',
+              'plone.app.robotframework[debug,reload]',
               'plone.app.testing',
           ],
           'develop': [
