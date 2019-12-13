@@ -11,6 +11,6 @@
   	 <a tal:condition="python:mtool.checkPermission(action.permission, context)"
   	    tal:attributes="href string:${context/absolute_url}/${action/view_name}/${options/membership/user}"
   	    tal:content="action/label"
-  	    class="pat-modal" />&nbsp;
+  	    class="pat-plone-modal" />&nbsp;
   </tal:block>
 </td>
