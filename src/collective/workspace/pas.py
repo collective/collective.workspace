@@ -271,7 +271,10 @@ class WorkspaceRoles(object):
 
     def __init__(self, context):
         self.workspace = IWorkspace(context)
-        self.uid = context.UID()
+        uid = context.UID()
+        if uid is None:
+            uid = 'unassigned-uid'
+        self.uid = uid
 
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
