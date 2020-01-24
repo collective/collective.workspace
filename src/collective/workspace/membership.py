@@ -1,3 +1,4 @@
+# coding=utf-8
 from BTrees.Length import Length
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
@@ -5,14 +6,14 @@ from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.pas import add_group
 from collective.workspace.pas import get_workspace_groups_plugin
-from collective.workspace.vocabs import UsersSource
 from copy import deepcopy
 from DateTime import DateTime
 from plone import api
+from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from plone.autoform import directives as form
-from plone.formwidget.autocomplete import AutocompleteFieldWidget
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
+from Products.CMFPlone.utils import safe_nativestring
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
 from zope.component import adapter
@@ -24,10 +25,13 @@ from zope.interface import implementer
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    form.widget(user=AutocompleteFieldWidget)
-    user = schema.Choice(
+    user = schema.TextLine(
         title=_(u'User'),
-        source=UsersSource,
+    )
+    form.widget(
+        "user",
+        AjaxSelectFieldWidget,
+        vocabulary='plone.app.vocabularies.Users',
     )
 
     position = schema.TextLine(
@@ -115,18 +119,20 @@ class TeamMembership(object):
 
         # Add to new groups
         for group_name in (new_groups - old_groups):
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            group_name = safe_nativestring(group_name)
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
                 title = '{}: {}'.format(
-                    group_name.encode('utf8'), context.Title())
+                    group_name, context.Title())
                 add_group(group_id, title)
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
 
         # Remove from old groups
         for group_name in (old_groups - new_groups):
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            group_name = safe_nativestring(group_name)
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
@@ -138,7 +144,8 @@ class TeamMembership(object):
         workspace_groups = get_workspace_groups_plugin()
         groups = set(self.groups) | set(workspace.available_groups)
         for group_name in groups:
-            group_id = '{}:{}'.format(group_name.encode('utf8'), uid)
+            group_name = safe_nativestring(group_name)
+            group_id = '{}:{}'.format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist

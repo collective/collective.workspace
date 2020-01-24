@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.0.dev0'
+version = '3.0.dev0'
 
 long_description = (
     open('README.rst').read()
@@ -18,14 +18,17 @@ setup(name='collective.workspace',
       description="Provide 'membership' in specific areas of a Plone Site",
       long_description=long_description,
       # Get more strings from
-      # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      # https://pypi.org/classifiers/
       classifiers=[
           "Environment :: Web Environment",
           "Framework :: Plone",
+          "Framework :: Plone :: Addon",
+          "Framework :: Plone :: 5.2",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-          "Programming Language :: Python :: 2.6",
           "Programming Language :: Python :: 2.7",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
           "Topic :: Software Development :: Libraries :: Python Modules",
       ],
       keywords='plone workspace collaboration',
@@ -42,12 +45,11 @@ setup(name='collective.workspace',
           'setuptools',
           'plone.api',
           'plone.app.dexterity',
-          'plone.formwidget.autocomplete',
           # -*- Extra requirements: -*-
       ],
       extras_require={
           'test': [
-              'plone.app.robotframework',
+              'plone.app.robotframework[debug,reload]',
               'plone.app.testing',
           ],
           'develop': [

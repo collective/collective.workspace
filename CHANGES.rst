@@ -1,10 +1,11 @@
 Changelog
 =========
 
-2.0 (unreleased)
+3.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Upgrade for Python 3 and Plone 5.2
+  [cillianderoiste]
 
 
 2.0b3 (2018-05-03)
