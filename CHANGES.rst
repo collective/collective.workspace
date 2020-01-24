@@ -4,6 +4,8 @@ Changelog
 3.0 (unreleased)
 ----------------
 
+- Add Finnish localization
+  [datakurre]
 - Added the possibility to specify the available groups through
   the registry record ``collective.workspace.available_groups``
   [datakurre]
