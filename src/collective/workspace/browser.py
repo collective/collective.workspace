@@ -1,3 +1,4 @@
+# coding=utf-8
 from AccessControl import getSecurityManager
 from Products.statusmessages.interfaces import IStatusMessage
 from collective.workspace import workspaceMessageFactory as _
@@ -18,17 +19,17 @@ from zope.publisher.interfaces.browser import IPublishTraverse
 import transaction
 
 
-Action = namedtuple('Action', "label view_name permission")
+Action = namedtuple("Action", "label view_name permission")
 
 
 @implementer(IRosterView)
 class TeamRosterView(AutoFields, DisplayForm):
     """Display the roster as a table."""
 
-    row_template = ViewPageTemplateFile('templates/team_roster_row.pt')
+    row_template = ViewPageTemplateFile("templates/team_roster_row.pt")
 
     row_actions = (
-        Action('Edit', 'edit-roster', 'collective.workspace: Manage roster'),
+        Action("Edit", "edit-roster", "collective.workspace: Manage roster"),
     )
 
     table_actions = ()
@@ -40,7 +41,7 @@ class TeamRosterView(AutoFields, DisplayForm):
 
     @property
     def label(self):
-        return _(u'Roster: ${title}', mapping={'title': self.context.Title()})
+        return _(u"Roster: ${title}", mapping={"title": self.context.Title()})
 
     @lazy_property
     def schema(self):
@@ -62,7 +63,8 @@ class TeamRosterView(AutoFields, DisplayForm):
     @lazy_property
     def can_edit_roster(self):
         return getSecurityManager().checkPermission(
-            'collective.workspace: Manage roster', self.context)
+            "collective.workspace: Manage roster", self.context
+        )
 
     def update(self):
         z2.switch_on(self)
@@ -79,7 +81,6 @@ class TeamRosterView(AutoFields, DisplayForm):
 
 @implementer(IPublishTraverse)
 class TeamMemberEditForm(AutoExtensibleForm, EditForm):
-
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -99,7 +100,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         super(TeamMemberEditForm, self).updateFields()
         # don't show the user field if we are editing
         if self.key:
-            del self.fields['user']
+            del self.fields["user"]
 
     @lazy_property
     def ignoreContext(self):
@@ -110,7 +111,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         if self.key:
             return self.getContent()._title
         else:
-            return _(u'Add Person to Roster')
+            return _(u"Add Person to Roster")
 
     @lazy_property
     def _content(self):
@@ -126,14 +127,14 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def validateInvariants(self, membership):
         pass
 
-    @button.buttonAndHandler(_(u'Save'))
+    @button.buttonAndHandler(_(u"Save"))
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
             return
 
-        status = _(u'Changes saved')
+        status = _(u"Changes saved")
 
         if self.key:
             membership = self.getContent()
@@ -141,7 +142,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         else:
             # Add new roster member
             membership = self.workspace.add_to_team(**data)
-            status = _(u'User added')
+            status = _(u"User added")
 
         try:
             self.validateInvariants(membership)
@@ -151,24 +152,22 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
             raise
 
         self._finished = True
-        IStatusMessage(self.request).addStatusMessage(status, 'info')
+        IStatusMessage(self.request).addStatusMessage(status, "info")
 
     @property
     def can_remove(self):
         return self.key
 
-    @button.buttonAndHandler(
-        _(u'Remove'), condition=lambda self: self.can_remove)
+    @button.buttonAndHandler(_(u"Remove"), condition=lambda self: self.can_remove)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
         self._finished = True
-        IStatusMessage(self.request).addStatusMessage(
-            _(u"User removed"), "info")
+        IStatusMessage(self.request).addStatusMessage(_(u"User removed"), "info")
 
     _finished = False
 
     def render(self):
         if self._finished:
-            return ' '
+            return " "
         return super(TeamMemberEditForm, self).render()

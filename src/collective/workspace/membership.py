@@ -30,40 +30,31 @@ except ImportError:
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    user = schema.TextLine(
-        title=_(u'User'),
-    )
+    user = schema.TextLine(title=_(u"User"),)
     form.widget(
-        "user",
-        AjaxSelectFieldWidget,
-        vocabulary='plone.app.vocabularies.Users',
+        "user", AjaxSelectFieldWidget, vocabulary="plone.app.vocabularies.Users",
     )
 
-    position = schema.TextLine(
-        title=_(u'Position'),
-        required=False,
-    )
+    position = schema.TextLine(title=_(u"Position"), required=False,)
 
     form.widget(groups=CheckBoxFieldWidget)
     groups = schema.Set(
-        title=_(u'Groups'),
+        title=_(u"Groups"),
         required=False,
-        value_type=schema.Choice(
-            vocabulary='collective.workspace.groups',
-        ),
+        value_type=schema.Choice(vocabulary="collective.workspace.groups",),
     )
 
 
 @implementer(ITeamMembership)
 class TeamMembership(object):
 
-    __slots__ = ('workspace', '__dict__')
+    __slots__ = ("workspace", "__dict__")
     _schema = ITeamMembership
 
     def __init__(self, workspace, data):
         self.workspace = workspace
-        if 'UID' not in data:
-            data['UID'] = getUtility(IUUIDGenerator)()
+        if "UID" not in data:
+            data["UID"] = getUtility(IUUIDGenerator)()
         self.__dict__ = data
 
     @property
@@ -72,10 +63,10 @@ class TeamMembership(object):
 
     @property
     def _title(self):
-        mtool = api.portal.get_tool('portal_membership')
+        mtool = api.portal.get_tool("portal_membership")
         member = mtool.getMemberById(self._key)
         if member is not None:
-            return member.getProperty('fullname') or self._key
+            return member.getProperty("fullname") or self._key
         else:
             return self._key
 
@@ -87,10 +78,10 @@ class TeamMembership(object):
         return deepcopy(field.default)
 
     def __setattr__(self, name, value):
-        if name not in ('workspace', '__dict__'):
+        if name not in ("workspace", "__dict__"):
             raise Exception(
-                'Setting membership properties directly is not supported. '
-                'Use the `update` method instead.'
+                "Setting membership properties directly is not supported. "
+                "Use the `update` method instead."
             )
         super(TeamMembership, self).__setattr__(name, value)
 
@@ -104,17 +95,16 @@ class TeamMembership(object):
 
         for group_name in new_groups:
             if group_name not in workspace.available_groups:
-                raise ValueError(
-                    'Unknown workspace group: {}'.format(group_name))
+                raise ValueError("Unknown workspace group: {}".format(group_name))
         if self.groups != new_groups:
-            self.__dict__['groups'] = new_groups.copy()
+            self.__dict__["groups"] = new_groups.copy()
 
         # Determine automatic groups
         new_groups = set(new_groups)
         old_groups = set(old_groups)
         for name, condition in workspace.auto_groups.items():
             if name not in workspace.available_groups:
-                raise Exception('Unknown workspace group: {}'.format(name))
+                raise Exception("Unknown workspace group: {}".format(name))
             # only add the automatic groups if condition is satisfied,
             # otherwise remove it
             if condition(self):
@@ -123,21 +113,20 @@ class TeamMembership(object):
                 old_groups.add(name)
 
         # Add to new groups
-        for group_name in (new_groups - old_groups):
+        for group_name in new_groups - old_groups:
             group_name = safe_nativestring(group_name)
-            group_id = '{}:{}'.format(group_name, uid)
+            group_id = "{}:{}".format(group_name, uid)
             try:
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
-                title = '{}: {}'.format(
-                    group_name, context.Title())
+                title = "{}: {}".format(group_name, context.Title())
                 add_group(group_id, title)
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
 
         # Remove from old groups
-        for group_name in (old_groups - new_groups):
+        for group_name in old_groups - new_groups:
             group_name = safe_nativestring(group_name)
-            group_id = '{}:{}'.format(group_name, uid)
+            group_id = "{}:{}".format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
@@ -150,7 +139,7 @@ class TeamMembership(object):
         groups = set(self.groups) | set(workspace.available_groups)
         for group_name in groups:
             group_name = safe_nativestring(group_name)
-            group_id = '{}:{}'.format(group_name, uid)
+            group_id = "{}:{}".format(group_name, uid)
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
             except KeyError:  # group doesn't exist
@@ -159,7 +148,7 @@ class TeamMembership(object):
     @property
     def groups(self):
         # Don't include automatic groups
-        groups = set(self.__dict__.get('groups') or set())
+        groups = set(self.__dict__.get("groups") or set())
         groups -= set(self.workspace.auto_groups.keys())
         return groups
 
@@ -167,11 +156,11 @@ class TeamMembership(object):
         old = self.__dict__.copy()
         old_key = self._key
         user_changed = False
-        if 'user' in data and old['user'] != data['user']:
+        if "user" in data and old["user"] != data["user"]:
             # User is changing, so remove the old user from groups.
             user_changed = True
             self._remove_all_groups()
-        data['_mtime'] = DateTime()
+        data["_mtime"] = DateTime()
         self.__dict__.update(data)
         # make sure change is persisted
         # XXX really we should use PersistentDicts
@@ -198,13 +187,13 @@ class TeamMembership(object):
                     workspace.context._counters[name] = Length()
                 workspace.context._counters[name].change(diff)
 
-        if 'groups' in data:
-            self._update_groups(old['groups'], data['groups'])
+        if "groups" in data:
+            self._update_groups(old["groups"], data["groups"])
 
         self.handle_modified(old)
         notify(TeamMemberModifiedEvent(self.workspace.context, self))
         if user_changed:
-            workspace.context.reindexObject(idxs=['workspace_members'])
+            workspace.context.reindexObject(idxs=["workspace_members"])
 
     def handle_added(self):
         pass
@@ -224,7 +213,7 @@ class TeamMembership(object):
         self._remove_all_groups()
         self.handle_removed()
         notify(TeamMemberRemovedEvent(self.workspace.context, self))
-        self.workspace.context.reindexObject(idxs=['workspace_members'])
+        self.workspace.context.reindexObject(idxs=["workspace_members"])
 
 
 @adapter(ITeamMembership)

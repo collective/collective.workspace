@@ -15,3 +15,6 @@ log.html
 *.pyc
 /share
 *.mo
+.mr.developer.cfg
+.vscode/
+pyvenv.cfg

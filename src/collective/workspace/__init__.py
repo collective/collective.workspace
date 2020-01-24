@@ -15,7 +15,9 @@ def initialize(context):
     context.registerClass(
         pas.WorkspaceGroupManager,
         permission=add_user_folders,
-        constructors=(pas.manage_addWorkspaceGroupManagerForm,
-                      pas.addWorkspaceGroupManager),
+        constructors=(
+            pas.manage_addWorkspaceGroupManagerForm,
+            pas.addWorkspaceGroupManager,
+        ),
         visibility=None,
     )
