@@ -1,11 +1,11 @@
 # coding=utf-8
-from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
-from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import IntegrationTesting
-from plone.app.testing import FunctionalTesting
-from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 from plone import api
+from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
+from plone.app.testing import applyProfile
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
 from zope.configuration import xmlconfig
 
 

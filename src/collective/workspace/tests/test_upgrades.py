@@ -1,8 +1,6 @@
 # coding=utf-8
 from collective.workspace.interfaces import IWorkspace
-from collective.workspace.testing import (
-    COLLECTIVE_WORKSPACE_INTEGRATION_TESTING,
-)  # noqa: E501
+from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from plone import api
 from Products.GenericSetup.upgrade import listUpgradeSteps
 

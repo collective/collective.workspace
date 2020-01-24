@@ -15,7 +15,7 @@ env:
     - PLONE_VERSION=5.2.x
     - PLONE_VERSION=5.1.x
 matrix:
-  allow_failures:
+  exclude:
     - python: 3.6
       env: PLONE_VERSION=5.1.x
     - python: 3.7
@@ -31,11 +31,11 @@ before_install:
   - export PATH=$PATH:$PWD/geckodriver
 install:
   - pip install -r requirements.txt
+  - sed -ie "s#plone-x.x.x.cfg#plone-$PLONE_VERSION.cfg#" travis.cfg
+  - buildout -c travis.cfg
 services:
   - xvfb
 before_script:
   - "export ROBOT_HTTP_PORT=55001"
 script:
-  - sed -ie "s#plone-x.x.x.cfg#plone-$PLONE_VERSION.cfg#" travis.cfg
-  - buildout -c travis.cfg
   - bin/test
