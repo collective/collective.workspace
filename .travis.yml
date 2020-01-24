@@ -16,8 +16,11 @@ env:
     - PLONE_VERSION=5.1.x
 matrix:
   allow_failures:
-    - env: PLONE_VERSION=5.1.x
-before_install:
+    - python: 3.6
+      env: PLONE_VERSION=5.1.x
+      - python: 3.7
+      env: PLONE_VERSION=5.1.x
+      before_install:
   - mkdir -p $HOME/buildout-cache/{eggs,downloads}
   - mkdir $HOME/.buildout
   - echo "[buildout]" > $HOME/.buildout/default.cfg
