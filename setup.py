@@ -45,6 +45,7 @@ setup(name='collective.workspace',
           'setuptools',
           'plone.api',
           'plone.app.dexterity',
+          'six',
           # -*- Extra requirements: -*-
       ],
       extras_require={

@@ -11,7 +11,6 @@ from BTrees.OOBTree import OOBTree
 from DateTime import DateTime
 from plone import api
 from plone.uuid.interfaces import IUUIDGenerator
-from Products.CMFPlone.utils import safe_nativestring
 from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
 from zope.component import adapter
 from zope.component import getUtility
@@ -22,6 +21,12 @@ from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 import six
+
+
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    from collective.workspace._compat import safe_nativestring
 
 
 class Workspace(object):
