@@ -4,6 +4,11 @@
 msgid ""
 msgstr ""
 
-#: ./templates/team_roster_row.pt
 msgid "Edit"
+msgstr ""
+
+msgid "Admins"
+msgstr ""
+
+msgid "Guests"
 msgstr ""

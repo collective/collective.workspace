@@ -5,14 +5,19 @@ from .pas import add_group
 from .pas import get_workspace_groups_plugin
 from plone import api
 from plone.dexterity.interfaces import IDexterityFTI
-from Products.CMFPlone.utils import safe_nativestring
 from Products.PlonePAS.setuphandlers import activatePluginInterfaces
 from zope.component.hooks import getSite
 
 import logging
 
 
-logger = logging.getLogger("collective.workspace")
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    from collective.workspace._compat import safe_nativestring
+
+
+logger = logging.getLogger('collective.workspace')
 
 
 def setup_pas(context):

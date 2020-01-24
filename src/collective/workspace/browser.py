@@ -1,7 +1,7 @@
 # coding=utf-8
 from AccessControl import getSecurityManager
 from Products.statusmessages.interfaces import IStatusMessage
-from collective.workspace.interfaces import _
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
 from collections import namedtuple

@@ -1,8 +1,8 @@
 # coding=utf-8
 from BTrees.Length import Length
+from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.events import TeamMemberModifiedEvent
 from collective.workspace.events import TeamMemberRemovedEvent
-from collective.workspace.interfaces import _
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.pas import add_group
 from collective.workspace.pas import get_workspace_groups_plugin
@@ -13,13 +13,18 @@ from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
-from Products.CMFPlone.utils import safe_nativestring
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope import schema
 from zope.component import adapter
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implementer
+
+
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    from collective.workspace._compat import safe_nativestring
 
 
 class ITeamMembership(model.Schema):

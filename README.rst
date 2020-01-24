@@ -42,31 +42,5 @@ For Plone 5.2 use version 3.x. For Plone 4.3, 5.0 and 5.1 you should use version
 Custom Workspace Groups
 -----------------------
 
-The default groups available on a workspace are 'Guests', 'Members', and 'Admins'. You can customise the groups that are available and the default permissions they are given by adding a custom IWorkspace adapter:
-
-``configure.zcml``
-
-.. code:: xml
-
-  <adapter
-     for="mypackage.MyContentType"
-     provides="collective.workspace.interfaces.IWorkspace"
-     factory=".adapters.MyWorkspace"
-     />
-
-``adapters.py``
-
-.. code:: python
-
-  from collective.workspace.workspace import Workspace
-
-  class MyWorkspace(Workspace):
-      """
-      A custom workspace behaviour, based on collective.workspace
-      """
-      # A list of groups to which team members can be assigned.
-      # Maps group name -> roles
-      available_groups = {
-          u'Supervillains': ('Reader', ),
-          u'Superheroes': ('Reader', 'Contributor', 'Reviewer', 'Editor',),
-      }
+The default groups available on a workspace are 'Guests', 'Members', and 'Admins'.
+You can customise the groups that are available editing the registry record ``collective.workspace.available_groups``.

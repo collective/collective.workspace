@@ -4,6 +4,8 @@ from zope.interface import Interface
 
 _ = MessageFactory("collective.workspace")
 
+from zope.interface import Interface
+
 
 class IHasWorkspace(Interface):
     """Marker for team workspaces."""

@@ -4,8 +4,13 @@ Changelog
 3.0 (unreleased)
 ----------------
 
-- Upgrade for Python 3 and Plone 5.2
-  [cillianderoiste]
+- Add Finnish localization
+  [datakurre]
+- Added the possibility to specify the available groups through
+  the registry record ``collective.workspace.available_groups``
+  [datakurre]
+- The package is now compatible and tested with Plone 5.1 and Plone 5.2
+  [ale-rt, cillianderoiste]
 
 
 2.0b3 (2018-05-03)

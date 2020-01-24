@@ -1,13 +1,23 @@
 language: python
-sudo: false
 cache:
   pip: true
   directories:
     - eggs
 python:
-  - "2.7"
-  - "3.6"
-  - "3.7"
+  - 2.7
+  - 3.6
+  - 3.7
+env:
+  - PLONE_VERSION=5.1
+  - PLONE_VERSION=5.2
+jobs:
+  exclude:
+    - python: 3.6
+      env: PLONE_VERSION=5.1
+    - python: 3.7
+      env: PLONE_VERSION=5.1
+matrix:
+  fast_finish: true
 firefox: "latest"
 env:
   matrix:
