@@ -12,12 +12,10 @@ matrix:
 firefox: "latest"
 env:
   matrix:
-    - PLONE_VERSION=5.2.x BUILDOUT=buildout
-    - PLONE_VERSION=5.1.x BUILDOUT=buildout
-jobs:
+    - PLONE_VERSION=5.2.x
+    - PLONE_VERSION=5.1.x
   allow_failures:
-    - env: PLONE_VERSION=5.1.x PYTHON=3.6
-    - env: PLONE_VERSION=5.1.x PYTHON=3.7
+    - env: PLONE_VERSION=5.1.x
 before_install:
   - mkdir -p $HOME/buildout-cache/{eggs,downloads}
   - mkdir $HOME/.buildout
