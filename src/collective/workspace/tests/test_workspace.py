@@ -3,9 +3,14 @@ from collective.workspace.interfaces import IWorkspace
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING  # noqa: E501
 from plone import api
 from plone.app.testing import SITE_OWNER_NAME
-from plone.testing import zope
 
 import unittest
+
+
+try:
+    from plone.testing import zope
+except ImportError:
+    from plone.testing import z2 as zope
 
 
 class TestWorkspace(unittest.TestCase):
