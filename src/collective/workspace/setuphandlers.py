@@ -17,7 +17,7 @@ except ImportError:
     from collective.workspace._compat import safe_nativestring
 
 
-logger = logging.getLogger('collective.workspace')
+logger = logging.getLogger("collective.workspace")
 
 
 def setup_pas(context):

@@ -16,9 +16,9 @@ except ImportError:
     from collective.workspace._compat import safe_nativestring
 
 
-_ = MessageFactory('collective.workspace')
+_ = MessageFactory("collective.workspace")
 
-PLUGIN_ID = 'workspace_groups'
+PLUGIN_ID = "workspace_groups"
 
 
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
