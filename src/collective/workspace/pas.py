@@ -1,3 +1,4 @@
+# coding=utf-8
 from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
@@ -10,13 +11,13 @@ from Products.PlonePAS.plugins.group import GroupManager
 from zope.interface import implementer
 
 
-PLUGIN_ID = 'workspace_groups'
+PLUGIN_ID = "workspace_groups"
 
 
 manage_addWorkspaceGroupManagerForm = PageTemplateFile(
-    'templates/WorkspaceGroupManagerForm',
+    "templates/WorkspaceGroupManagerForm",
     globals(),
-    __name__='manage_addWorkspaceGroupManagerForm'
+    __name__="manage_addWorkspaceGroupManagerForm",
 )
 
 
@@ -27,10 +28,9 @@ def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
     dispatcher._setObject(pmm.getId(), pmm)
 
     if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect(
-            '%s/manage_workspace?manage_tabs_message='
-            'WorkspaceGroupManager+added.'
-            % dispatcher.absolute_url()
+        REQUEST["RESPONSE"].redirect(
+            "%s/manage_workspace?manage_tabs_message="
+            "WorkspaceGroupManager+added." % dispatcher.absolute_url()
         )
 
 
@@ -43,7 +43,7 @@ class WorkspaceGroupManager(GroupManager):
     control panel.
     """
 
-    meta_type = 'collective.workspace Group Manager'
+    meta_type = "collective.workspace Group Manager"
 
     security = ClassSecurityInfo()
 
@@ -70,7 +70,7 @@ InitializeClass(WorkspaceGroupManager)
 
 
 def get_workspace_groups_plugin():
-    acl_users = api.portal.get_tool('acl_users')
+    acl_users = api.portal.get_tool("acl_users")
     return getattr(acl_users, PLUGIN_ID)
 
 
@@ -78,9 +78,9 @@ def add_group(group_id, title):
     workspace_groups = get_workspace_groups_plugin()
     if group_id not in workspace_groups._groups:
         workspace_groups.addGroup(group_id)
-    gtool = api.portal.get_tool('portal_groups')
+    gtool = api.portal.get_tool("portal_groups")
     group = gtool.getGroupById(group_id)
-    group.setGroupProperties({'title': title})
+    group.setGroupProperties({"title": title})
 
 
 @implementer(ILocalRoleProvider)
@@ -95,7 +95,7 @@ class WorkspaceRoles(object):
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
             group_name = safe_nativestring(group_name)
-            group_id = group_name + ':' + self.uid
+            group_id = group_name + ":" + self.uid
             yield group_id, roles
 
     def getRoles(self, user_id):

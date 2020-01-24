@@ -1,3 +1,4 @@
+# coding=utf-8
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from plone.indexer import indexer

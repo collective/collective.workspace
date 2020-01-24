@@ -12,7 +12,9 @@ from DateTime import DateTime
 from plone import api
 from plone.uuid.interfaces import IUUIDGenerator
 from Products.CMFPlone.utils import safe_nativestring
-from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
+from Products.PluggableAuthService.interfaces.events import (
+    IPrincipalDeletedEvent,
+)  # noqa: E501
 from zope.component import adapter
 from zope.component import getUtility
 from zope.container.interfaces import IObjectAddedEvent
@@ -34,10 +36,10 @@ class Workspace(object):
         self.context = context
 
         # create a BTree to store team member data
-        if not hasattr(self.context, '_team'):
+        if not hasattr(self.context, "_team"):
             self.context._team = OOBTree()
 
-        if not hasattr(self.context, '_counters'):
+        if not hasattr(self.context, "_counters"):
             self._recount()
 
     def _recount(self):
@@ -61,20 +63,17 @@ class Workspace(object):
     # A list of groups to which team members can be assigned.
     # Maps group name -> roles
     available_groups = {
-        u'Members': ('Contributor', 'Reader', 'TeamMember'),
-        u'Guests': ('TeamGuest', ),
-        u'Admins': ('Contributor', 'Editor', 'Reviewer',
-                    'Reader', 'TeamManager',),
+        u"Members": ("Contributor", "Reader", "TeamMember"),
+        u"Guests": ("TeamGuest",),
+        u"Admins": ("Contributor", "Editor", "Reviewer", "Reader", "TeamManager",),
     }
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u'Members': lambda x: 'Guests' not in set(x.groups),
+        u"Members": lambda x: "Guests" not in set(x.groups),
     }
 
-    counters = (
-        ('members', lambda x: True),
-    )
+    counters = (("members", lambda x: True),)
 
     @property
     def members(self):
@@ -110,16 +109,16 @@ class Workspace(object):
         # TODO: user argument should be renamed to userid for clarity
         #       however doing so now would break backwards compatibility
         data = kw.copy()
-        data['user'] = user
+        data["user"] = user
         if groups is not None:
-            data['groups'] = groups = set(groups)
+            data["groups"] = groups = set(groups)
         members = self.members
         if not user or user not in members:
-            data['UID'] = uid = getUtility(IUUIDGenerator)()
+            data["UID"] = uid = getUtility(IUUIDGenerator)()
             key = user or uid
-            data['_mtime'] = DateTime()
+            data["_mtime"] = DateTime()
             if groups is None:
-                data['groups'] = groups = set()
+                data["groups"] = groups = set()
             members[key] = data
             for name, func in self.counters:
                 if func(data):
@@ -130,9 +129,7 @@ class Workspace(object):
             membership.handle_added()
             membership._update_groups(set(), groups)
             notify(TeamMemberAddedEvent(self.context, membership))
-            self.context.reindexObject(
-                idxs=['workspace_members', 'workspace_leaders']
-            )
+            self.context.reindexObject(idxs=["workspace_members", "workspace_leaders"])
         else:
             membership = self.membership_factory(self, self.members[user])
             membership.update(data)
@@ -159,19 +156,19 @@ def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = '{}:{}'.format(group_name, context.UID())
-        title = '{}: {}'.format(group_name, context.Title())
+        group_id = "{}:{}".format(group_name, context.UID())
+        title = "{}: {}".format(group_name, context.Title())
         add_group(group_id, title)
 
 
 @adapter(IHasWorkspace, IObjectModifiedEvent)
 def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
-    gtool = api.portal.get_tool('portal_groups')
+    gtool = api.portal.get_tool("portal_groups")
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = '{}:{}'.format(group_name, context.UID())
-        group_title = '{}: {}'.format(group_name, context.Title())
+        group_id = "{}:{}".format(group_name, context.UID())
+        group_title = "{}: {}".format(group_name, context.Title())
         group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
@@ -183,7 +180,7 @@ def handle_workspace_removed(context, event):
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = '{}:{}'.format(group_name, context.UID())
+        group_id = "{}:{}".format(group_name, context.UID())
         try:
             workspace_groups.removeGroup(group_id)
         except KeyError:  # group already doesn't exist
@@ -192,9 +189,9 @@ def handle_workspace_removed(context, event):
 
 @adapter(IHasWorkspace, IObjectCopiedEvent)
 def handle_workspace_copied(context, event):
-    if hasattr(context, '_team'):
+    if hasattr(context, "_team"):
         del context._team
-    if hasattr(context, '_counters'):
+    if hasattr(context, "_counters"):
         del context._counters
 
 
@@ -202,7 +199,7 @@ def handle_workspace_copied(context, event):
 def handle_principal_deleted(event):
     """When a user is deleted, remove it from all workspaces."""
     principal = event.principal
-    catalog = api.portal.get_tool('portal_catalog')
+    catalog = api.portal.get_tool("portal_catalog")
     for b in catalog.unrestrictedSearchResults(workspace_members=principal):
         workspace = IWorkspace(b._unrestrictedGetObject(), None)
         if workspace is not None:
