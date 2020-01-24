@@ -5,9 +5,20 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
-from plone.testing import zope
 from plone import api
 from zope.configuration import xmlconfig
+
+
+try:
+    from plone.testing import zope
+except ImportError:
+    from plone.testing import z2 as zope
+
+
+try:
+    from plone.testing.zope import WSGI_SERVER_FIXTURE
+except ImportError:
+    from plone.testing.z2 import ZSERVER_FIXTURE as WSGI_SERVER_FIXTURE
 
 
 class CollectiveWorkspaceLayer(PloneSandboxLayer):
@@ -52,7 +63,7 @@ COLLECTIVE_WORKSPACE_ROBOT_TESTING = FunctionalTesting(
     bases=(
         COLLECTIVE_WORKSPACE_FIXTURE,
         AUTOLOGIN_LIBRARY_FIXTURE,
-        zope.WSGI_SERVER_FIXTURE,
+        WSGI_SERVER_FIXTURE,
     ),
     name="CollectiveWorkspaceLayer:Robot"
 )

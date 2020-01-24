@@ -4,11 +4,16 @@ from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import IWorkspace
 from plone import api
-from Products.CMFPlone.utils import safe_nativestring
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
+
+
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    from collective.workspace._compat import safe_nativestring
 
 
 _ = MessageFactory('collective.workspace')
