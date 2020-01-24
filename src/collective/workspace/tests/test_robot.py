@@ -1,6 +1,7 @@
 # coding=utf-8
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_ROBOT_TESTING
 from plone.testing import layered
+
 import robotsuite
 import unittest
 

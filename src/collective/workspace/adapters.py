@@ -1,8 +1,8 @@
 # coding=utf-8
 from collective.workspace.interfaces import IHasWorkspace
+from plone import api
 from plone.app.dexterity.permissions import DXFieldPermissionChecker
 from zope.component import adapter
-from plone import api
 
 
 @adapter(IHasWorkspace)

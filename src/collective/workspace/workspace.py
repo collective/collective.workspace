@@ -12,9 +12,7 @@ from DateTime import DateTime
 from plone import api
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUIDGenerator
-from Products.PluggableAuthService.interfaces.events import (
-    IPrincipalDeletedEvent,
-)  # noqa: E501
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
 from zope.component import adapter
 from zope.component import getUtility
 from zope.container.interfaces import IObjectAddedEvent

@@ -4,6 +4,7 @@ from collective.workspace import pas
 from Products.PluggableAuthService import registerMultiPlugin
 from zope.i18nmessageid import MessageFactory
 
+
 workspaceMessageFactory = MessageFactory("collective.workspace")
 
 

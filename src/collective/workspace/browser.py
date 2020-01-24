@@ -1,14 +1,14 @@
 # coding=utf-8
 from AccessControl import getSecurityManager
-from Products.statusmessages.interfaces import IStatusMessage
+from collections import namedtuple
 from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IRosterView
 from collective.workspace.interfaces import IWorkspace
-from collections import namedtuple
 from plone.autoform.base import AutoFields
 from plone.autoform.form import AutoExtensibleForm
 from plone.z3cform import z2
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import button
 from z3c.form.form import DisplayForm
 from z3c.form.form import EditForm
@@ -16,6 +16,7 @@ from z3c.form.interfaces import ActionExecutionError
 from zope.cachedescriptors.property import Lazy as lazy_property
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IPublishTraverse
+
 import transaction
 
 
