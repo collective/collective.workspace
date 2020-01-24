@@ -7,15 +7,6 @@ python:
   - 2.7
   - 3.6
   - 3.7
-env:
-  - PLONE_VERSION=5.1
-  - PLONE_VERSION=5.2
-jobs:
-  exclude:
-    - python: 3.6
-      env: PLONE_VERSION=5.1
-    - python: 3.7
-      env: PLONE_VERSION=5.1
 matrix:
   fast_finish: true
 firefox: "latest"
@@ -23,6 +14,10 @@ env:
   matrix:
     - PLONE_VERSION=5.2.x BUILDOUT=buildout
     - PLONE_VERSION=5.1.x BUILDOUT=buildout
+jobs:
+  allow_failures:
+    - env: PLONE_VERSION=5.1.x PYTHON=3.6
+    - env: PLONE_VERSION=5.1.x PYTHON=3.7
 before_install:
   - mkdir -p $HOME/buildout-cache/{eggs,downloads}
   - mkdir $HOME/.buildout
