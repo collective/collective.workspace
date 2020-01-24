@@ -37,7 +37,8 @@ Basic Installation
 Compatibility
 -------------
 
-For Plone 5.2 use version 3.x. For Plone 4.3, 5.0 and 5.1 you should use version 2.x.
+For Plone 5.1 and 5.2 you should use version 3.x.
+For Plone 4.3 and 5.0 you should use version 2.x.
 
 Custom Workspace Groups
 -----------------------
