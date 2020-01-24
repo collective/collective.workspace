@@ -10,6 +10,7 @@ from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from DateTime import DateTime
 from plone import api
+from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUIDGenerator
 from Products.CMFPlone.utils import safe_nativestring
 from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent  # noqa: E501
@@ -60,12 +61,23 @@ class Workspace(object):
 
     # A list of groups to which team members can be assigned.
     # Maps group name -> roles
-    available_groups = {
-        u'Members': ('Contributor', 'Reader', 'TeamMember'),
-        u'Guests': ('TeamGuest', ),
-        u'Admins': ('Contributor', 'Editor', 'Reviewer',
-                    'Reader', 'TeamManager',),
-    }
+    @property
+    def available_groups(self):
+        registry = getUtility(IRegistry)
+        return registry.get(
+            "collective.workspace.available_groups",
+            {
+                u"Members": ("Contributor", "Reader", "TeamMember"),
+                u"Guests": ("TeamGuest",),
+                u"Admins": (
+                    "Contributor",
+                    "Editor",
+                    "Reviewer",
+                    "Reader",
+                    "TeamManager",
+                ),
+            },
+        )
 
     # Add everyone on the roster to the Members group
     auto_groups = {
