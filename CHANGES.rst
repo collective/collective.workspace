@@ -1,8 +1,8 @@
 Changelog
 =========
 
-3.0 (unreleased)
-----------------
+3.0b1 (2020-01-27)
+------------------
 
 - Add Finnish localization
   [datakurre]
