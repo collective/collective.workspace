@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 2.0b3 (2018-05-03)
 ------------------
 
