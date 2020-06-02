@@ -5,10 +5,12 @@ from .pas import add_group
 from .pas import get_workspace_groups_plugin
 from plone import api
 from plone.dexterity.interfaces import IDexterityFTI
+from Products.CMFPlone.utils import safe_encode
 from Products.PlonePAS.setuphandlers import activatePluginInterfaces
 from zope.component.hooks import getSite
 
 import logging
+import six
 
 
 try:
@@ -79,3 +81,18 @@ def move_dotted_to_named_behaviors(context):
             fti.behaviors = tuple(behaviors)
 
     logger.info("Done moving dotted to named behaviors.")
+
+
+def fix_workspace_members(context):
+    """ This makes sense only on Python2 because on Python3 the index keys
+    will already be str instances in any case
+    """
+    if not six.PY2:
+        return
+    pc = api.portal.get_tool("portal_catalog")
+    index = pc._catalog.indexes.get("workspace_members")
+    if not index:
+        return
+    keys_to_fix = (key for key in index._index if isinstance(key, six.text_type))
+    for key in keys_to_fix:
+        index._index[safe_encode(key)] = index._index.pop(key)

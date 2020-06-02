@@ -5,10 +5,16 @@ from plone.indexer import indexer
 from zope.interface import Interface
 
 
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    from collective.workspace._compat import safe_nativestring
+
+
 @indexer(IHasWorkspace)
 def workspace_members(self):
     workspace = IWorkspace(self)
-    return set(workspace.members)
+    return set(map(safe_nativestring, workspace.members or []))
 
 
 @indexer(Interface)

@@ -64,6 +64,15 @@
     handler=".setuphandlers.move_dotted_to_named_behaviors"
     />
 
+  <genericsetup:upgradeStep
+    source="0003"
+    destination="0004"
+    title="Fix the workspace_members indexer"
+    description="Normalize the indexed workspace_members values to be native strings. This is only relevant for Python2, on Python3 this will just upgrade the version."
+    profile="collective.workspace:default"
+    handler=".setuphandlers.fix_workspace_members"
+    />
+
   <plone:behavior
       title="Team workspace"
       description="This item is a team workspace."
