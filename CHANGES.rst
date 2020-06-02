@@ -4,7 +4,8 @@ Changelog
 3.0b2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- The workspace_members indexer properly returns a set of native strings
+  (Fixes #41) [ale-rt]
 
 
 3.0b1 (2020-01-27)
