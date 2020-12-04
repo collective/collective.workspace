@@ -93,6 +93,6 @@ def fix_workspace_members(context):
     index = pc._catalog.indexes.get("workspace_members")
     if not index:
         return
-    keys_to_fix = (key for key in index._index if isinstance(key, six.text_type))
+    keys_to_fix = [key for key in index._index if isinstance(key, six.text_type)]
     for key in keys_to_fix:
         index._index[safe_encode(key)] = index._index.pop(key)

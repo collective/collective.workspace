@@ -4,7 +4,8 @@ Changelog
 3.0b3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed upgrade step for the workspace_members indexer
+  (Fixes #44) [reinhardt]
 
 
 3.0b2 (2020-06-05)
