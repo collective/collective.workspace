@@ -22,7 +22,7 @@ class TestWorkspace(unittest.TestCase):
         self.request = self.layer["request"]
         zope.login(self.app["acl_users"], SITE_OWNER_NAME)
         self.user1 = api.user.create(
-            email="user1@example.com", username="user1", password="123"
+            email="user1@example.com", username="user1", password="Plone123"
         )
         self.workspace = api.content.create(
             container=self.portal, type="Workspace", id="a-workspace"
@@ -127,7 +127,7 @@ class TestWorkspace(unittest.TestCase):
             user=self.user1.getId(), groups=(u"Admins",),
         )
         user2 = api.user.create(
-            email="user2@example.com", username="user2", password="123"
+            email="user2@example.com", username="user2", password="Plone123"
         )
         self.ws[self.user1.getId()].update({"user": user2.getId()})
         self.assertNotIn(self.user1.getId(), self.workspace._team)

@@ -1,11 +1,11 @@
 Changelog
 =========
 
-3.0b3 (unreleased)
+3.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix deprecation a warning
+  (Fixes #47) [ale-rt]
 
 3.0b2 (2020-06-05)
 ------------------
