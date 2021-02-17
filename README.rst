@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/collective/collective.workspace.svg?branch=master
-    :target: https://travis-ci.org/collective/collective.workspace
+.. image:: https://github.com/collective/collective.workspace/workflows/tests/badge.svg
+    :target: https://github.com/collective/collective.workspace/actions?query=workflow%3Atests
 
 collective.workspace
 ====================

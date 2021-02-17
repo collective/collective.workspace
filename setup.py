@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = "3.0b3.dev0"
+version = "3.0.0.dev0"
 
 long_description = (
     open("README.rst").read() + "\n" + "Contributors\n"
@@ -30,6 +30,7 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords="plone workspace collaboration",

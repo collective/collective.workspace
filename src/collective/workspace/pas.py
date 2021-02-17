@@ -1,6 +1,5 @@
 # coding=utf-8
 from AccessControl import ClassSecurityInfo
-from App.class_init import InitializeClass
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import IWorkspace
 from plone import api
@@ -9,6 +8,11 @@ from Products.PlonePAS.plugins.group import GroupManager
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
 
+
+try:
+    from AccessControl.class_init import InitializeClass
+except ImportError:
+    from App.class_init import InitializeClass
 
 try:
     from Products.CMFPlone.utils import safe_nativestring
