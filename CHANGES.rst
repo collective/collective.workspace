@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.0 (unreleased)
+3.0.0 (2021-02-17)
 ------------------
 
 - Fixed upgrade step for the workspace_members indexer
