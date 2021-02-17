@@ -1,11 +1,14 @@
 Changelog
 =========
 
-3.0b3 (unreleased)
+3.0.0 (unreleased)
 ------------------
 
 - Fixed upgrade step for the workspace_members indexer
   (Fixes #44) [reinhardt]
+
+- Fix deprecation a warning
+  (Fixes #47) [ale-rt]
 
 
 3.0b2 (2020-06-05)
