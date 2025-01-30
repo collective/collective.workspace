@@ -7,6 +7,12 @@ recursive-include docs LICENSE.*
 global-exclude *.pyc
 
 # added by check_manifest.py
+include .gha.cfg
 include *.py
+include base.cfg
 include buildout.cfg
 include development.cfg
+include Makefile
+include plone-5.1.x.cfg
+include plone-5.2.x.cfg
+include versions.cfg
