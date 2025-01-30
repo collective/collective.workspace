@@ -30,7 +30,8 @@ def setup_pas(context):
         site.acl_users.manage_addProduct[
             "collective.workspace"
         ].addWorkspaceGroupManager(
-            "workspace_groups", "collective.workspace Groups",
+            "workspace_groups",
+            "collective.workspace Groups",
         )
         activatePluginInterfaces(site, "workspace_groups")
 
@@ -62,8 +63,7 @@ def migrate_groups(context):
 
 
 def move_dotted_to_named_behaviors(context):
-    """ https://github.com/plone/plone.app.upgrade/blob/master/plone/app/upgrade/v52/alphas.py#L58  # noqa: E501
-    """
+    """https://github.com/plone/plone.app.upgrade/blob/master/plone/app/upgrade/v52/alphas.py#L58  # noqa: E501"""
     mapping = {IWorkspace.__identifier__: "collective.workspace.team_workspace"}
 
     ptt = api.portal.get_tool("portal_types")
@@ -83,7 +83,7 @@ def move_dotted_to_named_behaviors(context):
 
 
 def fix_workspace_members(context):
-    """ This makes sense only on Python2 because on Python3 the index keys
+    """This makes sense only on Python2 because on Python3 the index keys
     will already be str instances in any case
     """
     return

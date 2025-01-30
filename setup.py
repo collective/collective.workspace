@@ -40,7 +40,9 @@ setup(
     license="gpl",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    namespace_packages=["collective",],
+    namespace_packages=[
+        "collective",
+    ],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -51,8 +53,13 @@ setup(
         # -*- Extra requirements: -*-
     ],
     extras_require={
-        "test": ["plone.app.robotframework[debug,reload]", "plone.app.testing",],
-        "develop": ["zest.releaser",],
+        "test": [
+            "plone.app.robotframework[debug,reload]",
+            "plone.app.testing",
+        ],
+        "develop": [
+            "zest.releaser",
+        ],
     },
     entry_points="""
       # -*- Entry points: -*-

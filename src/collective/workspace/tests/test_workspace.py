@@ -56,7 +56,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_adding_team_member_updates_groups(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=("Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         self.assertIn(
             self.user1.getId(),
@@ -107,7 +108,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_removing_team_member_updates_groups(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=("Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         self.ws.remove_from_team(user=self.user1.getId())
         self.assertNotIn(
@@ -123,7 +125,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_reparent_team_member(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=("Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         user2 = api.user.create(
             email="user2@example.com", username="user2", password="Plone123"
@@ -185,7 +188,7 @@ class TestWorkspace(unittest.TestCase):
         self.assertIsNone(api.group.get(test_group_id))
 
     def test_update_membership_groups(self):
-        """ Test that calling _update_groups will always add
+        """Test that calling _update_groups will always add
         the Members group, unless the user is also in the Guests group
         """
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
@@ -228,8 +231,7 @@ class TestWorkspace(unittest.TestCase):
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
 
     def test_membership_remove_all_groups(self):
-        """ Test that calling _remove_all_groups does so
-        """
+        """Test that calling _remove_all_groups does so"""
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
 
         # Adding the user to the workspace will grant the TeamMember role

@@ -32,7 +32,7 @@ manage_addWorkspaceGroupManagerForm = PageTemplateFile(
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
-    """ Add a WorkspaceGroupManager to a Pluggable Auth Service. """
+    """Add a WorkspaceGroupManager to a Pluggable Auth Service."""
 
     pmm = WorkspaceGroupManager(id, title)
     dispatcher._setObject(pmm.getId(), pmm)
@@ -95,8 +95,7 @@ def add_group(group_id, title):
 
 @implementer(ILocalRoleProvider)
 class WorkspaceRoles:
-    """Automatically assign local roles to workspace groups.
-    """
+    """Automatically assign local roles to workspace groups."""
 
     def __init__(self, context):
         self.workspace = IWorkspace(context)

@@ -29,18 +29,27 @@ except ImportError:
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
-    user = schema.TextLine(title=_("User"),)
+    user = schema.TextLine(
+        title=_("User"),
+    )
     form.widget(
-        "user", AjaxSelectFieldWidget, vocabulary="plone.app.vocabularies.Users",
+        "user",
+        AjaxSelectFieldWidget,
+        vocabulary="plone.app.vocabularies.Users",
     )
 
-    position = schema.TextLine(title=_("Position"), required=False,)
+    position = schema.TextLine(
+        title=_("Position"),
+        required=False,
+    )
 
     form.widget(groups=CheckBoxFieldWidget)
     groups = schema.Set(
         title=_("Groups"),
         required=False,
-        value_type=schema.Choice(vocabulary="collective.workspace.groups",),
+        value_type=schema.Choice(
+            vocabulary="collective.workspace.groups",
+        ),
     )
 
 

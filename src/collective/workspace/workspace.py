@@ -57,8 +57,7 @@ class Workspace:
 
     @property
     def membership_schema(self):
-        """Returns the schema to be used for editing team memberships.
-        """
+        """Returns the schema to be used for editing team memberships."""
         return ITeamMembership
 
     membership_factory = TeamMembership
