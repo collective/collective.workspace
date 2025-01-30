@@ -13,11 +13,6 @@ try:
 except ImportError:
     from App.class_init import InitializeClass
 
-try:
-    from Products.CMFPlone.utils import safe_nativestring
-except ImportError:
-    from collective.workspace._compat import safe_nativestring
-
 
 _ = MessageFactory("collective.workspace")
 
@@ -103,7 +98,6 @@ class WorkspaceRoles:
 
     def getAllRoles(self):
         for group_name, roles in self.workspace.available_groups.items():
-            group_name = safe_nativestring(group_name)
             group_id = group_name + ":" + self.uid
             yield group_id, roles
 

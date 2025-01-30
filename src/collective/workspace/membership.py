@@ -20,12 +20,6 @@ from zope.event import notify
 from zope.interface import implementer
 
 
-try:
-    from Products.CMFPlone.utils import safe_nativestring
-except ImportError:
-    from collective.workspace._compat import safe_nativestring
-
-
 class ITeamMembership(model.Schema):
     """Schema for one person's membership in a team."""
 
@@ -122,7 +116,6 @@ class TeamMembership:
 
         # Add to new groups
         for group_name in new_groups - old_groups:
-            group_name = safe_nativestring(group_name)
             group_id = f"{group_name}:{uid}"
             try:
                 workspace_groups.addPrincipalToGroup(self.user, group_id)
@@ -133,7 +126,6 @@ class TeamMembership:
 
         # Remove from old groups
         for group_name in old_groups - new_groups:
-            group_name = safe_nativestring(group_name)
             group_id = f"{group_name}:{uid}"
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)
@@ -146,7 +138,6 @@ class TeamMembership:
         workspace_groups = get_workspace_groups_plugin()
         groups = set(self.groups) | set(workspace.available_groups)
         for group_name in groups:
-            group_name = safe_nativestring(group_name)
             group_id = f"{group_name}:{uid}"
             try:
                 workspace_groups.removePrincipalFromGroup(self.user, group_id)

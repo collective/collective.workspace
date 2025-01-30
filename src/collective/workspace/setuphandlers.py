@@ -9,13 +9,6 @@ from Products.PlonePAS.setuphandlers import activatePluginInterfaces
 from zope.component.hooks import getSite
 
 import logging
-import six
-
-
-try:
-    from Products.CMFPlone.utils import safe_nativestring
-except ImportError:
-    from collective.workspace._compat import safe_nativestring
 
 
 logger = logging.getLogger("collective.workspace")
@@ -53,7 +46,6 @@ def migrate_groups(context):
         logger.info(f"Migrating workspace groups for {b.getPath()}")
         workspace = IWorkspace(b._unrestrictedGetObject())
         for group_name in set(workspace.available_groups):
-            group_name = safe_nativestring(group_name)
             group_id = f"{group_name}:{b.UID}"
             title = f"{group_name}: {b.Title}"
             add_group(group_id, title)

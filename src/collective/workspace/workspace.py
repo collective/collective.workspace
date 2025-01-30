@@ -20,14 +20,6 @@ from zope.event import notify
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
-import six
-
-
-try:
-    from Products.CMFPlone.utils import safe_nativestring
-except ImportError:
-    from collective.workspace._compat import safe_nativestring
-
 
 class Workspace:
     """Provides access to team workspace functionality.
@@ -169,7 +161,6 @@ class Workspace:
 def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
-        group_name = safe_nativestring(group_name)
         group_id = f"{group_name}:{context.UID()}"
         title = f"{group_name}: {context.Title()}"
         add_group(group_id, title)
@@ -180,7 +171,6 @@ def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
     gtool = api.portal.get_tool("portal_groups")
     for group_name in workspace.available_groups:
-        group_name = safe_nativestring(group_name)
         group_id = f"{group_name}:{context.UID()}"
         group_title = f"{group_name}: {context.Title()}"
         group = gtool.getGroupById(group_id)
@@ -193,7 +183,6 @@ def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
-        group_name = safe_nativestring(group_name)
         group_id = f"{group_name}:{context.UID()}"
         try:
             workspace_groups.removeGroup(group_id)
