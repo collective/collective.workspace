@@ -1,20 +1,58 @@
-.Python
-.installed.cfg
-bin
-develop-eggs
-include
-lib
-parts
-var
-*.egg
+# Generated from:
+# https://github.com/plone/meta/tree/main/config/default
+# See the inline comments on how to expand/tweak this configuration file
+# python related
 *.egg-info
-output.xml
-report.html
-log.html
-/src/collective.workspace.egg-info
 *.pyc
-/share
+*.pyo
+
+# translation related
 *.mo
-.mr.developer.cfg
+
+# tools related
+build/
+.coverage
+.*project
+coverage.xml
+dist/
+docs/_build
+__pycache__/
+.tox
 .vscode/
+node_modules/
+forest.dot
+forest.json
+
+# venv / buildout related
+bin/
+develop-eggs/
+eggs/
+.eggs/
+etc/
+.installed.cfg
+include/
+lib/
+lib64
+.mr.developer.cfg
+parts/
 pyvenv.cfg
+var/
+local.cfg
+
+# mxdev
+/instance/
+/.make-sentinels/
+/*-mxdev.txt
+/reports/
+/sources/
+/venv/
+.installed.txt
+
+
+##
+# Add extra configuration options in .meta.toml:
+#  [gitignore]
+#  extra_lines = """
+#  _your own configuration lines_
+#  """
+##
