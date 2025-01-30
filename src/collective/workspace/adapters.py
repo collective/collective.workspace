@@ -1,4 +1,3 @@
-# coding=utf-8
 from collective.workspace.interfaces import IHasWorkspace
 from plone import api
 from plone.app.dexterity.permissions import DXFieldPermissionChecker
@@ -19,6 +18,6 @@ class WorkspaceFieldPermissionChecker(DXFieldPermissionChecker):
             )
         ):
             return True
-        return super(WorkspaceFieldPermissionChecker, self).validate(
+        return super().validate(
             field_name, vocabulary_name
         )

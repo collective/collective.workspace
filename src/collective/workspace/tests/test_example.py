@@ -1,4 +1,3 @@
-# coding=utf-8
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from Products.CMFPlone.utils import get_installer
 

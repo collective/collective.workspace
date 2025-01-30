@@ -1,4 +1,3 @@
-# coding=utf-8
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
 from .pas import add_group
@@ -50,12 +49,12 @@ def migrate_groups(context):
     for b in catalog.unrestrictedSearchResults(
         object_provides=IHasWorkspace.__identifier__
     ):
-        logger.info("Migrating workspace groups for {}".format(b.getPath()))
+        logger.info(f"Migrating workspace groups for {b.getPath()}")
         workspace = IWorkspace(b._unrestrictedGetObject())
         for group_name in set(workspace.available_groups):
             group_name = safe_nativestring(group_name)
-            group_id = "{}:{}".format(group_name, b.UID)
-            title = "{}: {}".format(group_name, b.Title)
+            group_id = f"{group_name}:{b.UID}"
+            title = f"{group_name}: {b.Title}"
             add_group(group_id, title)
         for m in workspace:
             new_groups = m.groups & set(workspace.available_groups)
@@ -87,12 +86,11 @@ def fix_workspace_members(context):
     """ This makes sense only on Python2 because on Python3 the index keys
     will already be str instances in any case
     """
-    if not six.PY2:
-        return
+    return
     pc = api.portal.get_tool("portal_catalog")
     index = pc._catalog.indexes.get("workspace_members")
     if not index:
         return
-    keys_to_fix = [key for key in index._index if isinstance(key, six.text_type)]
+    keys_to_fix = [key for key in index._index if isinstance(key, str)]
     for key in keys_to_fix:
         index._index[safe_encode(key)] = index._index.pop(key)

@@ -1,4 +1,3 @@
-# coding=utf-8
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
@@ -30,7 +29,7 @@ except ImportError:
     from collective.workspace._compat import safe_nativestring
 
 
-class Workspace(object):
+class Workspace:
     """Provides access to team workspace functionality.
 
     This is registered as a behavior providing the IWorkspace interface.
@@ -50,7 +49,7 @@ class Workspace(object):
         counters = {}
         for name, func in self.counters:
             counters[name] = Length()
-        for m in six.itervalues(self.context._team):
+        for m in self.context._team.values():
             for name, func in self.counters:
                 if func(m):
                     counters[name].change(1)
@@ -72,9 +71,9 @@ class Workspace(object):
         return registry.get(
             "collective.workspace.available_groups",
             {
-                u"Members": ("Contributor", "Reader", "TeamMember"),
-                u"Guests": ("TeamGuest",),
-                u"Admins": (
+                "Members": ("Contributor", "Reader", "TeamMember"),
+                "Guests": ("TeamGuest",),
+                "Admins": (
                     "Contributor",
                     "Editor",
                     "Reviewer",
@@ -86,7 +85,7 @@ class Workspace(object):
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u"Members": lambda x: "Guests" not in set(x.groups),
+        "Members": lambda x: "Guests" not in set(x.groups),
     }
 
     counters = (("members", lambda x: True),)
@@ -107,7 +106,7 @@ class Workspace(object):
             return default
 
     def __iter__(self):
-        for key in six.iterkeys(self.context._team):
+        for key in self.context._team.keys():
             yield self[key]
 
     def add_to_team(self, user, groups=None, **kw):
@@ -172,8 +171,8 @@ def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = "{}:{}".format(group_name, context.UID())
-        title = "{}: {}".format(group_name, context.Title())
+        group_id = f"{group_name}:{context.UID()}"
+        title = f"{group_name}: {context.Title()}"
         add_group(group_id, title)
 
 
@@ -183,8 +182,8 @@ def handle_workspace_modified(context, event):
     gtool = api.portal.get_tool("portal_groups")
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = "{}:{}".format(group_name, context.UID())
-        group_title = "{}: {}".format(group_name, context.Title())
+        group_id = f"{group_name}:{context.UID()}"
+        group_title = f"{group_name}: {context.Title()}"
         group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
@@ -196,7 +195,7 @@ def handle_workspace_removed(context, event):
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
         group_name = safe_nativestring(group_name)
-        group_id = "{}:{}".format(group_name, context.UID())
+        group_id = f"{group_name}:{context.UID()}"
         try:
             workspace_groups.removeGroup(group_id)
         except KeyError:  # group already doesn't exist

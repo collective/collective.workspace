@@ -1,4 +1,3 @@
-# coding=utf-8
 from Products.CMFPlone.utils import safe_encode
 from Products.CMFPlone.utils import safe_unicode
 
@@ -10,8 +9,8 @@ def safe_nativestring(value, encoding="utf-8"):
 
     Needed for Plone < 5.2
     """
-    if six.PY2 and isinstance(value, six.text_type):
+    if six.PY2 and isinstance(value, str):
         value = safe_encode(value, encoding)
-    if not six.PY2 and isinstance(value, six.binary_type):
+    if not six.PY2 and isinstance(value, bytes):
         value = safe_unicode(value, encoding)
     return value

@@ -1,4 +1,3 @@
-# coding=utf-8
 from AccessControl import getSecurityManager
 from collections import namedtuple
 from collective.workspace import workspaceMessageFactory as _
@@ -42,7 +41,7 @@ class TeamRosterView(AutoFields, DisplayForm):
 
     @property
     def label(self):
-        return _(u"Roster: ${title}", mapping={"title": self.context.Title()})
+        return _("Roster: ${title}", mapping={"title": self.context.Title()})
 
     @lazy_property
     def schema(self):
@@ -98,7 +97,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         return self.workspace.membership_schema
 
     def updateFields(self):
-        super(TeamMemberEditForm, self).updateFields()
+        super().updateFields()
         # don't show the user field if we are editing
         if self.key:
             del self.fields["user"]
@@ -112,7 +111,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         if self.key:
             return self.getContent()._title
         else:
-            return _(u"Add Person to Roster")
+            return _("Add Person to Roster")
 
     @lazy_property
     def _content(self):
@@ -128,14 +127,14 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def validateInvariants(self, membership):
         pass
 
-    @button.buttonAndHandler(_(u"Save"))
+    @button.buttonAndHandler(_("Save"))
     def handleSave(self, action):
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
             return
 
-        status = _(u"Changes saved")
+        status = _("Changes saved")
 
         if self.key:
             membership = self.getContent()
@@ -143,7 +142,7 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
         else:
             # Add new roster member
             membership = self.workspace.add_to_team(**data)
-            status = _(u"User added")
+            status = _("User added")
 
         try:
             self.validateInvariants(membership)
@@ -159,16 +158,16 @@ class TeamMemberEditForm(AutoExtensibleForm, EditForm):
     def can_remove(self):
         return self.key
 
-    @button.buttonAndHandler(_(u"Remove"), condition=lambda self: self.can_remove)
+    @button.buttonAndHandler(_("Remove"), condition=lambda self: self.can_remove)
     def handleRemove(self, action):
         membership = self.getContent()
         membership.remove_from_team()
         self._finished = True
-        IStatusMessage(self.request).addStatusMessage(_(u"User removed"), "info")
+        IStatusMessage(self.request).addStatusMessage(_("User removed"), "info")
 
     _finished = False
 
     def render(self):
         if self._finished:
             return " "
-        return super(TeamMemberEditForm, self).render()
+        return super().render()
