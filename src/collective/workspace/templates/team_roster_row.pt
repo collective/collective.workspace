@@ -1,23 +1,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="collective.workspace">
-<td tal:condition="view/table_actions">
-  <input type="checkbox" name="ids:list"
-         tal:attributes="value options/membership/user" />
-</td>
-<td tal:repeat="widget view/widgets/values">
-    <div tal:replace="structure widget/render" />
-</td>
-<td>
-  <tal:block tal:define="mtool nocall:context/portal_membership"
-  	         tal:repeat="action view/row_actions">
-  	 <a tal:condition="python:mtool.checkPermission(action.permission, context)"
-  	    tal:attributes="href string:${context/absolute_url}/${action/view_name}/${options/membership/user}"
-  	    tal:content="action/label"
-        i18n:translate=""
-  	    class="pat-plone-modal" />&nbsp;
-  </tal:block>
-</td>
+      i18n:domain="collective.workspace"
+>
+  <td tal:condition="view/table_actions">
+    <input name="ids:list"
+           type="checkbox"
+           tal:attributes="
+             value options/membership/user;
+           "
+    />
+  </td>
+  <td tal:repeat="widget view/widgets/values">
+    <div tal:replace="structure widget/render"></div>
+  </td>
+  <td>
+    <tal:block tal:define="
+                 mtool nocall:context/portal_membership;
+               "
+               tal:repeat="action view/row_actions"
+    >
+      <a class="pat-plone-modal"
+         tal:condition="python:mtool.checkPermission(action.permission, context)"
+         tal:content="action/label"
+         tal:attributes="
+           href string:${context/absolute_url}/${action/view_name}/${options/membership/user};
+         "
+         i18n:translate=""
+      ></a>&nbsp;
+    </tal:block>
+  </td>
 </html>

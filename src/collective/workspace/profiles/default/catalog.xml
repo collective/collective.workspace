@@ -1,6 +1,10 @@
-<?xml version="1.0"?>
-<object name="portal_catalog" meta_type="Plone Catalog Tool">
- <index name="workspace_members" meta_type="KeywordIndex">
-  <indexed_attr value="workspace_members"/>
- </index>
+<?xml version="1.0" encoding="utf-8"?>
+<object meta_type="Plone Catalog Tool"
+        name="portal_catalog"
+>
+  <index meta_type="KeywordIndex"
+         name="workspace_members"
+  >
+    <indexed_attr value="workspace_members" />
+  </index>
 </object>

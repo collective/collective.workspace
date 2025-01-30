@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <rolemap>
   <roles>
-    <role name="TeamManager"/>
-    <role name="TeamGuest"/>
+    <role name="TeamManager" />
+    <role name="TeamGuest" />
   </roles>
   <permissions>
-  </permissions>
+</permissions>
 </rolemap>

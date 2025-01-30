@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <registry>
   <record name="collective.workspace.available_groups">
     <field type="plone.registry.field.Dict">
