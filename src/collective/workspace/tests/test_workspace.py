@@ -223,7 +223,7 @@ class TestWorkspace(unittest.TestCase):
         self.assertIn("TeamMember", self._get_roles_in_workspace())
 
         # Adding the user to the Guests group will remove it from the Members
-        # because the condition will not be satisifed
+        # because the condition will not be satisfied
         old = set()
         new = {"Guests"}
         membership._update_groups(old, new)
