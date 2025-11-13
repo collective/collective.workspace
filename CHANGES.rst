@@ -1,10 +1,11 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
+4.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Support only Python 3.9+ and Plone 6.0+
+  [ale-rt]
 
 
 3.0.0 (2021-02-17)

@@ -181,7 +181,7 @@ class TestWorkspace(unittest.TestCase):
         self.assertIsNone(api.group.get(test_group_id))
         api.group.create(test_group_id)
         group = api.group.get(test_group_id)
-        self.assertEquals(group.getId(), test_group_id)
+        self.assertEqual(group.getId(), test_group_id)
         api.group.delete(test_group_id)
         self.assertIsNone(api.group.get(test_group_id))
 

@@ -15,19 +15,16 @@ jobs:
     strategy:
       matrix:
         config:
-          - ["Py2.7-Plone5.1", "2.7", "5.1"]
-          - ["Py2.7-Plone5.2", "2.7", "5.2"]
-          - ["Py3.6-Plone5.2", "3.6", "5.2"]
-          - ["Py3.7-Plone5.2", "3.7", "5.2"]
-          - ["Py3.8-Plone5.2", "3.8", "5.2"]
+          - ["Py3.9-Plone6.0", "3.9", "6.0"]
+          - ["Py3.13-Plone6.1", "3.13", "6.1"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
       - name: Set up Python ${{ matrix.config[1] }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.config[1] }}
       - name: Pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/pip
@@ -44,10 +41,14 @@ jobs:
           echo "[buildout]" > $HOME/.buildout/default.cfg
           echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
           echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
-          wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
-          mkdir geckodriver && tar zxvf geckodriver-v0.26.0-linux64.tar.gz -C geckodriver
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          echo "abi-tag-eggs = true" >> $HOME/.buildout/default.cfg
+
+      - name: Install requirements and buildout
+        run: |
+          pip install -r requirements-${{ matrix.config[2] }}.txt
+
+      - name: Run buildout
+        run: |
           sed -ie "s#plone-x.x.x.cfg#plone-${{ matrix.config[2] }}.x.cfg#" .gha.cfg
           buildout -c .gha.cfg
       - name: Test

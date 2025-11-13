@@ -28,14 +28,27 @@ Scenario: Workspace member gains access to workspace
 
 Start browser
     Open browser  ${START_URL}  browser=${BROWSER}
+    Set window size  1200  1000
 
 a test workspace
     Log in as site owner
     Go to  ${PLONE_URL}
-    Open Add New Menu
+    Compatible Open Add New Menu
     Click link  css=.contenttype-workspace
     Input text  form-widgets-IBasic-title  Test Workspace
     Click button  Save
+
+# This is done to support multiple Plone versions where the
+# Add New Menu structure changeds slightly. The selector switched from:
+#   css=#plone-contentmenu-factories > div > ul
+# to:
+#   css=#plone-contentmenu-factories > ul
+Compatible Open Add New Menu
+    ${status}=    Run Keyword And Return Status    Open Add New Menu
+    IF    '${status}' == 'FAIL'
+        Wait Until Element Is Visible  css=#plone-contentmenu-factories > ul
+    END
+
 
 the test user is added to the roster
 	Click link  css=#contentview-team-roster a
