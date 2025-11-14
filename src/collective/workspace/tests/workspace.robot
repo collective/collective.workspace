@@ -9,7 +9,7 @@ Suite Teardown  Close All Browsers
 
 *** Variables ***
 
-${BROWSER} =  chrome
+${BROWSER} =  firefox
 
 *** Test Cases ***
 
@@ -28,6 +28,7 @@ Scenario: Workspace member gains access to workspace
 
 Start browser
     Open browser  ${START_URL}  browser=${BROWSER}
+    Set Window Size  1200  1000
 
 a test workspace
     Log in as site owner
