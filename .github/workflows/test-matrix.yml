@@ -19,7 +19,7 @@ jobs:
         - ["ubuntu", "ubuntu-latest"]
         config:
         # [Python version, visual name, tox env]
-        - ["3.8", "5.2 on py3.8", "py38-plone52"]
+        - ["3.11", "6.0 on py3.11", "py311-plone60"]
 
     runs-on: ${{ matrix.os[1] }}
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
