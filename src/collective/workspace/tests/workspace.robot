@@ -9,7 +9,7 @@ Suite Teardown  Close All Browsers
 
 *** Variables ***
 
-${BROWSER} =  firefox
+${BROWSER} =  chrome
 
 *** Test Cases ***
 
