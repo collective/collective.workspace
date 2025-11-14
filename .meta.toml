@@ -11,5 +11,8 @@ test_matrix = {"6.0" = ["3.11"]}
 
 [gitignore]
 extra_lines = """
-/workspaces
+/robot_log.html
+/robot_output.xml
+/robot_report.html
+/workspace
 """

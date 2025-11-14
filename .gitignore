@@ -48,7 +48,10 @@ local.cfg
 /venv/
 .installed.txt
 
-/workspaces
+/robot_log.html
+/robot_output.xml
+/robot_report.html
+/workspace
 
 ##
 # Add extra configuration options in .meta.toml:
