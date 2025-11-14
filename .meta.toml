@@ -4,3 +4,9 @@
 [meta]
 template = "default"
 commit-id = "2.2.3.dev0"
+
+
+[tox]
+envlist_lines = """
+    py313-plone61
+"""
