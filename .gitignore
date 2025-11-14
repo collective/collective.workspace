@@ -48,6 +48,7 @@ local.cfg
 /venv/
 .installed.txt
 
+/workspaces
 
 ##
 # Add extra configuration options in .meta.toml:

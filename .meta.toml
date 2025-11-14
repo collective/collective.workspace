@@ -8,3 +8,8 @@ commit-id = "2.2.3.dev0"
 
 [tox]
 test_matrix = {"6.0" = ["3.11"]}
+
+[gitignore]
+extra_lines = """
+/workspaces
+"""
