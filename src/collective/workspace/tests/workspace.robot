@@ -32,10 +32,22 @@ Start browser
 a test workspace
     Log in as site owner
     Go to  ${PLONE_URL}
-    Open Add New Menu
+    Compatible Open Add New Menu
     Click link  css=.contenttype-workspace
     Input text  form-widgets-IBasic-title  Test Workspace
     Click button  Save
+
+
+# There was a change in markup from:
+#   css=#plone-contentmenu-factories > div > ul
+# to:
+#   css=#plone-contentmenu-factories > ul
+Compatible Open Add New Menu
+    ${status}=    Run Keyword And Return Status    Open Add New Menu
+    IF    '${status}' == 'FAIL'
+        Wait Until Element Is Visible  css=#plone-contentmenu-factories > ul
+    END
+
 
 the test user is added to the roster
 	Click link  css=#contentview-team-roster a
