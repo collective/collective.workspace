@@ -37,8 +37,17 @@ Basic Installation
 Compatibility
 -------------
 
-For Plone 5.1 and 5.2 you should use version 3.x.
-For Plone 4.3 and 5.0 you should use version 2.x.
+This table shows which version of collective.workspace is compatible with which versions of Plone and Python:
+
++---------------+----------------------+---------------------------+
+| Plone         | Python               | collective.workspace      |
++===============+======================+===========================+
+| 6.0+          | 3.9+                 | 4                         |
++---------------+----------------------+---------------------------+
+| 5.1, 5.2      | 2.7 - 3.8            | 3                         |
++---------------+----------------------+---------------------------+
+| 4.3, 5.0      | 2.7                  | 2                         |
++---------------+----------------------+---------------------------+
 
 Custom Workspace Groups
 -----------------------
