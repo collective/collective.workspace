@@ -21,8 +21,6 @@ from zope.event import notify
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
-import six
-
 
 class Workspace(object):
     """Provides access to team workspace functionality.
@@ -44,7 +42,7 @@ class Workspace(object):
         counters = {}
         for name, func in self.counters:
             counters[name] = Length()
-        for m in six.itervalues(self.context._team):
+        for m in self.context._team.values():
             for name, func in self.counters:
                 if func(m):
                     counters[name].change(1)
@@ -101,7 +99,7 @@ class Workspace(object):
             return default
 
     def __iter__(self):
-        for key in six.iterkeys(self.context._team):
+        for key in self.context._team.keys():
             yield self[key]
 
     def add_to_team(self, user, groups=None, **kw):
