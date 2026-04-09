@@ -4,6 +4,8 @@ Changelog
 4.0.0 (unreleased)
 ------------------
 
+- Modernize the code to use plone.base
+  [ale-rt]
 - Support only Python 3.9+ and Plone 6.0+
   [ale-rt]
 
