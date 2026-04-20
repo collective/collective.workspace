@@ -46,33 +46,6 @@
       description=""
       handler=".setuphandlers.setup_pas" />
 
-  <genericsetup:upgradeStep
-    source="0001"
-    destination="0002"
-    title="Store workspace groups in workspace_groups plugin"
-    description="This allows for an optimization of looking up group memberships."
-    profile="collective.workspace:default"
-    handler=".setuphandlers.migrate_groups"
-    />
-
-  <genericsetup:upgradeStep
-    source="0002"
-    destination="0003"
-    title="Store workspace groups in workspace_groups plugin"
-    description="This allows for an optimization of looking up group memberships."
-    profile="collective.workspace:default"
-    handler=".setuphandlers.move_dotted_to_named_behaviors"
-    />
-
-  <genericsetup:upgradeStep
-    source="0003"
-    destination="0004"
-    title="Fix the workspace_members indexer"
-    description="Normalize the indexed workspace_members values to be native strings. This is only relevant for Python2, on Python3 this will just upgrade the version."
-    profile="collective.workspace:default"
-    handler=".setuphandlers.fix_workspace_members"
-    />
-
   <plone:behavior
       title="Team workspace"
       description="This item is a team workspace."

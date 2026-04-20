@@ -4,7 +4,14 @@ Changelog
 4.0.0 (unreleased)
 ------------------
 
-- Support only Python 3.9+ and Plone 6.0+
+- Modernize the code to use plone.base
+  [ale-rt]
+- Support only Python 3.9+ and Plone 6.0+.
+  Removed support for Plone 5.1 and Plone 5.2.
+  Removed the upgrade steps needed for the upgrade from Plone 5.2 to Plone 6.0.
+  If you need to upgrade from Plone 5.2 to Plone 6.0,
+  you should first upgrade to version 3.0.0 of this package,
+  and then upgrade to version 4.0.0.
   [ale-rt]
 
 
