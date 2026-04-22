@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 version = "4.0.0.dev0"
 
@@ -20,6 +21,7 @@ setup(
     # Get more strings from
     # https://pypi.org/classifiers/
     classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: Addon",
@@ -38,12 +40,13 @@ setup(
     ],
     keywords="plone workspace collaboration",
     author="David Glick",
-    author_email="",
+    author_email="collective@plone.org",
     url="https://github.com/collective/collective.workspace",
     license="gpl",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    namespace_packages=["collective",],
+    python_requires=">=3.9",
+    namespace_packages=["collective"],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -53,8 +56,13 @@ setup(
         # -*- Extra requirements: -*-
     ],
     extras_require={
-        "test": ["plone.app.robotframework[debug,reload]", "plone.app.testing",],
-        "develop": ["zest.releaser",],
+        "test": [
+            "plone.app.robotframework[debug,reload]",
+            "plone.app.testing",
+        ],
+        "develop": [
+            "zest.releaser",
+        ],
     },
     entry_points="""
       # -*- Entry points: -*-

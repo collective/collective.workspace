@@ -1,4 +1,3 @@
-# coding=utf-8
 from Acquisition import aq_chain
 from collective.workspace import workspaceMessageFactory as _
 from collective.workspace.interfaces import IWorkspace

@@ -35,7 +35,7 @@ target-version = ["py310"]
 ##
 
 [tool.codespell]
-ignore-words-list = "discreet,assertin,thet,"
+ignore-words-list = "discreet,assertin,thet,thirdparty"
 skip = "*.po,"
 ##
 # Add extra configuration options in .meta.toml:
@@ -53,7 +53,11 @@ ignore = [
     "dependabot.yml",
     "mx.ini",
     "tox.ini",
-
+    ".gha.cfg",
+    "base.cfg",
+    "plone-6.0.x.cfg",
+    "plone-6.1.x.cfg",
+    "plone-6.2.x.cfg",
 ]
 
 ##

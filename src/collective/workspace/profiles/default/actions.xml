@@ -1,18 +1,28 @@
-<?xml version="1.0"?>
-<object name="portal_actions" meta_type="Plone Actions Tool"
-   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <object name="object" meta_type="CMF Action Category">
-  <object name="team-roster" meta_type="CMF Action" i18n:domain="plone">
-   <property name="title" i18n:translate="">Roster</property>
-   <property name="description" i18n:translate=""></property>
-   <property
-      name="url_expr">string:${context/absolute_url}/team-roster</property>
-   <property name="icon_expr"></property>
-   <property name="available_expr">nocall:context/@@team-roster|nothing</property>
-   <property name="permissions">
-    <element value="collective.workspace: View roster"/>
-   </property>
-   <property name="visible">True</property>
+<?xml version="1.0" encoding="utf-8"?>
+<object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        meta_type="Plone Actions Tool"
+        name="portal_actions"
+>
+  <object meta_type="CMF Action Category"
+          name="object"
+  >
+    <object meta_type="CMF Action"
+            name="team-roster"
+            i18n:domain="plone"
+    >
+      <property name="title"
+                i18n:translate=""
+      >Roster</property>
+      <property name="description"
+                i18n:translate=""
+      />
+      <property name="url_expr">string:${context/absolute_url}/team-roster</property>
+      <property name="icon_expr" />
+      <property name="available_expr">nocall:context/@@team-roster|nothing</property>
+      <property name="permissions">
+        <element value="collective.workspace: View roster" />
+      </property>
+      <property name="visible">True</property>
+    </object>
   </object>
- </object>
 </object>

@@ -2,19 +2,24 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:plone="http://namespaces.plone.org/plone"
-    i18n_domain="collective.workspace">
+    i18n_domain="collective.workspace"
+    >
 
-  <five:registerPackage package="." initialize=".initialize" />
+  <five:registerPackage
+      package="."
+      initialize=".initialize"
+      />
   <i18n:registerTranslations directory="locales" />
 
   <include package="plone.app.dexterity" />
 
   <permission
       id="collective.workspace.ViewRoster"
-      title="collective.workspace: View roster">
+      title="collective.workspace: View roster"
+      >
     <role name="TeamMember" />
     <role name="TeamGuest" />
     <role name="TeamManager" />
@@ -25,7 +30,8 @@
 
   <permission
       id="collective.workspace.ManageRoster"
-      title="collective.workspace: Manage roster">
+      title="collective.workspace: Manage roster"
+      >
     <role name="TeamManager" />
     <role name="Site Administrator" />
     <role name="Manager" />
@@ -35,45 +41,47 @@
   <genericsetup:registerProfile
       name="default"
       title="collective.workspace"
-      directory="profiles/default"
       description="Installs the collective.workspace package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/default"
       />
 
   <genericsetup:importStep
       name="collective.workspace_various"
       title="collective.workspace various"
       description=""
-      handler=".setuphandlers.setup_pas" />
+      handler=".setuphandlers.setup_pas"
+      />
 
   <plone:behavior
+      name="collective.workspace.team_workspace"
       title="Team workspace"
       description="This item is a team workspace."
-      name="collective.workspace.team_workspace"
-      provides=".interfaces.IWorkspace"
       factory=".workspace.Workspace"
-      marker=".interfaces.IHasWorkspace"
+      provides=".interfaces.IWorkspace"
       for="plone.dexterity.interfaces.IDexterityContent"
+      marker=".interfaces.IHasWorkspace"
       />
 
   <browser:page
-      for=".interfaces.IHasWorkspace"
       name="team-roster"
+      for=".interfaces.IHasWorkspace"
       class=".browser.TeamRosterView"
       template="templates/team_roster.pt"
       permission="collective.workspace.ViewRoster"
       />
 
   <browser:page
-      for=".interfaces.IHasWorkspace"
       name="edit-roster"
+      for=".interfaces.IHasWorkspace"
       class=".browser.TeamMemberEditForm"
       permission="collective.workspace.ManageRoster"
       />
 
   <utility
+      name="collective.workspace.groups"
       component=".vocabs.TeamGroupsVocabulary"
-      name="collective.workspace.groups" />
+      />
 
   <adapter factory=".adapters.WorkspaceFieldPermissionChecker" />
 
@@ -83,9 +91,7 @@
       name="collective.workspace"
       />
 
-  <adapter
-      factory=".membership.workspace_from_membership"
-      />
+  <adapter factory=".membership.workspace_from_membership" />
 
   <utility
       factory=".pas.TeamManagerRoleDelegation"
@@ -93,8 +99,14 @@
       name="TeamManager"
       />
 
-  <adapter factory=".catalog.workspace_members" name="workspace_members" />
-  <adapter factory=".catalog.null_indexer" name="workspace_members" />
+  <adapter
+      factory=".catalog.workspace_members"
+      name="workspace_members"
+      />
+  <adapter
+      factory=".catalog.null_indexer"
+      name="workspace_members"
+      />
 
   <subscriber handler=".workspace.handle_workspace_added" />
   <subscriber handler=".workspace.handle_workspace_modified" />
