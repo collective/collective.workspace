@@ -9,7 +9,7 @@ from collective.workspace.pas import get_workspace_groups_plugin
 from copy import deepcopy
 from DateTime import DateTime
 from plone import api
-from plone.app.z3cform.widget import AjaxSelectFieldWidget
+from plone.app.z3cform.widgets.select import AjaxSelectFieldWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
 from plone.uuid.interfaces import IUUIDGenerator
