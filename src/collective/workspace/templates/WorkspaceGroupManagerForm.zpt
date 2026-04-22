@@ -15,7 +15,9 @@
       <td align="left"
           valign="top"
       >
-        <div class="form-label">
+        <div class="form-label"
+             i18n:translate=""
+        >
     Id
         </div>
       </td>
@@ -32,7 +34,9 @@
       <td align="left"
           valign="top"
       >
-        <div class="form-optional">
+        <div class="form-optional"
+             i18n:translate=""
+        >
     Title
         </div>
       </td>
@@ -49,7 +53,9 @@
       <td align="left"
           valign="top"
       >
-        <div class="form-optional">
+        <div class="form-optional"
+             i18n:translate=""
+        >
     Delegate user folder path
         </div>
       </td>
@@ -74,7 +80,8 @@
           <input class="form-element"
                  name="submit"
                  type="submit"
-                 value=" Add "
+                 value="Add"
+                 i18n:attributes="value"
           />
         </div>
       </td>
