@@ -51,9 +51,8 @@ setup(
     zip_safe=False,
     install_requires=[
         "setuptools",
+        "Products.CMFPlone",
         "plone.api",
-        "plone.app.dexterity",
-        # -*- Extra requirements: -*-
     ],
     extras_require={
         "test": [

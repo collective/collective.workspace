@@ -1,12 +1,15 @@
 include *.rst
 include *.txt
-
-graft src
-recursive-include docs LICENSE.*
-
-global-exclude *.pyc
-
-# added by check_manifest.py
-include *.py
-include buildout.cfg
-include development.cfg
+recursive-include docs *.GPL
+recursive-include docs *.txt
+recursive-include news *.gitkeep
+recursive-include news *.internal
+recursive-include src *.po
+recursive-include src *.pot
+recursive-include src *.pt
+recursive-include src *.robot
+recursive-include src *.sh
+recursive-include src *.txt
+recursive-include src *.xml
+recursive-include src *.zcml
+recursive-include src *.zpt
