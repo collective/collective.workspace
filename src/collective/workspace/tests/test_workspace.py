@@ -1,11 +1,9 @@
-# coding=utf-8
 from collective.workspace.interfaces import IWorkspace
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from plone import api
 from plone.app.testing import SITE_OWNER_NAME
 
 import unittest
-
 
 try:
     from plone.testing import zope
@@ -57,7 +55,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_adding_team_member_updates_groups(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=(u"Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         self.assertIn(
             self.user1.getId(),
@@ -72,7 +71,7 @@ class TestWorkspace(unittest.TestCase):
 
     def test_updating_team_member_updates_groups(self):
         self.ws.add_to_team(user=self.user1.getId())
-        self.ws[self.user1.getId()].update({"groups": set([u"Admins"])})
+        self.ws[self.user1.getId()].update({"groups": {"Admins"}})
         self.assertIn(
             self.user1.getId(),
             self.portal.portal_groups.getGroupMembers(
@@ -87,7 +86,7 @@ class TestWorkspace(unittest.TestCase):
     def test_direct_set_of_membership_property_is_blocked(self):
         self.ws.add_to_team(user=self.user1.getId())
         try:
-            self.ws[self.user1.getId()].position = u"Tester"
+            self.ws[self.user1.getId()].position = "Tester"
         except Exception as e:
             self.assertEqual(
                 str(e),
@@ -108,7 +107,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_removing_team_member_updates_groups(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=(u"Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         self.ws.remove_from_team(user=self.user1.getId())
         self.assertNotIn(
@@ -124,7 +124,8 @@ class TestWorkspace(unittest.TestCase):
 
     def test_reparent_team_member(self):
         self.ws.add_to_team(
-            user=self.user1.getId(), groups=(u"Admins",),
+            user=self.user1.getId(),
+            groups=("Admins",),
         )
         user2 = api.user.create(
             email="user2@example.com", username="user2", password="Plone123"
@@ -186,7 +187,7 @@ class TestWorkspace(unittest.TestCase):
         self.assertIsNone(api.group.get(test_group_id))
 
     def test_update_membership_groups(self):
-        """ Test that calling _update_groups will always add
+        """Test that calling _update_groups will always add
         the Members group, unless the user is also in the Guests group
         """
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
@@ -203,34 +204,33 @@ class TestWorkspace(unittest.TestCase):
 
         # groups should be untouched because user is already a member
         old = set()
-        new = set(["Members"])
+        new = {"Members"}
         membership._update_groups(old, new)
         self.assertIn("TeamMember", self._get_roles_in_workspace())
 
         # Removing the automatic group will not actually remove it
         # because it is an automatic group
-        old = set(["Members"])
+        old = {"Members"}
         new = set()
         membership._update_groups(old, new)
         self.assertIn("TeamMember", self._get_roles_in_workspace())
 
         # Removing the automatic group will have no effect
-        old = set(["Members"])
+        old = {"Members"}
         new = set()
         membership._update_groups(old, new)
         self.assertIn("TeamMember", self._get_roles_in_workspace())
 
         # Adding the user to the Guests group will remove it from the Members
-        # because the condition will not be satisifed
+        # because the condition will not be satisfied
         old = set()
-        new = set(["Guests"])
+        new = {"Guests"}
         membership._update_groups(old, new)
         self.assertIn("TeamGuest", self._get_roles_in_workspace())
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
 
     def test_membership_remove_all_groups(self):
-        """ Test that calling _remove_all_groups does so
-        """
+        """Test that calling _remove_all_groups does so"""
         self.assertNotIn("TeamMember", self._get_roles_in_workspace())
 
         # Adding the user to the workspace will grant the TeamMember role

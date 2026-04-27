@@ -1,7 +1,5 @@
-# coding=utf-8
 from zope.i18nmessageid import MessageFactory
 from zope.interface import Interface
-
 
 _ = MessageFactory("collective.workspace")
 

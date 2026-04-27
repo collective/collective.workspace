@@ -3,7 +3,6 @@ from zope.component.hooks import getSite
 
 import logging
 
-
 logger = logging.getLogger("collective.workspace")
 
 
@@ -16,6 +15,7 @@ def setup_pas(context):
         site.acl_users.manage_addProduct[
             "collective.workspace"
         ].addWorkspaceGroupManager(
-            "workspace_groups", "collective.workspace Groups",
+            "workspace_groups",
+            "collective.workspace Groups",
         )
         activatePluginInterfaces(site, "workspace_groups")

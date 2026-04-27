@@ -1,4 +1,3 @@
-# coding=utf-8
 from .events import TeamMemberAddedEvent
 from .interfaces import IHasWorkspace
 from .interfaces import IWorkspace
@@ -22,7 +21,7 @@ from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
-class Workspace(object):
+class Workspace:
     """Provides access to team workspace functionality.
 
     This is registered as a behavior providing the IWorkspace interface.
@@ -50,8 +49,7 @@ class Workspace(object):
 
     @property
     def membership_schema(self):
-        """Returns the schema to be used for editing team memberships.
-        """
+        """Returns the schema to be used for editing team memberships."""
         return ITeamMembership
 
     membership_factory = TeamMembership
@@ -64,9 +62,9 @@ class Workspace(object):
         return registry.get(
             "collective.workspace.available_groups",
             {
-                u"Members": ("Contributor", "Reader", "TeamMember"),
-                u"Guests": ("TeamGuest",),
-                u"Admins": (
+                "Members": ("Contributor", "Reader", "TeamMember"),
+                "Guests": ("TeamGuest",),
+                "Admins": (
                     "Contributor",
                     "Editor",
                     "Reviewer",
@@ -78,7 +76,7 @@ class Workspace(object):
 
     # Add everyone on the roster to the Members group
     auto_groups = {
-        u"Members": lambda x: "Guests" not in set(x.groups),
+        "Members": lambda x: "Guests" not in set(x.groups),
     }
 
     counters = (("members", lambda x: True),)
@@ -163,8 +161,8 @@ class Workspace(object):
 def handle_workspace_added(context, event):
     workspace = IWorkspace(context)
     for group_name in workspace.available_groups:
-        group_id = "{}:{}".format(group_name, context.UID())
-        title = "{}: {}".format(group_name, context.Title())
+        group_id = f"{group_name}:{context.UID()}"
+        title = f"{group_name}: {context.Title()}"
         add_group(group_id, title)
 
 
@@ -173,8 +171,8 @@ def handle_workspace_modified(context, event):
     workspace = IWorkspace(context)
     gtool = api.portal.get_tool("portal_groups")
     for group_name in workspace.available_groups:
-        group_id = "{}:{}".format(group_name, context.UID())
-        group_title = "{}: {}".format(group_name, context.Title())
+        group_id = f"{group_name}:{context.UID()}"
+        group_title = f"{group_name}: {context.Title()}"
         group = gtool.getGroupById(group_id)
         if group is not None:
             group.setProperties(title=group_title)
@@ -185,7 +183,7 @@ def handle_workspace_removed(context, event):
     workspace = IWorkspace(context)
     workspace_groups = get_workspace_groups_plugin()
     for group_name in workspace.available_groups:
-        group_id = "{}:{}".format(group_name, context.UID())
+        group_id = f"{group_name}:{context.UID()}"
         try:
             workspace_groups.removeGroup(group_id)
         except KeyError:  # group already doesn't exist

@@ -1,4 +1,3 @@
-# coding=utf-8
 from AccessControl import ClassSecurityInfo
 from borg.localrole.interfaces import ILocalRoleProvider
 from collective.workspace.interfaces import IWorkspace
@@ -7,7 +6,6 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PlonePAS.plugins.group import GroupManager
 from zope.i18nmessageid import MessageFactory
 from zope.interface import implementer
-
 
 try:
     from AccessControl.class_init import InitializeClass
@@ -27,7 +25,7 @@ manage_addWorkspaceGroupManagerForm = PageTemplateFile(
 
 
 def addWorkspaceGroupManager(dispatcher, id, title=None, REQUEST=None):
-    """ Add a WorkspaceGroupManager to a Pluggable Auth Service. """
+    """Add a WorkspaceGroupManager to a Pluggable Auth Service."""
 
     pmm = WorkspaceGroupManager(id, title)
     dispatcher._setObject(pmm.getId(), pmm)
@@ -56,7 +54,7 @@ class WorkspaceGroupManager(GroupManager):
         # Don't break when PAS asks to delete a non-workspace group.
         if self.getGroupInfo(group_id) is None:
             return
-        return super(WorkspaceGroupManager, self).removeGroup(group_id)
+        return super().removeGroup(group_id)
 
     def allowGroupAdd(self, user_id, group_id):
         # Disable adding to workspace groups in control panel
@@ -89,9 +87,8 @@ def add_group(group_id, title):
 
 
 @implementer(ILocalRoleProvider)
-class WorkspaceRoles(object):
-    """Automatically assign local roles to workspace groups.
-    """
+class WorkspaceRoles:
+    """Automatically assign local roles to workspace groups."""
 
     def __init__(self, context):
         self.workspace = IWorkspace(context)
@@ -110,6 +107,6 @@ class WorkspaceRoles(object):
 
 
 # Make the MemberAdmin role show up on the Sharing tab
-class TeamManagerRoleDelegation(object):
-    title = _(u"Can edit roster")
+class TeamManagerRoleDelegation:
+    title = _("Can edit roster")
     required_permission = "collective.workspace: Manage roster"

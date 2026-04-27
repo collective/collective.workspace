@@ -1,4 +1,3 @@
-# coding=utf-8
 from collective.workspace.testing import COLLECTIVE_WORKSPACE_INTEGRATION_TESTING
 from plone.base.utils import get_installer
 
@@ -15,8 +14,8 @@ class TestExample(unittest.TestCase):
         self.installer = get_installer(self.portal)
 
     def test_product_is_installed(self):
-        """ Validate that our products GS profile has been run and the product
-            installed
+        """Validate that our products GS profile has been run and the product
+        installed
         """
         pid = "collective.workspace"
         is_installed = self.installer.is_product_installed(pid)
