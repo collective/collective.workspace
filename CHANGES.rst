@@ -4,7 +4,7 @@ Changelog
 4.0.0 (unreleased)
 ------------------
 
-- Modernize the code to use plone.base
+- Modernize the code to use plone.base and remove deprecation warnings
   [ale-rt]
 - Support only Python 3.9+ and Plone 6.0+.
   Removed support for Plone 5.1 and Plone 5.2.

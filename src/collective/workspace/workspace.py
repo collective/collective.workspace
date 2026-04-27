@@ -14,11 +14,11 @@ from plone.uuid.interfaces import IUUIDGenerator
 from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
 from zope.component import adapter
 from zope.component import getUtility
-from zope.container.interfaces import IObjectAddedEvent
-from zope.container.interfaces import IObjectRemovedEvent
 from zope.event import notify
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 
 
 class Workspace:
