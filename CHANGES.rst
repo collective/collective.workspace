@@ -1,8 +1,8 @@
 Changelog
 =========
 
-4.0.0 (unreleased)
-------------------
+4.0.0a1 (2026-04-27)
+--------------------
 
 - Modernize the code to use plone.base and remove deprecation warnings
   [ale-rt]
