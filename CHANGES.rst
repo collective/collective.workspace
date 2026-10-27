@@ -1,10 +1,11 @@
 Changelog
 =========
 
-4.0.0a2 (unreleased)
---------------------
+4.0.0 (2026-10-27)
+------------------
 
-- Nothing changed yet.
+- Rerelease as final.
+  [ale-rt]
 
 
 4.0.0a1 (2026-04-27)
