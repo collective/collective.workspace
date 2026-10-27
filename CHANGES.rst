@@ -1,10 +1,13 @@
 Changelog
 =========
 
-4.0.1 (unreleased)
+5.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Support only Python 3.11+ and Plone 6.2+.
+  [ale-rt]
+- This is now a native namespace package.
+  [ale-rt]
 
 
 4.0.0 (2026-10-27)
