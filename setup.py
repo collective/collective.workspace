@@ -1,7 +1,6 @@
-from setuptools import find_packages
 from setuptools import setup
 
-version = "4.0.1.dev0"
+version = "5.0.0.dev0"
 
 long_description = (
     open("README.rst").read() + "\n" + "Contributors\n"
@@ -25,13 +24,9 @@ setup(
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: Addon",
-        "Framework :: Plone :: 6.0",
-        "Framework :: Plone :: 6.1",
         "Framework :: Plone :: 6.2",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
@@ -43,14 +38,10 @@ setup(
     author_email="collective@plone.org",
     url="https://github.com/collective/collective.workspace",
     license="gpl",
-    packages=find_packages("src"),
-    package_dir={"": "src"},
-    python_requires=">=3.9",
-    namespace_packages=["collective"],
+    python_requires=">=3.11",
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "setuptools",
         "plone.api",
         "plone.app.dexterity",
         # -*- Extra requirements: -*-
