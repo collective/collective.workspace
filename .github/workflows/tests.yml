@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - ["Py3.13-Plone6.2", "3.11", "6.1"]
+          - ["Py3.11-Plone6.2", "3.11", "6.2"]
           - ["Py3.14-Plone6.2", "3.14", "6.2"]
     steps:
       - uses: actions/checkout@v5
