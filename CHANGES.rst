@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.0.0 (unreleased)
+5.0.0 (2026-11-15)
 ------------------
 
 - Support only Python 3.11+ and Plone 6.2+.
